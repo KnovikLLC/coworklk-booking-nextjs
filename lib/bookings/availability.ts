@@ -57,3 +57,99 @@ export async function getAvailabilityForRange(
 
   return dates.map((date) => byDate.get(format(date, "yyyy-MM-dd"))!);
 }
+
+// Mirrors check_availability's overlap WHERE clause (supabase/migrations/
+// ...check_availability_function.sql) so the admin grid can attach the
+// actual occupying booking to a slot cell without re-deriving the RPC's
+// count logic — one bookings query per space/date, matched in JS.
+function slotOverlaps(bookingSlot: string, cellSlot: string): boolean {
+  if (bookingSlot === cellSlot) return true;
+  if ((cellSlot === "morning" || cellSlot === "afternoon") && (bookingSlot === "full_day" || bookingSlot === "unlimited"))
+    return true;
+  if (cellSlot === "full_day" && (bookingSlot === "morning" || bookingSlot === "afternoon" || bookingSlot === "unlimited"))
+    return true;
+  if (
+    cellSlot === "unlimited" &&
+    (bookingSlot === "morning" || bookingSlot === "afternoon" || bookingSlot === "evening" || bookingSlot === "full_day")
+  )
+    return true;
+  return false;
+}
+
+export interface AdminSlotInfo {
+  available: number;
+  booked: number;
+  booking: { id: string; customer: string; status: string } | null;
+}
+
+export interface AdminResource {
+  space_id: string;
+  space_name: string;
+  space_type: string;
+  total_inventory: number;
+  slots: Record<string, AdminSlotInfo>;
+}
+
+// Doc §4.2 GET /api/admin/availability response shape.
+export async function getAdminAvailabilityForDate(
+  supabase: SupabaseClient<Database>,
+  date: string
+): Promise<AdminResource[]> {
+  const { data: spaces } = await supabase
+    .from("spaces")
+    .select("id, name, type, total_inventory")
+    .eq("is_active", true)
+    .order("type");
+
+  if (!spaces) return [];
+
+  return Promise.all(
+    spaces.map(async (space) => {
+      const slotKeys = slotKeysForSpaceType(space.type);
+
+      const [availabilityRows, { data: bookings }] = await Promise.all([
+        Promise.all(
+          slotKeys.map((slot) =>
+            supabase
+              .rpc("check_availability", {
+                p_space_id: space.id,
+                p_date: date,
+                p_slot: slot as Database["public"]["Enums"]["time_slot"],
+              })
+              .then(({ data }) => ({ slot, row: data?.[0] ?? null }))
+          )
+        ),
+        supabase
+          .from("bookings")
+          .select("id, time_slot, status, guest_name, users!bookings_user_id_fkey ( full_name )")
+          .eq("space_id", space.id)
+          .eq("booking_date", date)
+          .in("status", ["pending_payment", "confirmed", "checked_in"]),
+      ]);
+
+      const slots: Record<string, AdminSlotInfo> = {};
+      for (const { slot, row } of availabilityRows) {
+        const matchingBooking = (bookings ?? []).find((b) => slotOverlaps(b.time_slot, slot));
+        slots[slot] = {
+          available: row ? row.total_inventory - row.booked_count : space.total_inventory,
+          booked: row?.booked_count ?? 0,
+          booking: matchingBooking
+            ? {
+                id: matchingBooking.id,
+                customer: matchingBooking.guest_name ?? matchingBooking.users?.full_name ?? "Customer",
+                status: matchingBooking.status ?? "pending_payment",
+              }
+            : null,
+        };
+      }
+
+      return {
+        space_id: space.id,
+        space_name: space.name,
+        space_type: space.type,
+        total_inventory: space.total_inventory,
+        slots,
+      };
+    })
+  );
+}
