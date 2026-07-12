@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { formatLKR } from "@/lib/utils";
 import { durationLabel } from "@/lib/spaces";
+import { redirectToPayhereCheckout } from "@/lib/payhere/redirect";
 import type { AddonDTO, SpaceDTO, SpacePricingDTO } from "@/lib/types/domain";
 
 const SLOT_LABELS: Record<string, string> = {
@@ -89,7 +90,27 @@ export function CheckoutForm({
         return;
       }
 
-      router.push(`/booking/success?id=${data.booking.id}`);
+      const bookingId = data.booking.id as string;
+
+      if (paymentMethod === "payhere") {
+        const initiateRes = await fetch("/api/payments/payhere/initiate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ bookingId }),
+        });
+        const initiateData = await initiateRes.json();
+
+        if (!initiateRes.ok) {
+          toast.error(initiateData.error ?? "Could not start PayHere payment");
+          router.push(`/booking/success?id=${bookingId}`);
+          return;
+        }
+
+        redirectToPayhereCheckout(initiateData.payhere_url, initiateData.form_data);
+        return;
+      }
+
+      router.push(`/booking/success?id=${bookingId}`);
     } finally {
       setSubmitting(false);
     }
@@ -174,9 +195,9 @@ export function CheckoutForm({
               <RadioGroupItem value="qr_transfer" id="qr_transfer" />
               QR / Bank Transfer
             </label>
-            <label className="flex items-center gap-2 rounded-md border p-3 text-sm opacity-50">
-              <RadioGroupItem value="payhere" id="payhere" disabled />
-              Card / PayHere (coming soon)
+            <label className="flex items-center gap-2 rounded-md border p-3 text-sm">
+              <RadioGroupItem value="payhere" id="payhere" />
+              Card / PayHere
             </label>
           </RadioGroup>
         </section>
