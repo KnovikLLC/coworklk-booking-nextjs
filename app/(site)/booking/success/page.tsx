@@ -4,6 +4,7 @@ import { getAuthorizedBookingSummary } from "@/lib/data/bookings";
 import { formatLKR } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { BANK_DETAILS } from "@/lib/payhere/config";
+import { ConvertGuestPrompt } from "@/components/auth/ConvertGuestPrompt";
 
 export const metadata = { title: "Booking Confirmed | Cowork.lk" };
 
@@ -88,6 +89,10 @@ export default async function BookingSuccessPage({
               </dl>
             </div>
           </div>
+        ) : null}
+
+        {!user && summary.guest_email ? (
+          <ConvertGuestPrompt email={summary.guest_email} bookingId={summary.id} />
         ) : null}
       </div>
     </main>

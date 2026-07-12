@@ -18,3 +18,10 @@ export const forgotPasswordSchema = z.object({
   email: z.string().email("Enter a valid email address"),
 });
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+
+export const convertGuestSchema = z.object({
+  email: z.string().email("Enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  bookingId: z.string().uuid().optional(),
+});
+export type ConvertGuestInput = z.infer<typeof convertGuestSchema>;
