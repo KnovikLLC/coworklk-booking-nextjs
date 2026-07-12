@@ -1,4 +1,12 @@
 -- Doc: docs/cowork-booking-architecture.md §3.3 `check_availability` (lines 610-655)
+--
+-- Deviation from doc: made SECURITY DEFINER. The doc's version runs as
+-- whatever role calls it (plain LANGUAGE plpgsql, no SECURITY DEFINER), but
+-- guests checking availability call this as `anon`, which correctly has no
+-- SELECT grant on `bookings` (it holds guest PII). Without SECURITY DEFINER
+-- the internal COUNT(*) query fails with "permission denied for table
+-- bookings". SECURITY DEFINER is safe here since the function only ever
+-- returns an aggregate count/boolean, never booking rows.
 
 CREATE OR REPLACE FUNCTION check_availability(
   p_space_id UUID,
@@ -40,4 +48,4 @@ BEGIN
     v_booked_count AS booked_count,
     v_total_inventory AS total_inventory;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
