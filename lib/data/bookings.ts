@@ -68,3 +68,36 @@ export async function getAuthorizedBookingSummary(
 
   return { summary: toSummary(row) };
 }
+
+// /profile/bookings history list — uses the caller's own RLS-scoped client
+// (not the admin client) since "own bookings" is exactly what the
+// `Users can view own bookings` policy already grants.
+export async function getUserBookings(
+  supabase: SupabaseClient<Database>,
+  userId: string
+): Promise<BookingSummaryDTO[]> {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select(
+      "id, booking_number, booking_date, time_slot, base_amount, addons_amount, discount_amount, discount_reason, total_amount, status, guest_email, spaces ( name )"
+    )
+    .eq("user_id", userId)
+    .order("booking_date", { ascending: false });
+
+  if (error || !data) return [];
+
+  return data.map((row) => ({
+    id: row.id,
+    booking_number: row.booking_number,
+    space_name: row.spaces?.name ?? "Space",
+    booking_date: row.booking_date,
+    time_slot: row.time_slot,
+    base_amount: Number(row.base_amount),
+    addons_amount: Number(row.addons_amount),
+    discount_amount: Number(row.discount_amount),
+    discount_reason: row.discount_reason,
+    total_amount: Number(row.total_amount),
+    status: row.status ?? "pending_payment",
+    guest_email: row.guest_email,
+  }));
+}

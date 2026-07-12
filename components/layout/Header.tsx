@@ -7,7 +7,7 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function Header() {
+export function Header({ isSignedIn = false }: { isSignedIn?: boolean }) {
   return (
     <header className="sticky top-0 z-40 border-b bg-white">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
@@ -27,10 +27,10 @@ export function Header() {
         </nav>
         <div className="flex items-center gap-3">
           <Link
-            href="/login"
+            href={isSignedIn ? "/profile" : "/login"}
             className="hidden text-sm font-medium text-brand-dark hover:text-brand sm:inline"
           >
-            Sign In
+            {isSignedIn ? "My Account" : "Sign In"}
           </Link>
           <Link
             href="/booking"
