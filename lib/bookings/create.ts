@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/types/database.types";
 import { computeBookingTotals } from "@/lib/bookings/pricing";
 import { SLOT_TIMES } from "@/lib/bookings/slot-times";
+import { checkMemberDiscount } from "@/lib/pricing/discount";
 
 export class BookingError extends Error {
   constructor(
@@ -27,9 +28,6 @@ export interface CreateBookingParams {
   createdBy?: string | null;
   /** Admin walk-ins with payment already received skip pending_payment. */
   markConfirmed?: boolean;
-  /** Wired in by the loyalty-discount milestone; 0 until then. */
-  discountPercent?: number;
-  discountReason?: string | null;
 }
 
 export interface CreatedBooking {
@@ -105,10 +103,21 @@ export async function createBooking(
     }));
   }
 
+  // Doc §8.3: guest bookings never get a discount; checkMemberDiscount
+  // already short-circuits to ineligible when userId is null, but the
+  // pricing.price lookup only exists here, so the discount check happens
+  // here rather than being pre-computed by the caller.
+  const discount = await checkMemberDiscount(
+    supabase,
+    params.userId ?? null,
+    params.guestEmail ?? null,
+    Number(pricing.price)
+  );
+
   const totals = computeBookingTotals(
     Number(pricing.price),
     addonLines.map((l) => ({ unitPrice: l.unitPrice, quantity: l.quantity })),
-    params.discountPercent ?? 0
+    discount.discount_percent
   );
 
   let guestProfileId: string | null = null;
@@ -153,7 +162,7 @@ export async function createBooking(
       addons_amount: totals.addons_amount,
       discount_percent: totals.discount_percent,
       discount_amount: totals.discount_amount,
-      discount_reason: params.discountReason ?? null,
+      discount_reason: discount.eligible ? discount.reason : null,
       total_amount: totals.total_amount,
       status: params.markConfirmed ? "confirmed" : "pending_payment",
       payment_reference: null,

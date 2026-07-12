@@ -30,6 +30,7 @@ export function CheckoutForm({
   slot,
   addons,
   userEmail,
+  discount,
 }: {
   space: SpaceDTO;
   pricing: SpacePricingDTO;
@@ -37,6 +38,7 @@ export function CheckoutForm({
   slot: string;
   addons: AddonDTO[];
   userEmail: string | null;
+  discount: { percent: number; amount: number; reason: string | null } | null;
 }) {
   const router = useRouter();
   const [selectedAddonIds, setSelectedAddonIds] = useState<Set<string>>(new Set());
@@ -51,7 +53,8 @@ export function CheckoutForm({
     [addons, selectedAddonIds]
   );
   const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price, 0);
-  const total = pricing.price + addonsTotal;
+  const discountAmount = discount?.amount ?? 0;
+  const total = pricing.price - discountAmount + addonsTotal;
 
   function toggleAddon(id: string) {
     setSelectedAddonIds((prev) => {
@@ -219,6 +222,12 @@ export function CheckoutForm({
               <dt className="text-muted-foreground">{durationLabel(pricing.duration)}</dt>
               <dd>{formatLKR(pricing.price)}</dd>
             </div>
+            {discount ? (
+              <div className="flex justify-between text-emerald-600">
+                <dt>Member discount ({discount.percent}%)</dt>
+                <dd>-{formatLKR(discount.amount)}</dd>
+              </div>
+            ) : null}
             {selectedAddons.map((a) => (
               <div key={a.id} className="flex justify-between">
                 <dt className="text-muted-foreground">{a.name}</dt>
@@ -226,6 +235,11 @@ export function CheckoutForm({
               </div>
             ))}
           </dl>
+          {discount ? (
+            <p className="mt-2 rounded-md bg-emerald-50 p-2 text-xs text-emerald-700">
+              🎁 You have a 10% member discount applied on this booking.
+            </p>
+          ) : null}
           <div className="mt-3 flex justify-between border-t pt-3 font-semibold text-brand-dark">
             <span>Total</span>
             <span>{formatLKR(total)}</span>
