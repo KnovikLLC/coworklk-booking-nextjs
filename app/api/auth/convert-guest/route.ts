@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { convertGuestSchema } from "@/lib/validation/auth.schema";
+import { createOrUpdateZohoContact } from "@/lib/zoho/customers";
+import { ZohoNotConfiguredError } from "@/lib/zoho/client";
 
 // Doc §8.6 lines 1829-1893, adapted:
 // - Uses lib/supabase/server's cookie-aware client for signUp() so the
@@ -12,8 +14,8 @@ import { convertGuestSchema } from "@/lib/validation/auth.schema";
 //   handle_new_user trigger already created that row. UPDATEs it instead
 //   with the guest profile's details plus membership fields, or the doc's
 //   version would fail on a duplicate primary key.
-// - createOrUpdateZohoContact is wired in by the Zoho milestone; wrapped
-//   there so a missing/failed Zoho call never blocks account creation.
+// - createOrUpdateZohoContact is wrapped in try/catch below so a missing/
+//   failed Zoho call never blocks account creation.
 export async function POST(request: NextRequest) {
   const parsed = convertGuestSchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
@@ -74,7 +76,13 @@ export async function POST(request: NextRequest) {
       .eq("id", guestProfile.id);
   }
 
-  // TODO(zoho-milestone): createOrUpdateZohoContact(email, guestProfile?.full_name, guestProfile?.phone) — wrapped, non-blocking.
+  try {
+    await createOrUpdateZohoContact(email, guestProfile?.full_name, guestProfile?.phone);
+  } catch (error) {
+    if (!(error instanceof ZohoNotConfiguredError)) {
+      console.error(`[zoho] contact sync failed for ${email}`, error);
+    }
+  }
 
   return NextResponse.json({
     success: true,

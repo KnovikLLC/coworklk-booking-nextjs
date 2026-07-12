@@ -3,6 +3,7 @@ import { z } from "zod";
 import { requireStaff } from "@/lib/auth/require-staff";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { markBookingPaid } from "@/lib/bookings/payments";
+import { createBookingInvoice } from "@/lib/zoho/create-booking-invoice";
 
 const confirmQrSchema = z.object({
   booking_id: z.string().uuid(),
@@ -43,6 +44,8 @@ export async function POST(request: NextRequest) {
     qrConfirmedBy: staff.user.id,
     qrConfirmationNote: parsed.data.note ?? null,
   });
+
+  await createBookingInvoice(admin, booking.id);
 
   return NextResponse.json({ success: true });
 }

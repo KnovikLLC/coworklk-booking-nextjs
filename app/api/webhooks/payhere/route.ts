@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { generatePayhereNotifyHash } from "@/lib/payhere/hash";
 import { markBookingPaid } from "@/lib/bookings/payments";
+import { createBookingInvoice } from "@/lib/zoho/create-booking-invoice";
 
 // Doc §6.1 lines 1498-1541, adapted: looks the booking up by booking_number
 // (order_id) via the admin client, and uses markBookingPaid instead of an
-// undefined confirmBookingPayment. Zoho invoice creation and the
-// confirmation email are wired in by their own milestones (both wrapped so
-// a missing/failed integration never blocks the payment confirmation
-// itself — see lib/zoho/client.ts's graceful-degradation pattern).
+// undefined confirmBookingPayment. createBookingInvoice never throws (see
+// its own comment) so a Zoho outage can't turn a successful payment into a
+// failed webhook. The confirmation email is wired in by its own milestone.
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
 
@@ -54,7 +54,8 @@ export async function POST(request: NextRequest) {
       ),
     });
 
-    // TODO(zoho-milestone): createZohoInvoice(booking) — wrapped, non-blocking.
+    await createBookingInvoice(admin, booking.id);
+
     // TODO(email-milestone): sendBookingConfirmationEmail(booking) — wrapped, non-blocking.
   }
 
