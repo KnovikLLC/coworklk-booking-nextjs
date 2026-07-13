@@ -48,7 +48,7 @@ export default function ContactPage() {
           {/* Contact Form */}
           <div className="rounded-lg border bg-white p-6 shadow-sm">
             <h2 className="text-xl font-semibold text-brand-dark mb-4">Send a Message</h2>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4">
               <div>
                 <Label htmlFor="name">Name</Label>
                 <Input id="name" placeholder="John Doe" />
