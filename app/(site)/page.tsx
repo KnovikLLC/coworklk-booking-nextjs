@@ -119,7 +119,7 @@ export default function HomePage() {
             {/* Overlay badge representation */}
             <div className="absolute bottom-6 left-6 z-20 bg-white/90 backdrop-blur rounded-xl p-4 shadow-sm border border-white max-w-xs">
               <p className="text-[10px] uppercase font-extrabold tracking-wider text-brand">Vibrant Community</p>
-              <p className="text-xs font-bold text-brand-dark mt-1">Networking and events happen every week.</p>
+              <p className="text-xs font-bold text-brand-dark mt-1">Networking and events happen every month.</p>
             </div>
           </div>
 

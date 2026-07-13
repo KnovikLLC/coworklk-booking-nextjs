@@ -11,7 +11,7 @@ const CONNECTED_COMMUNITIES = [
     name: "Online Entrepreneurs Club",
     description:
       "A thriving network of digital entrepreneurs sharing strategies, insights, and opportunities to grow online businesses.",
-    members: "500+",
+    members: "200,000+",
     icon: "🚀",
   },
   {
@@ -266,7 +266,7 @@ export default function CommunityPage() {
               Ready to Join?
             </span>
             <h3 className="text-2xl font-bold tracking-tight text-brand-dark">
-              Don&apos;t Miss Out — Join 2,000+ Members Today
+              Don&apos;t Miss Out — Join Cowork Sri Lanka Community Today
             </h3>
             <p className="text-sm text-brand-dark/65 max-w-xl leading-relaxed">
               Our WhatsApp community is free, active, and full of real
