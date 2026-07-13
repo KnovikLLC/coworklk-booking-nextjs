@@ -10,7 +10,7 @@ type NavLink = {
 const NAV_LINKS: NavLink[] = [
   { href: "/booking", label: "Booking" },
   { href: "/about", label: "About" },
-  { href: "https://chat.whatsapp.com/FUHL35hZvOs35O4oeyexpa", label: "Community", external: true },
+  { href: "/community", label: "Community" },
   { href: "/events", label: "Events" },
   { href: "/contact", label: "Contact" },
 ];
