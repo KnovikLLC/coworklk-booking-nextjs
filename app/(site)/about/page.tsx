@@ -44,6 +44,16 @@ export default function AboutPage() {
           </p>
         </div>
 
+        <div className="mt-12 rounded-lg bg-brand-dark/5 p-6 border border-brand/10">
+          <h2 className="text-xl font-semibold text-brand-dark mb-3">Our Story</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            The story of Cowork.lk began when our three co-founders met in the Sri Lankan <strong>Online Entrepreneurs Club</strong>. As independent freelancers and remote developers, they experienced firsthand the isolation and daily hassles of working alone from home. Recognizing the need for a collaborative space, they joined forces to build a vibrant community hub.
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed mt-3">
+            To empower local freelancers, digital creators, and small teams, Cowork.lk offers premium workspace infrastructure at minimal, community-first prices. Our ultimate vision is to build a thriving, collaborative tech ecosystem in Sri Lanka, enabling more local professionals to export high-value IT services and bring valuable foreign currency into the country.
+          </p>
+        </div>
+
         <div className="mt-12">
           <h2 className="text-xl font-semibold text-brand-dark mb-4">Our Founders</h2>
           <div className="grid gap-6 sm:grid-cols-3">
