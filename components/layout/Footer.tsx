@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export function Footer() {
   return (
@@ -8,11 +7,9 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-12">
           {/* Brand Info */}
           <div className="space-y-4 lg:col-span-5">
-            <Image
+            <img
               src="/images/logos/cowork-logo.svg"
               alt="Cowork.lk"
-              width={140}
-              height={26}
               className="h-[26px] w-auto"
             />
             <p className="text-sm leading-relaxed text-brand-dark/70">

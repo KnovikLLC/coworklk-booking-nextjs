@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 const NAV_LINKS = [
   { href: "/booking", label: "Booking" },
@@ -15,13 +14,10 @@ export function Header({ isSignedIn = false }: { isSignedIn?: boolean }) {
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <Image
+          <img
             src="/images/logos/cowork-logo.svg"
             alt="Cowork.lk"
-            width={140}
-            height={26}
             className="h-[26px] w-auto"
-            priority
           />
         </Link>
 
