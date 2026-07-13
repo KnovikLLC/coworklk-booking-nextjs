@@ -81,8 +81,29 @@ export function Footer() {
       {/* Dark Sub-footer */}
       <div className="bg-brand-dark text-white/60 py-6 border-t border-white/5">
         <div className="mx-auto max-w-6xl px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-semibold">
-          <div>
-            © {new Date().getFullYear()} Cowork Lanka (Private) Limited. All Rights Reserved
+          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+            <span>© {new Date().getFullYear()} Cowork Lanka (Private) Limited. All Rights Reserved</span>
+            <span className="hidden md:inline text-white/20">|</span>
+            <span>
+              Designed by{" "}
+              <a
+                href="https://www.charithdesign.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-brand hover:underline transition-colors"
+              >
+                Charith Design
+              </a>{" "}
+              &amp; Developed by{" "}
+              <a
+                href="https://knovik.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-brand hover:underline transition-colors"
+              >
+                Knovik
+              </a>
+            </span>
           </div>
           <div className="flex gap-6">
             <Link href="/terms" className="hover:text-white transition-colors">Terms &amp; Conditions</Link>

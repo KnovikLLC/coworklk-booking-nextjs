@@ -11,6 +11,7 @@ export const metadata = {
     description:
       "Join the Cowork community — connect with entrepreneurs, developers, freelancers, and professionals across Sri Lanka. Exclusive discounts, hiring opportunities, and partner perks.",
     url: "/community",
+    images: ["/opengraph-image"],
   },
 };
 

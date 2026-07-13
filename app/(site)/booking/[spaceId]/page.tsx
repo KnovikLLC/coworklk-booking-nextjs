@@ -26,7 +26,13 @@ export async function generateMetadata({
     title,
     description,
     alternates: { canonical: `/booking/${space.id}` },
-    openGraph: { siteName: "Cowork.lk", title, description, url: `/booking/${space.id}` },
+    openGraph: {
+      siteName: "Cowork.lk",
+      title,
+      description,
+      url: `/booking/${space.id}`,
+      images: [space.image_url || "/opengraph-image"],
+    },
   };
 }
 

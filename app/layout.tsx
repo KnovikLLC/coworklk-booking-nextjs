@@ -12,10 +12,9 @@ const DEFAULT_DESCRIPTION =
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: "Cowork.lk | Coworking Space in Pannipitiya, Sri Lanka",
-    template: `%s | ${SITE_NAME}`,
-  },
+  // Every page in this app already bakes "| Cowork.lk" into its own title
+  // string, so no title.template here — it would double up the suffix.
+  title: "Cowork.lk | Coworking Space in Pannipitiya, Sri Lanka",
   description: DEFAULT_DESCRIPTION,
   keywords: [
     "coworking space Sri Lanka",
@@ -55,7 +54,7 @@ const localBusinessJsonLd = {
   image: `${SITE_URL}/opengraph-image`,
   telephone: "+94774884040",
   email: "hello@cowork.lk",
-  priceRange: "LKR 699 - LKR 4990",
+  priceRange: "LKR 490 - LKR 6750",
   address: {
     "@type": "PostalAddress",
     streetAddress: "279 Avissawella Road",

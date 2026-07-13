@@ -12,6 +12,7 @@ export const metadata = {
     title: "Contact Us | Cowork.lk",
     description: "Get in touch with Cowork Lanka. Send us a message, find our phone number, email address, and Google Map location.",
     url: "/contact",
+    images: ["/opengraph-image"],
   },
 };
 

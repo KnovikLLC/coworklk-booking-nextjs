@@ -40,6 +40,7 @@ export const metadata = {
     description:
       "Discover hot desks, dedicated workspaces, and fully-equipped meeting rooms at Cowork Lanka (Pannipitiya). Book online with real-time availability.",
     url: "/",
+    images: ["/opengraph-image"],
   },
 };
 

@@ -11,6 +11,7 @@ export const metadata = {
     description:
       "Explore past and upcoming events at Cowork.lk — from member celebrations to creative recording sessions, our community is always buzzing.",
     url: "/events",
+    images: ["/opengraph-image"],
   },
 };
 

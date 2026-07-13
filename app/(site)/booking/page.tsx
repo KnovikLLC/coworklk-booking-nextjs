@@ -12,6 +12,7 @@ export const metadata = {
     title: "Book a Space | Cowork.lk",
     description: "Browse premium coworking hot desks, dedicated workspaces, and meeting rooms. Book online instantly.",
     url: "/booking",
+    images: ["/opengraph-image"],
   },
 };
 

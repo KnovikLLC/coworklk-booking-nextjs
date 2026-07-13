@@ -7,6 +7,7 @@ export const metadata = {
     title: "About Us | Cowork.lk",
     description: "Learn more about Cowork Lanka (Pvt) Ltd, our story, mission, and the premium coworking workspace we provide in Pannipitiya.",
     url: "/about",
+    images: ["/opengraph-image"],
   },
 };
 
@@ -41,6 +42,48 @@ export default function AboutPage() {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Our central location at 279 Avissawella Road, Pannipitiya, offers excellent accessibility. The facility features a backup power generator (ensuring 100% uptime during load shedding), dedicated clean washrooms, comfortable breakout zones, and safe on-premise parking.
           </p>
+        </div>
+
+        <div className="mt-12">
+          <h2 className="text-xl font-semibold text-brand-dark mb-4">Our Founders</h2>
+          <div className="grid gap-6 sm:grid-cols-3">
+            <div className="rounded-xl border bg-white p-5 shadow-sm text-center">
+              <h3 className="font-bold text-brand-dark text-base">Charith</h3>
+              <p className="text-xs text-muted-foreground mt-1 mb-3">Co-Founder &amp; Designer</p>
+              <a
+                href="https://www.charithdesign.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-xs font-bold text-brand hover:underline"
+              >
+                Charith Design
+              </a>
+            </div>
+            <div className="rounded-xl border bg-white p-5 shadow-sm text-center">
+              <h3 className="font-bold text-brand-dark text-base">Madusanka Premaratne</h3>
+              <p className="text-xs text-muted-foreground mt-1 mb-3">Co-Founder</p>
+              <a
+                href="https://madusankapremaratne.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-xs font-bold text-brand hover:underline"
+              >
+                madusankapremaratne.com
+              </a>
+            </div>
+            <div className="rounded-xl border bg-white p-5 shadow-sm text-center">
+              <h3 className="font-bold text-brand-dark text-base">Amila Gunawardhana</h3>
+              <p className="text-xs text-muted-foreground mt-1 mb-3">Co-Founder</p>
+              <a
+                href="https://amilagunawardhana.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-xs font-bold text-brand hover:underline"
+              >
+                amilagunawardhana.com
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </main>
