@@ -14,10 +14,22 @@ import { buildBookableOptions, type BookableOption } from "@/lib/bookings/slot-o
 import { formatLKR } from "@/lib/utils";
 import type { AddonDTO, AvailabilityResponse, SpaceDTO } from "@/lib/types/domain";
 
+import { useSearchParams } from "next/navigation";
+
 export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addons: AddonDTO[] }) {
   const router = useRouter();
-  const [spaceId, setSpaceId] = useState(spaces[0]?.id ?? "");
-  const [date, setDate] = useState(() => format(new Date(), "yyyy-MM-dd"));
+  const searchParams = useSearchParams();
+  const paramSpaceId = searchParams.get("space_id");
+  const paramDate = searchParams.get("date");
+
+  const [spaceId, setSpaceId] = useState(() => {
+    if (paramSpaceId && spaces.some((s) => s.id === paramSpaceId)) {
+      return paramSpaceId;
+    }
+    return spaces[0]?.id ?? "";
+  });
+  const [date, setDate] = useState(() => paramDate ?? format(new Date(), "yyyy-MM-dd"));
+
   const [availability, setAvailability] = useState<AvailabilityResponse | null>(null);
   const [selectedOption, setSelectedOption] = useState<BookableOption | null>(null);
   const [selectedAddonIds, setSelectedAddonIds] = useState<Set<string>>(new Set());

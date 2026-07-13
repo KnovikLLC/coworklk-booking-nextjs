@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/lib/types/database.types";
+import { sendBookingConfirmationEmail } from "@/lib/email/resend";
 
 export interface MarkBookingPaidParams {
   bookingId: string;
@@ -43,5 +44,12 @@ export async function markBookingPaid(
 
   if (paymentError) {
     throw new Error(paymentError.message);
+  }
+
+  // Trigger confirmation email, degrading gracefully if Resend fails or is unconfigured
+  try {
+    await sendBookingConfirmationEmail(params.bookingId);
+  } catch (emailError) {
+    console.error("[Email Sync] Booking confirmation email failed to send:", emailError);
   }
 }

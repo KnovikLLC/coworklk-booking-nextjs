@@ -28,6 +28,8 @@ const STATUS_VARIANT: Record<string, "default" | "secondary" | "destructive" | "
   expired: "outline",
 };
 
+import { toast } from "sonner";
+
 // Doc §10.4 mockup.
 export function BookingList() {
   const [dateFilter, setDateFilter] = useState("");
@@ -36,6 +38,7 @@ export function BookingList() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0);
   const limit = 20;
 
   useEffect(() => {
@@ -51,7 +54,48 @@ export function BookingList() {
         setTotal(data.total ?? 0);
       })
       .finally(() => setLoading(false));
-  }, [dateFilter, statusFilter, page]);
+  }, [dateFilter, statusFilter, page, refreshKey]);
+
+  async function updateStatus(id: string, newStatus: string) {
+    try {
+      const res = await fetch(`/api/admin/bookings/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Failed to update status");
+        return;
+      }
+      toast.success(`Booking status updated to ${newStatus.replace("_", " ")}`);
+      setRefreshKey((k) => k + 1);
+    } catch {
+      toast.error("An error occurred while updating status");
+    }
+  }
+
+  async function confirmQr(id: string) {
+    const note = window.prompt("Enter optional QR/bank confirmation note:");
+    if (note === null) return; // User cancelled prompt
+    try {
+      const res = await fetch(`/api/admin/payments/confirm-qr`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ booking_id: id, note }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Failed to confirm payment");
+        return;
+      }
+      toast.success("QR/Bank payment confirmed");
+      setRefreshKey((k) => k + 1);
+    } catch {
+      toast.error("An error occurred while confirming payment");
+    }
+  }
+
 
   return (
     <div className="rounded-lg border bg-white p-4">
@@ -111,6 +155,7 @@ export function BookingList() {
               <TableHead>Slot</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -124,6 +169,33 @@ export function BookingList() {
                 <TableCell>{formatLKR(b.total_amount)}</TableCell>
                 <TableCell>
                   <Badge variant={STATUS_VARIANT[b.status] ?? "outline"}>{b.status.replace("_", " ")}</Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-1.5">
+                    {b.status === "pending_payment" && (
+                      <Button size="sm" variant="outline" onClick={() => confirmQr(b.id)}>
+                        Confirm QR
+                      </Button>
+                    )}
+                    {b.status === "confirmed" && (
+                      <>
+                        <Button size="sm" variant="default" className="bg-brand hover:bg-brand/90" onClick={() => updateStatus(b.id, "checked_in")}>
+                          Check-in
+                        </Button>
+                        <Button size="sm" variant="destructive" onClick={() => updateStatus(b.id, "no_show")}>
+                          No Show
+                        </Button>
+                      </>
+                    )}
+                    {b.status === "checked_in" && (
+                      <Button size="sm" variant="outline" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50" onClick={() => updateStatus(b.id, "completed")}>
+                        Complete
+                      </Button>
+                    )}
+                    {!["pending_payment", "confirmed", "checked_in"].includes(b.status) && (
+                      <span className="text-xs text-muted-foreground">-</span>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
