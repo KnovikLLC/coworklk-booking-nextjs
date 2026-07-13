@@ -109,6 +109,7 @@ export type Database = {
       bookings: {
         Row: {
           addons_amount: number | null
+          agent_name: string | null
           base_amount: number
           booking_date: string
           booking_number: string
@@ -142,6 +143,7 @@ export type Database = {
         }
         Insert: {
           addons_amount?: number | null
+          agent_name?: string | null
           base_amount: number
           booking_date: string
           booking_number: string
@@ -175,6 +177,7 @@ export type Database = {
         }
         Update: {
           addons_amount?: number | null
+          agent_name?: string | null
           base_amount?: number
           booking_date?: string
           booking_number?: string
@@ -635,7 +638,7 @@ export type Database = {
         | "no_show"
         | "expired"
       booking_type: "member" | "guest"
-      payment_method: "payhere" | "qr_transfer" | "cash" | "card_terminal"
+      payment_method: "payhere" | "qr_transfer" | "cash" | "card_terminal" | "stripe"
       payment_status:
         | "pending"
         | "processing"
@@ -793,7 +796,7 @@ export const Constants = {
         "expired",
       ],
       booking_type: ["member", "guest"],
-      payment_method: ["payhere", "qr_transfer", "cash", "card_terminal"],
+      payment_method: ["payhere", "qr_transfer", "cash", "card_terminal", "stripe"],
       payment_status: [
         "pending",
         "processing",

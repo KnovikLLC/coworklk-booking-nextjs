@@ -28,6 +28,9 @@ export interface CreateBookingParams {
   createdBy?: string | null;
   /** Admin walk-ins with payment already received skip pending_payment. */
   markConfirmed?: boolean;
+  /** Cowork Admin Assist: free-text accountability field, not a users.id FK
+   *  (shared-device/shared-API-key trust model, no per-agent login). */
+  agentName?: string;
 }
 
 export interface CreatedBooking {
@@ -168,6 +171,7 @@ export async function createBooking(
       payment_reference: null,
       notes: params.notes ?? null,
       created_by: params.createdBy ?? null,
+      agent_name: params.agentName ?? null,
     })
     .select("id, booking_number, total_amount, status")
     .single();

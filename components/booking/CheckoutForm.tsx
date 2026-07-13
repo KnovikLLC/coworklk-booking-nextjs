@@ -10,7 +10,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { formatLKR } from "@/lib/utils";
 import { durationLabel } from "@/lib/spaces";
-import { redirectToPayhereCheckout } from "@/lib/payhere/redirect";
 import type { AddonDTO, SpaceDTO, SpacePricingDTO } from "@/lib/types/domain";
 
 const SLOT_LABELS: Record<string, string> = {
@@ -45,7 +44,7 @@ export function CheckoutForm({
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"qr_transfer" | "payhere">("qr_transfer");
+  const [paymentMethod, setPaymentMethod] = useState<"qr_transfer" | "stripe" | "payhere">("qr_transfer");
   const [submitting, setSubmitting] = useState(false);
 
   const selectedAddons = useMemo(
@@ -95,8 +94,8 @@ export function CheckoutForm({
 
       const bookingId = data.booking.id as string;
 
-      if (paymentMethod === "payhere") {
-        const initiateRes = await fetch("/api/payments/payhere/initiate", {
+      if (paymentMethod === "stripe") {
+        const initiateRes = await fetch("/api/payments/stripe/initiate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ bookingId }),
@@ -104,12 +103,12 @@ export function CheckoutForm({
         const initiateData = await initiateRes.json();
 
         if (!initiateRes.ok) {
-          toast.error(initiateData.error ?? "Could not start PayHere payment");
+          toast.error(initiateData.error ?? "Could not start Stripe payment");
           router.push(`/booking/success?id=${bookingId}`);
           return;
         }
 
-        redirectToPayhereCheckout(initiateData.payhere_url, initiateData.form_data);
+        window.location.href = initiateData.url;
         return;
       }
 
@@ -194,13 +193,20 @@ export function CheckoutForm({
             onValueChange={(v) => setPaymentMethod(v as typeof paymentMethod)}
             className="mt-3 space-y-2"
           >
-            <label className="flex items-center gap-2 rounded-md border p-3 text-sm">
+            <label className="flex cursor-pointer items-center gap-2 rounded-md border p-3 text-sm hover:bg-slate-50 transition-colors">
               <RadioGroupItem value="qr_transfer" id="qr_transfer" />
               QR / Bank Transfer
             </label>
-            <label className="flex items-center gap-2 rounded-md border p-3 text-sm">
-              <RadioGroupItem value="payhere" id="payhere" />
-              Card / PayHere
+            <label className="flex cursor-pointer items-center gap-2 rounded-md border p-3 text-sm hover:bg-slate-50 transition-colors">
+              <RadioGroupItem value="stripe" id="stripe" />
+              Card Payment (Stripe)
+            </label>
+            <label className="flex items-start gap-2 rounded-md border p-3 text-sm opacity-60 cursor-not-allowed bg-slate-50">
+              <RadioGroupItem value="payhere" id="payhere" disabled />
+              <div className="flex flex-col">
+                <span className="font-medium text-slate-500">Card / PayHere</span>
+                <span className="text-xs text-amber-600 font-medium mt-0.5">Not ready yet - coming soon</span>
+              </div>
             </label>
           </RadioGroup>
         </section>

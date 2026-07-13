@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { generatePayhereHash } from "@/lib/payhere/hash";
+import { buildPayhereCheckout } from "@/lib/payhere/build-checkout";
 
 // Doc §6.1 lines 1451-1494, adapted: fetches the booking (+ customer contact
 // info, from either the guest fields or the linked user row) via the admin
-// client instead of an undefined getBookingById, and builds the sandbox/live
-// URL from PAYHERE_MODE.
+// client instead of an undefined getBookingById. Hash/form-data building
+// itself lives in lib/payhere/build-checkout.ts, shared with the public
+// /pay/[bookingId] page.
 export async function POST(request: NextRequest) {
   const { bookingId } = await request.json().catch(() => ({}));
   if (!bookingId) {
@@ -28,45 +29,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Booking is not awaiting payment" }, { status: 409 });
   }
 
-  const name = booking.guest_name ?? booking.users?.full_name ?? "Customer";
-  const email = booking.guest_email ?? booking.users?.email ?? "";
-  const phone = booking.guest_phone ?? booking.users?.phone ?? "";
-  const [firstName, ...rest] = name.split(" ");
+  const checkout = buildPayhereCheckout({
+    id: booking.id,
+    booking_number: booking.booking_number,
+    total_amount: booking.total_amount,
+    guest_name: booking.guest_name,
+    guest_email: booking.guest_email,
+    guest_phone: booking.guest_phone,
+    space_name: booking.spaces?.name ?? null,
+    user_full_name: booking.users?.full_name,
+    user_email: booking.users?.email,
+    user_phone: booking.users?.phone,
+  });
 
-  const merchantId = process.env.PAYHERE_MERCHANT_ID;
-  const merchantSecret = process.env.PAYHERE_MERCHANT_SECRET;
-  if (!merchantId || !merchantSecret) {
+  if ("notConfigured" in checkout) {
     return NextResponse.json(
       { error: "PayHere is not configured. Use QR / bank transfer instead." },
       { status: 503 }
     );
   }
 
-  const amount = Number(booking.total_amount);
-  const paymentData = {
-    merchant_id: merchantId,
-    return_url: `${process.env.NEXT_PUBLIC_URL}/booking/success?id=${booking.id}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_URL}/booking/cancel?id=${booking.id}`,
-    notify_url: `${process.env.NEXT_PUBLIC_URL}/api/webhooks/payhere`,
-    order_id: booking.booking_number,
-    items: booking.spaces?.name ?? "Cowork.lk Booking",
-    currency: "LKR",
-    amount,
-    first_name: firstName || "Customer",
-    last_name: rest.join(" ") || "-",
-    email,
-    phone,
-    address: "N/A",
-    city: "Colombo",
-    country: "Sri Lanka",
-    hash: generatePayhereHash(merchantId, booking.booking_number, amount, "LKR", merchantSecret),
-  };
-
-  return NextResponse.json({
-    payhere_url:
-      process.env.PAYHERE_MODE === "live"
-        ? "https://www.payhere.lk/pay/checkout"
-        : "https://sandbox.payhere.lk/pay/checkout",
-    form_data: paymentData,
-  });
+  return NextResponse.json(checkout);
 }

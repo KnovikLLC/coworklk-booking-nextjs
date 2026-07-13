@@ -4,17 +4,30 @@ import { findOrCreateCustomer } from "@/lib/zoho/customers";
 import { createInvoice, type InvoiceLineItem } from "@/lib/zoho/invoices";
 import { ZohoNotConfiguredError } from "@/lib/zoho/client";
 
-// Orchestrates a Zoho invoice for a just-paid booking: fetches the booking's
+export interface CreateBookingInvoiceOptions {
+  /** Zoho records the invoice as already paid. Default true (payment-confirmation callers). */
+  paymentReceived?: boolean;
+  /** Whether Zoho itself emails the invoice to the customer. Default true.
+   *  Cowork Admin Assist passes false: its own Resend email already carries
+   *  the payment link, so a separate Zoho email would be a third redundant
+   *  message alongside email + WhatsApp. */
+  sendEmail?: boolean;
+}
+
+// Orchestrates a Zoho invoice for a booking: fetches the booking's
 // pricing/addon zoho_item_ids, finds-or-creates the Zoho contact, creates the
 // invoice, and stamps zoho_invoice_id/number back onto the booking. Shared
 // by every payment-confirmation path (PayHere webhook, QR confirm, admin
-// walk-in). Never throws — every caller in this codebase treats Zoho as
+// walk-in) as well as Cowork Admin Assist's unpaid-booking flow (via the
+// options below). Never throws — every caller in this codebase treats Zoho as
 // best-effort, so this swallows and logs instead, matching the doc's own
 // framing of Zoho as a high-but-not-critical-priority integration (§2.3).
 export async function createBookingInvoice(
   supabase: SupabaseClient<Database>,
-  bookingId: string
+  bookingId: string,
+  options: CreateBookingInvoiceOptions = {}
 ): Promise<void> {
+  const { paymentReceived = true, sendEmail = true } = options;
   try {
     const { data: booking, error } = await supabase
       .from("bookings")
@@ -70,7 +83,8 @@ export async function createBookingInvoice(
       email,
       booking.booking_number,
       lineItems,
-      true
+      paymentReceived,
+      sendEmail
     );
 
     await supabase

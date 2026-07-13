@@ -20,7 +20,8 @@ export async function createInvoice(
   customerEmail: string,
   bookingNumber: string,
   lineItems: InvoiceLineItem[],
-  paymentReceived: boolean = true
+  paymentReceived: boolean = true,
+  sendEmail: boolean = true
 ): Promise<{ invoice_id: string; invoice_number: string }> {
   const zoho = await getZohoClient();
 
@@ -48,11 +49,17 @@ export async function createInvoice(
     });
   }
 
-  await zoho.post(`/invoices/${invoiceId}/email`, {
-    to_mail_ids: [customerEmail],
-    subject: `Invoice ${invoiceNumber} from Cowork`,
-    body: `Dear Customer,\n\nPlease find attached your invoice for booking ${bookingNumber}.\n\nThank you for choosing Cowork!`,
-  });
+  // Cowork Admin Assist passes sendEmail: false here, since its own Resend
+  // email (sendPaymentRequestEmail) already carries the payment link —
+  // sending Zoho's separate invoice email too would be a third redundant
+  // message alongside email + WhatsApp.
+  if (sendEmail) {
+    await zoho.post(`/invoices/${invoiceId}/email`, {
+      to_mail_ids: [customerEmail],
+      subject: `Invoice ${invoiceNumber} from Cowork`,
+      body: `Dear Customer,\n\nPlease find attached your invoice for booking ${bookingNumber}.\n\nThank you for choosing Cowork!`,
+    });
+  }
 
   return { invoice_id: invoiceId, invoice_number: invoiceNumber };
 }
