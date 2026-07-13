@@ -71,10 +71,10 @@ export function Header({ isSignedIn = false }: { isSignedIn?: boolean }) {
             {isSignedIn ? "My Account" : "Sign In"}
           </Link>
           <Link
-            href={isSignedIn ? "/booking" : "/signup"}
+            href="/booking"
             className="group flex items-center gap-1.5 rounded-lg bg-brand-dark px-5 py-2.5 text-sm font-bold text-white transition-all hover:bg-brand-dark/95 hover:shadow-sm"
           >
-            {isSignedIn ? "Book Now" : "Register"}
+            Book a Space
             <span className="transition-transform group-hover:translate-x-0.5">→</span>
           </Link>
         </div>
