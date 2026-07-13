@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -53,7 +54,7 @@ const localBusinessJsonLd = {
   logo: `${SITE_URL}/images/logos/cowork-logo.svg`,
   image: `${SITE_URL}/opengraph-image`,
   telephone: "+94774884040",
-  email: "hello@cowork.lk",
+  email: "admin@cowork.lk",
   priceRange: "LKR 490 - LKR 6750",
   address: {
     "@type": "PostalAddress",
@@ -87,6 +88,19 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans antialiased">
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-LKDEVT7T3Z"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-LKDEVT7T3Z');
+          `}
+        </Script>
         {children}
         <Toaster richColors position="top-right" />
         <script
