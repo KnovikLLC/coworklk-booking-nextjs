@@ -25,18 +25,27 @@ export async function findOrCreateCustomer(
 ): Promise<ZohoCustomer> {
   const zoho = await getZohoClient();
 
-  const searchResult = await zoho.get<ZohoContactsSearchResponse>("/contacts", {
-    params: { email },
-  });
+  const searchParams: Record<string, string> = {};
+  if (email) {
+    searchParams.email = email;
+  } else if (phone) {
+    searchParams.phone = phone;
+  }
 
-  if (searchResult.data.contacts.length > 0) {
-    return searchResult.data.contacts[0];
+  if (email || phone) {
+    const searchResult = await zoho.get<ZohoContactsSearchResponse>("/contacts", {
+      params: searchParams,
+    });
+
+    if (searchResult.data.contacts && searchResult.data.contacts.length > 0) {
+      return searchResult.data.contacts[0];
+    }
   }
 
   const newCustomer = await zoho.post<ZohoContactCreateResponse>("/contacts", {
     contact_name: name,
-    email,
-    phone,
+    email: email || undefined,
+    phone: phone || undefined,
     contact_type: "customer",
   });
 
