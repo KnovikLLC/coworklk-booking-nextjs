@@ -43,6 +43,28 @@ const PAST_EVENTS = [
       "Celebrating the wins of our community members. At Cowork, your success is our success.",
     images: ["/images/events/CoWork-Member-Success-1.jpg"],
   },
+  {
+    title: "Knovik Foosball Championship",
+    description:
+      "Competitive spirit was at an all-time high during our in-house Foosball championship. Members battled it out for bragging rights!",
+    images: [
+      "/images/events/Knovik-foosball-championship-1.JPG",
+      "/images/events/Knovik-foosball-championship-2.JPG",
+      "/images/events/Knovik-foosball-championship-3.JPG",
+    ],
+  },
+  {
+    title: "Training & Workshop Sessions",
+    description:
+      "Knowledge-sharing sessions and hands-on workshops hosted at Cowork — empowering our members to learn and grow together.",
+    images: [
+      "/images/events/training-sessions-1.jpg",
+      "/images/events/training-sessions-2.jpg",
+      "/images/events/training-sessions-3.jpg",
+      "/images/events/training-sessions-4.JPG",
+      "/images/events/training-sessions-5.jpg",
+    ],
+  },
 ];
 
 export default function EventsPage() {
