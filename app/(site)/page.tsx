@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export const metadata = {
   title: "Cowork.lk | Premium Coworking Space in Pannipitiya, Sri Lanka",
@@ -9,148 +9,240 @@ export const metadata = {
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-background min-h-screen text-brand-dark pb-16">
+      {/* Decorative Top Curve SVG decoration (from Figma Mockup) */}
+      <div className="absolute top-0 right-0 pointer-events-none opacity-20 hidden md:block">
+        <svg width="400" height="400" viewBox="0 0 400 400" fill="none">
+          <circle cx="300" cy="100" r="180" stroke="#F9A440" strokeWidth="2" />
+          <circle cx="300" cy="100" r="130" stroke="#F9A440" strokeWidth="1.5" strokeDasharray="5 5" />
+        </svg>
+      </div>
+
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-brand-dark via-gray-900 to-black py-20 text-white md:py-32">
-        <div className="mx-auto max-w-6xl px-4 text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-            Work Better, Together at <span className="text-brand">Cowork.lk</span>
+      <section className="mx-auto max-w-6xl w-full px-4 pt-16 pb-20 relative">
+        <div className="max-w-2xl space-y-6">
+          <span className="text-xs uppercase font-extrabold tracking-widest text-brand-dark/40">
+            Welcome
+          </span>
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl leading-[1.08] text-brand-dark">
+            Work Solo,
+            <br />
+            Collaborate Together.
+            <br />
+            <span className="text-brand">Let&apos;s Cowork!</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-white/80 md:text-xl">
-            Premium coworking space in Pannipitiya, Sri Lanka. Fully-equipped hot desks, private workspaces, meeting rooms, and studio spaces, available with instant real-time booking.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" className="bg-brand text-white hover:bg-brand/90">
-              <Link href="/booking">Book a Space</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white/10 hover:text-white">
-              <Link href="/about">Explore Spaces</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
 
-      {/* Features Grid */}
-      <section className="bg-muted/30 py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl">
-              Why Cowork.lk?
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-              Everything you need to focus on your work, connect with a vibrant community, and scale your business.
-            </p>
-          </div>
+          <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            <Link
+              href="/booking"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand px-7 py-4 text-base font-bold text-white shadow-md transition-all hover:bg-brand/95 hover:-translate-y-0.5"
+            >
+              Book a Space
+              <span>→</span>
+            </Link>
 
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-lg border bg-white p-6 shadow-sm">
-              <div className="h-10 w-10 rounded-md bg-brand/10 text-brand flex items-center justify-center font-bold text-lg">
-                ⚡
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-full border-2 border-brand flex items-center justify-center text-brand font-bold text-lg bg-white/50 cursor-pointer">
+                ▶
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-brand-dark">High-Speed Connectivity</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Ultra-fast, redundant fibre-optic internet connection. Every room booking includes complimentary data allocation.
-              </p>
-            </div>
-            <div className="rounded-lg border bg-white p-6 shadow-sm">
-              <div className="h-10 w-10 rounded-md bg-brand/10 text-brand flex items-center justify-center font-bold text-lg">
-                🤝
+              <div>
+                <p className="text-sm font-bold text-brand-dark">Cowork Tour</p>
+                <p className="text-xs text-brand font-semibold uppercase tracking-wider">Coming Soon</p>
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-brand-dark">Professional Meeting Rooms</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Acoustically treated meeting rooms (4-seater, 5-seater, creative studios) equipped with monitors and projection screens.
-              </p>
-            </div>
-            <div className="rounded-lg border bg-white p-6 shadow-sm">
-              <div className="h-10 w-10 rounded-md bg-brand/10 text-brand flex items-center justify-center font-bold text-lg">
-                🎁
-              </div>
-              <h3 className="mt-4 text-lg font-semibold text-brand-dark">Member Loyalty Discounts</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Enjoy 10% off your booking automatically if you are a returning member with booking activity in the last 30 days.
-              </p>
-            </div>
-            <div className="rounded-lg border bg-white p-6 shadow-sm">
-              <div className="h-10 w-10 rounded-md bg-brand/10 text-brand flex items-center justify-center font-bold text-lg">
-                💼
-              </div>
-              <h3 className="mt-4 text-lg font-semibold text-brand-dark">Zoho Invoice Integration</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Seamless, automated generation of tax-compliant digital invoices and receipts synced directly with Zoho Books.
-              </p>
-            </div>
-            <div className="rounded-lg border bg-white p-6 shadow-sm">
-              <div className="h-10 w-10 rounded-md bg-brand/10 text-brand flex items-center justify-center font-bold text-lg">
-                ☕
-              </div>
-              <h3 className="mt-4 text-lg font-semibold text-brand-dark">Refreshments & Amenities</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Complimentary tea, premium coffee, water, clean washrooms, backup generator, and printing facilities on-site.
-              </p>
-            </div>
-            <div className="rounded-lg border bg-white p-6 shadow-sm">
-              <div className="h-10 w-10 rounded-md bg-brand/10 text-brand flex items-center justify-center font-bold text-lg">
-                🕒
-              </div>
-              <h3 className="mt-4 text-lg font-semibold text-brand-dark">Instant Real-Time Booking</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Search available slots and pay online via PayHere or make bank/QR transfers. Confirmations are instantaneous.
-              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Spaces Showcase */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-6xl px-4 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl">
-            Choose Your Workspace
+      {/* Explore Our Offerings */}
+      <section className="mx-auto max-w-6xl w-full px-4 py-16">
+        <div className="flex items-end justify-between border-b border-brand-dark/10 pb-4">
+          <h2 className="text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">
+            Explore Our Offerings
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
-            From flexible hot desks to private meeting rooms, find the ideal setting for your productive day.
-          </p>
+          <Link href="/booking" className="text-xs font-bold text-brand-dark/50 hover:text-brand transition-colors">
+            View All
+          </Link>
+        </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 text-left">
-            <div className="group overflow-hidden rounded-lg border bg-white shadow-sm transition-all hover:shadow-md">
-              <div className="h-48 bg-gray-100 bg-[url('/images/spaces/hot_desk.jpg')] bg-cover bg-center" />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-brand-dark">Hot Desks</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Flexible desks in our shared collaborative open layout. Great for freelancers and remote workers.
-                </p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-sm font-semibold text-brand-dark">From LKR 490</span>
-                  <Link href="/booking" className="text-sm font-bold text-brand hover:underline">Book →</Link>
-                </div>
-              </div>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Card 1: Workspace */}
+          <div className="group rounded-2xl border border-brand-dark/5 bg-white p-6 text-center transition-all hover:border-brand/20 hover:shadow-md">
+            <div className="mx-auto h-16 w-16 rounded-full bg-brand/5 text-brand flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
+              🪑
             </div>
-            <div className="group overflow-hidden rounded-lg border bg-white shadow-sm transition-all hover:shadow-md">
-              <div className="h-48 bg-gray-100 bg-[url('/images/spaces/workspace.jpg')] bg-cover bg-center" />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-brand-dark">Dedicated Workspaces</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Your own dedicated desk with ergonomically designed seating and storage. Perfect for focused work.
-                </p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-sm font-semibold text-brand-dark">From LKR 790</span>
-                  <Link href="/booking" className="text-sm font-bold text-brand hover:underline">Book →</Link>
-                </div>
-              </div>
+            <h3 className="mt-4 text-base font-bold text-brand-dark">Workspace</h3>
+            <p className="mt-1 text-xs text-brand-dark/45">Starting 699.00 LKR</p>
+          </div>
+
+          {/* Card 2: Meeting Room */}
+          <div className="group rounded-2xl border border-brand-dark/5 bg-white p-6 text-center transition-all hover:border-brand/20 hover:shadow-md">
+            <div className="mx-auto h-16 w-16 rounded-full bg-brand/5 text-brand flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
+              👥
             </div>
-            <div className="group overflow-hidden rounded-lg border bg-white shadow-sm transition-all hover:shadow-md">
-              <div className="h-48 bg-gray-100 bg-[url('/images/spaces/meeting_room.jpg')] bg-cover bg-center" />
-              <div className="p-5">
-                <h3 className="text-lg font-semibold text-brand-dark">Private Meeting Rooms</h3>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Soundproofed rooms for team huddles, workshops, and client presentations. Accommodates 4-5 pax.
-                </p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-sm font-semibold text-brand-dark">From LKR 3,450</span>
-                  <Link href="/booking" className="text-sm font-bold text-brand hover:underline">Book →</Link>
-                </div>
-              </div>
+            <h3 className="mt-4 text-base font-bold text-brand-dark">Meeting Room</h3>
+            <p className="mt-1 text-xs text-brand-dark/45">Starting 1,750.00 LKR</p>
+          </div>
+
+          {/* Card 3: Creative Studio */}
+          <div className="group rounded-2xl border border-brand-dark/5 bg-white p-6 text-center transition-all hover:border-brand/20 hover:shadow-md">
+            <div className="mx-auto h-16 w-16 rounded-full bg-brand/5 text-brand flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
+              🎬
             </div>
+            <h3 className="mt-4 text-base font-bold text-brand-dark">Creative Studio</h3>
+            <p className="mt-1 text-xs text-brand-dark/45">Starting 1,500.00 LKR</p>
+          </div>
+
+          {/* Card 4: Classroom */}
+          <div className="group rounded-2xl border border-brand-dark/5 bg-white p-6 text-center transition-all hover:border-brand/20 hover:shadow-md">
+            <div className="mx-auto h-16 w-16 rounded-full bg-brand/5 text-brand flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
+              🎓
+            </div>
+            <h3 className="mt-4 text-base font-bold text-brand-dark">Classroom</h3>
+            <p className="mt-1 text-xs text-brand-dark/45">Starting 4,990.00 LKR</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Welcome to Cowork (Collaboration section) */}
+      <section className="mx-auto max-w-6xl w-full px-4 py-16">
+        <div className="grid gap-12 lg:grid-cols-2 items-center">
+          {/* Mock photo with rounded-2xl borders */}
+          <div className="relative h-96 w-full rounded-[24px] overflow-hidden bg-white border border-brand-dark/10 shadow-sm">
+            <div className="absolute inset-0 bg-gradient-to-tr from-brand-dark/10 to-brand/10 z-10" />
+            <Image
+              src="/images/spaces/placeholder.svg"
+              alt="Collaboration"
+              fill
+              className="object-cover"
+            />
+            {/* Overlay badge representation */}
+            <div className="absolute bottom-6 left-6 z-20 bg-white/90 backdrop-blur rounded-xl p-4 shadow-sm border border-white max-w-xs">
+              <p className="text-[10px] uppercase font-extrabold tracking-wider text-brand">Vibrant Community</p>
+              <p className="text-xs font-bold text-brand-dark mt-1">Networking and events happen every week.</p>
+            </div>
+          </div>
+
+          {/* Welcome Text */}
+          <div className="space-y-6">
+            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl leading-tight">
+              Welcome to <span className="text-brand">Cowork</span> Where Collaboration Thrives!
+            </h2>
+            <p className="text-sm leading-relaxed text-brand-dark/70">
+              At Cowork, we foster creativity and connection in our vibrant coworking community. Join us to collaborate, innovate, and thrive together! We offer the premium utilities and amenities tailored to help you scale.
+            </p>
+            <div className="pt-2">
+              <Link
+                href="/about"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-brand-dark/20 px-5 py-2.5 text-sm font-bold text-brand-dark transition-colors hover:bg-brand-dark/5"
+              >
+                Learn More
+                <span>→</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Unlock Your Workspace Experience */}
+      <section className="mx-auto max-w-6xl w-full px-4 py-16">
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">
+            Unlock Your Workspace
+          </h2>
+          <p className="text-brand text-lg font-bold">Experience</p>
+          <p className="text-xs uppercase font-extrabold tracking-widest text-brand-dark/40 pt-2">
+            Discover Amenities, Features & Facilities
+          </p>
+        </div>
+
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Amenity 1 */}
+          <div className="rounded-2xl border border-brand-dark/5 bg-white p-6 space-y-4">
+            <span className="text-2xl text-brand block">📡</span>
+            <div>
+              <h3 className="font-bold text-sm text-brand-dark">Free WiFi (Fiber)</h3>
+              <p className="mt-1.5 text-xs text-brand-dark/60 leading-relaxed">
+                SLT Mobitel Fiber lines will keep you connected the fastest way possible.
+              </p>
+            </div>
+          </div>
+
+          {/* Amenity 2 */}
+          <div className="rounded-2xl border border-brand-dark/5 bg-white p-6 space-y-4">
+            <span className="text-2xl text-brand block">☕</span>
+            <div>
+              <h3 className="font-bold text-sm text-brand-dark">Free Unlimited Coffee / Tea</h3>
+              <p className="mt-1.5 text-xs text-brand-dark/60 leading-relaxed">
+                Unlimited Nescafé & Nest Tea for your refreshment.
+              </p>
+            </div>
+          </div>
+
+          {/* Amenity 3 */}
+          <div className="rounded-2xl border border-brand-dark/5 bg-white p-6 space-y-4">
+            <span className="text-2xl text-brand block">🛋️</span>
+            <div>
+              <h3 className="font-bold text-sm text-brand-dark">Lounge Area Access</h3>
+              <p className="mt-1.5 text-xs text-brand-dark/60 leading-relaxed">
+                Be relaxed and enjoy the lobby area with all the bean bags and vibrant vibes.
+              </p>
+            </div>
+          </div>
+
+          {/* Amenity 4 */}
+          <div className="rounded-2xl border border-brand-dark/5 bg-white p-6 space-y-4">
+            <span className="text-2xl text-brand block">🤝</span>
+            <div>
+              <h3 className="font-bold text-sm text-brand-dark">24/7 Customer Support</h3>
+              <p className="mt-1.5 text-xs text-brand-dark/60 leading-relaxed">
+                We&apos;ll be there in a minute to assist and guide you with your requirements.
+              </p>
+            </div>
+          </div>
+
+          {/* Amenity 5 */}
+          <div className="rounded-2xl border border-brand-dark/5 bg-white p-6 space-y-4">
+            <span className="text-2xl text-brand block">⚽</span>
+            <div>
+              <h3 className="font-bold text-sm text-brand-dark">Play Area (Foosball)</h3>
+              <p className="mt-1.5 text-xs text-brand-dark/60 leading-relaxed">
+                Stressed & tired? Bond & Enjoy a fun game of Foosball.
+              </p>
+            </div>
+          </div>
+
+          {/* Amenity 6 */}
+          <div className="rounded-2xl border border-brand-dark/5 bg-white p-6 space-y-4">
+            <span className="text-2xl text-brand block">📅</span>
+            <div>
+              <h3 className="font-bold text-sm text-brand-dark">Networking & Events</h3>
+              <p className="mt-1.5 text-xs text-brand-dark/60 leading-relaxed">
+                We create more exciting opportunities to increase your network.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Showcase Grid */}
+      <section className="mx-auto max-w-6xl w-full px-4 py-8">
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="relative h-64 w-full rounded-[20px] overflow-hidden border border-brand-dark/15 shadow-sm">
+            <Image
+              src="/images/spaces/placeholder.svg"
+              alt="Space Gallery 1"
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="relative h-64 w-full rounded-[20px] overflow-hidden border border-brand-dark/15 shadow-sm">
+            <Image
+              src="/images/spaces/placeholder.svg"
+              alt="Space Gallery 2"
+              fill
+              className="object-cover"
+            />
           </div>
         </div>
       </section>

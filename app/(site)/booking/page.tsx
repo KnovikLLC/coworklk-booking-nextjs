@@ -1,9 +1,11 @@
 import { createClient } from "@/lib/supabase/server";
 import { getActiveSpaces } from "@/lib/data/spaces";
 import { SpaceCard } from "@/components/booking/SpaceCard";
+import Link from "next/link";
 
 export const metadata = {
   title: "Book a Space | Cowork.lk",
+  description: "Browse premium coworking hot desks, dedicated workspaces, and meeting rooms. Book online instantly.",
 };
 
 export default async function BookingPage() {
@@ -11,23 +13,71 @@ export default async function BookingPage() {
   const spaces = await getActiveSpaces(supabase);
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-brand-dark">Book a Space</h1>
-        <p className="mt-2 text-muted-foreground">
-          Choose a space, pick a date and time, and book instantly.
-        </p>
+    <div className="bg-background min-h-screen text-brand-dark pb-24">
+      {/* Decorative Curves (consistent with Home) */}
+      <div className="absolute top-0 right-0 pointer-events-none opacity-10 hidden md:block">
+        <svg width="400" height="400" viewBox="0 0 400 400" fill="none">
+          <circle cx="300" cy="100" r="180" stroke="#F9A440" strokeWidth="2" />
+          <circle cx="300" cy="100" r="130" stroke="#F9A440" strokeWidth="1.5" strokeDasharray="5 5" />
+        </svg>
       </div>
 
-      {spaces.length === 0 ? (
-        <p className="text-muted-foreground">No spaces available right now.</p>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {spaces.map((space) => (
-            <SpaceCard key={space.id} space={space} />
-          ))}
+      <main className="mx-auto max-w-6xl px-4 pt-12 relative">
+        {/* Banner Section */}
+        <div className="max-w-2xl space-y-4 mb-16">
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+            Book Your Spot,
+            <br />
+            Join the Community
+            <br />
+            <span className="text-brand">Let&apos;s Cowork!</span>
+          </h1>
+          <p className="text-sm text-brand-dark/65 max-w-lg leading-relaxed pt-2">
+            Explore our curated list of workspace offerings. Find the perfect environment for your productive day, or book private, soundproofed spaces for your team huddles.
+          </p>
         </div>
-      )}
-    </main>
+
+        {/* Offerings Grid */}
+        <div className="space-y-4">
+          <div className="border-b border-brand-dark/10 pb-4">
+            <h2 className="text-xl font-bold tracking-tight text-brand-dark">
+              Explore Our Offerings
+            </h2>
+          </div>
+
+          {spaces.length === 0 ? (
+            <p className="text-sm text-brand-dark/50">No spaces are available to book right now.</p>
+          ) : (
+            <div className="grid gap-6 md:grid-cols-2 mt-8">
+              {spaces.map((space) => (
+                <SpaceCard key={space.id} space={space} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Custom Offering Banner */}
+        <section className="mt-20 rounded-2xl border border-brand-dark/5 bg-white p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
+          <div className="space-y-2">
+            <span className="text-[10px] uppercase font-extrabold tracking-wider text-brand">
+              Custom Offering
+            </span>
+            <h3 className="text-2xl font-bold tracking-tight text-brand-dark">
+              Seeking a Tailored Workspace Solution?
+            </h3>
+            <p className="text-sm text-brand-dark/65 max-w-xl leading-relaxed">
+              Let&apos;s customize your workspace experience. Reach out to explore tailored options for dedicated teams, private custom offices, or larger event settings.
+            </p>
+          </div>
+          <Link
+            href="/contact"
+            className="group inline-flex items-center gap-1.5 rounded-xl border border-brand-dark/20 px-6 py-3 text-sm font-bold text-brand-dark transition-all hover:bg-brand-dark/5 hover:border-brand-dark whitespace-nowrap"
+          >
+            Contact Us
+            <span className="transition-transform group-hover:translate-x-0.5">→</span>
+          </Link>
+        </section>
+      </main>
+    </div>
   );
 }

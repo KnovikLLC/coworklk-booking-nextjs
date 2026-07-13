@@ -1,0 +1,25 @@
+name: Scheduled jobs
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+jobs:
+  run-crons:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Zoho sync
+        continue-on-error: true
+        run: |
+          curl -sf -X GET "$APP_URL/api/cron/zoho-sync" \
+            -H "Authorization: Bearer $CRON_SECRET"
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+      - name: Expire stale bookings
+        continue-on-error: true
+        run: |
+          curl -sf -X GET "$APP_URL/api/cron/expire-bookings" \
+            -H "Authorization: Bearer $CRON_SECRET"
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
