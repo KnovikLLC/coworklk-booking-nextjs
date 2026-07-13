@@ -2,13 +2,13 @@
 -- §3.2 spaces (lines 202-208), pricing (lines 229-261), addons (lines 589-598)
 -- Applied automatically by `supabase db reset`.
 
-INSERT INTO spaces (name, type, capacity, total_inventory, requires_specific_seat) VALUES
-('Hot Desk', 'hot_desk', 1, 10, FALSE),
-('Workspace Seat', 'workspace', 1, 8, FALSE),
-('4-Seater Meeting Room', 'meeting_room_4', 4, 1, TRUE),
-('4-Seater Black Meeting Room', 'meeting_room_4_black', 4, 1, TRUE),
-('5-Seater Meeting Room', 'meeting_room_5', 5, 1, TRUE),
-('Lobby Area', 'lobby', 10, 1, TRUE);
+INSERT INTO spaces (name, type, capacity, total_inventory, requires_specific_seat, image_url) VALUES
+('Hot Desk', 'hot_desk', 1, 10, FALSE, '/images/spaces/co-work-area.png'),
+('Workspace Seat', 'workspace', 1, 8, FALSE, '/images/spaces/workstation.png'),
+('4-Seater Meeting Room', 'meeting_room_4', 4, 1, TRUE, '/images/spaces/4-seater.png'),
+('4-Seater Black Meeting Room', 'meeting_room_4_black', 4, 1, TRUE, '/images/spaces/meeting-rooms.png'),
+('5-Seater Meeting Room', 'meeting_room_5', 5, 1, TRUE, '/images/spaces/table.png'),
+('Lobby Area', 'lobby', 10, 1, TRUE, '/images/spaces/lobby.png');
 
 -- Hot Desk pricing (mapped to Zoho)
 INSERT INTO pricing (space_id, duration, price, zoho_item_id, zoho_item_name, description) VALUES
