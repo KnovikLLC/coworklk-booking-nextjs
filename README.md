@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cowork.lk Booking Engine
 
-## Getting Started
+A real-time coworking space booking platform built for **Cowork Lanka (Pvt) Ltd** (Pannipitiya, Sri Lanka). This web application provides a seamless booking experience for hot desks, dedicated desks, meeting rooms, and event spaces.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## What It Does
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The platform acts as a unified hub for space management, invoicing, and user authentication, handling both public bookings and admin-focused operations.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Key Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+*   **Space Catalog & Booking Engine**: An interactive, responsive interface enabling users to browse different workspace categories, view details, and book spaces.
+*   **Real-time Availability Grid**: A slot-selection calendar powered by a robust Supabase database check engine that ensures zero double-bookings.
+*   **Flexible Checkout Flow**: Supports guest bookings with automatic prompt/flow to convert guests into registered members immediately after a successful checkout.
+*   **Integrated Payments**:
+    *   **Online Payments**: Powered by the **PayHere** gateway (LKR payments) with automated webhook signature verification.
+    *   **Manual Payments**: Supports bank transfers and QR code payments with an admin dashboard verification and approval workflow.
+*   **Member Loyalty Engine**: Automatically identifies returning members and applies a **10% discount** on base prices if they had a completed booking within the prior 30 days.
+*   **Automated Accounting (Zoho Books)**: Automatically synchronizes booking invoices, payments, and customer accounts to Zoho Books. Integrations degrade gracefully without disrupting the user flow if credentials are not configured.
+*   **Admin Command Center**:
+    *   Walk-in booking creation (handles cash/card/QR payments).
+    *   Interactive scheduling grid and booking calendar view.
+    *   Check-in management and customer logs.
+*   **Tiered Refund Policy**: Automated cancellation processing with graduated refunds (80% if >24 hours, 50% if 4–24 hours, 0% if <4 hours prior).
+*   **Automated Background Crons**: Automatically expires unpaid bookings after 30 minutes to free up locked inventory, and manages queued invoice syncs.
 
-## Learn More
+### Technology Stack
 
-To learn more about Next.js, take a look at the following resources:
+*   **Framework**: [Next.js 14](https://nextjs.org/) (App Router, Server Components)
+*   **Language**: [TypeScript](https://www.typescriptlang.org/)
+*   **Database & Authentication**: [Supabase](https://supabase.com/) (Postgres, Row-Level Security, Database Triggers, SSR Cookie Auth)
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
+*   **Email Notifications**: [Resend](https://resend.com/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contributors
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*   **Madusanka Premaratne** — [rmmpremaratne@gmail.com](mailto:rmmpremaratne@gmail.com)

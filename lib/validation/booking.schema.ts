@@ -33,3 +33,31 @@ export const bookingCreateSchema = z
   });
 
 export type BookingCreateInput = z.infer<typeof bookingCreateSchema>;
+
+// Doc §4.2 POST /api/admin/bookings (walk-in/phone/manual booking).
+export const adminBookingCreateSchema = z.object({
+  space_id: z.string().uuid(),
+  pricing_id: z.string().uuid(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "date must be YYYY-MM-DD"),
+  slot: z.enum([
+    "morning",
+    "afternoon",
+    "evening",
+    "night",
+    "full_day",
+    "unlimited",
+    "1hr",
+    "2hr",
+    "30min",
+  ]),
+  customer: z.object({
+    name: z.string().min(2),
+    email: z.string().email(),
+    phone: z.string().min(9),
+  }),
+  addons: z.array(bookingAddonSchema).max(20).optional(),
+  payment_method: z.enum(["cash", "card_terminal", "qr_transfer", "payhere"]),
+  payment_received: z.boolean().optional(),
+  notes: z.string().max(1000).optional(),
+});
+export type AdminBookingCreateInput = z.infer<typeof adminBookingCreateSchema>;
