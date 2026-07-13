@@ -40,6 +40,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: SITE_URL,
   },
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 // Site-wide entity signal for Google/AI answer engines: who this business is,
