@@ -3,8 +3,8 @@
 -- Applied automatically by `supabase db reset`.
 
 INSERT INTO spaces (name, type, capacity, total_inventory, requires_specific_seat, image_url) VALUES
-('Hot Desk', 'hot_desk', 1, 10, FALSE, '/images/spaces/co-work-area.png'),
-('Workspace Seat', 'workspace', 1, 8, FALSE, '/images/spaces/workstation.png'),
+('Hot Desk', 'hot_desk', 1, 5, FALSE, '/images/spaces/co-work-area.png'),
+('Workspace Seat', 'workspace', 1, 16, FALSE, '/images/spaces/co-work-area.png'),
 ('4-Seater Meeting Room', 'meeting_room_4', 4, 1, TRUE, '/images/spaces/4-seater.png'),
 ('4-Seater Black Meeting Room', 'meeting_room_4_black', 4, 1, TRUE, '/images/spaces/meeting-rooms.png'),
 ('5-Seater Meeting Room', 'meeting_room_5', 5, 1, TRUE, '/images/spaces/table.png'),
