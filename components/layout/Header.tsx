@@ -4,7 +4,7 @@ const NAV_LINKS = [
   { href: "/booking", label: "Booking" },
   { href: "/about", label: "About" },
   { href: "#", label: "Community", comingSoon: true },
-  { href: "#", label: "Events", comingSoon: true },
+  { href: "/events", label: "Events" },
   { href: "/contact", label: "Contact" },
 ];
 
