@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SignupForm } from "@/components/auth/SignupForm";
 
-export const metadata = { title: "Create Account | Cowork.lk" };
+export const metadata = { title: "Create Account | Cowork.lk", robots: { index: false, follow: false } };
 
 export default function SignupPage() {
   return (

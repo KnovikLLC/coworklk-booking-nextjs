@@ -6,7 +6,7 @@ import { formatLKR } from "@/lib/utils";
 
 import { CancelBookingButton } from "@/components/member/CancelBookingButton";
 
-export const metadata = { title: "Booking History | Cowork.lk" };
+export const metadata = { title: "Booking History | Cowork.lk", robots: { index: false, follow: false } };
 
 export default async function ProfileBookingsPage() {
   const { user, supabase } = await requireUser();

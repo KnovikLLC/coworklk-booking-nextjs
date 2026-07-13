@@ -31,6 +31,7 @@ export interface CreateBookingParams {
   /** Cowork Admin Assist: free-text accountability field, not a users.id FK
    *  (shared-device/shared-API-key trust model, no per-agent login). */
   agentName?: string;
+  workspaceCount?: number;
 }
 
 export interface CreatedBooking {
@@ -80,9 +81,17 @@ export async function createBooking(
     }
   );
 
+  const workspaceCount = params.workspaceCount ?? 1;
   const availabilityRow = !availabilityError && availability ? availability[0] : null;
-  if (!availabilityRow?.is_available) {
-    throw new BookingError("This slot is no longer available", 409);
+  const remainingInventory = (availabilityRow?.total_inventory ?? 0) - (availabilityRow?.booked_count ?? 0);
+
+  if (remainingInventory < workspaceCount) {
+    throw new BookingError(
+      remainingInventory > 0 
+        ? `Only ${remainingInventory} seat(s) are available for this slot` 
+        : "This slot is no longer available", 
+      409
+    );
   }
 
   let addonLines: { addon_id: string; unitPrice: number; quantity: number }[] = [];
@@ -118,7 +127,7 @@ export async function createBooking(
   );
 
   const totals = computeBookingTotals(
-    Number(pricing.price),
+    Number(pricing.price) * workspaceCount,
     addonLines.map((l) => ({ unitPrice: l.unitPrice, quantity: l.quantity })),
     discount.discount_percent
   );
@@ -172,6 +181,7 @@ export async function createBooking(
       notes: params.notes ?? null,
       created_by: params.createdBy ?? null,
       agent_name: params.agentName ?? null,
+      workspace_count: workspaceCount,
     })
     .select("id, booking_number, total_amount, status")
     .single();

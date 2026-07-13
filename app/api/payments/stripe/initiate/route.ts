@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   const { data: booking, error } = await admin
     .from("bookings")
     .select(
-      "id, booking_number, total_amount, status, booking_date, time_slot, guest_name, guest_email, guest_phone, user_id, spaces ( name ), users!bookings_user_id_fkey ( full_name, email, phone )"
+      "id, booking_number, total_amount, status, booking_date, time_slot, guest_name, guest_email, guest_phone, user_id, workspace_count, spaces ( name ), users!bookings_user_id_fkey ( full_name, email, phone )"
     )
     .eq("id", bookingId)
     .single();
@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
 
     const email = booking.guest_email ?? booking.users?.email ?? undefined;
     const spaceName = booking.spaces?.name ?? "Coworking Space Booking";
+    const seatsLabel = booking.workspace_count > 1 ? ` (${booking.workspace_count} seats)` : "";
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
           price_data: {
             currency: "lkr",
             product_data: {
-              name: spaceName,
+              name: `${spaceName}${seatsLabel}`,
               description: `Booking #${booking.booking_number} on ${booking.booking_date} (${booking.time_slot.replace("_", " ")})`,
             },
             unit_amount: Math.round(Number(booking.total_amount) * 100), // Standard standard decimal LKR expects cents (multiplied by 100)
@@ -55,8 +56,8 @@ export async function POST(request: NextRequest) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_URL}/booking/success?id=${booking.id}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL}/booking/checkout?id=${booking.id}`, // fallback url
+      success_url: `https://cowork.lk/booking/success?id=${booking.id}&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `https://cowork.lk/booking/checkout?id=${booking.id}`, // fallback url
       metadata: {
         bookingId: booking.id,
         bookingNumber: booking.booking_number,

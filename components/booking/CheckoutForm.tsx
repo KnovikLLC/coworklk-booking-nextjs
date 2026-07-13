@@ -46,14 +46,26 @@ export function CheckoutForm({
   const [guestPhone, setGuestPhone] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"qr_transfer" | "stripe" | "payhere">("qr_transfer");
   const [submitting, setSubmitting] = useState(false);
+  const [workspaceCount, setWorkspaceCount] = useState(1);
+
+  // Read remaining count from URL if present
+  const remaining = useMemo(() => {
+    if (typeof window === "undefined") return space.total_inventory;
+    const params = new URLSearchParams(window.location.search);
+    const rem = params.get("remaining");
+    return rem ? Number(rem) : space.total_inventory;
+  }, [space.total_inventory]);
+
+  const maxAllowed = Math.min(space.total_inventory, remaining);
 
   const selectedAddons = useMemo(
     () => addons.filter((a) => selectedAddonIds.has(a.id)),
     [addons, selectedAddonIds]
   );
   const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price, 0);
-  const discountAmount = discount?.amount ?? 0;
-  const total = pricing.price - discountAmount + addonsTotal;
+  const discountPercent = discount?.percent ?? 0;
+  const discountAmount = Math.round((pricing.price * workspaceCount) * (discountPercent / 100));
+  const total = (pricing.price * workspaceCount) - discountAmount + addonsTotal;
 
   function toggleAddon(id: string) {
     setSelectedAddonIds((prev) => {
@@ -82,6 +94,7 @@ export function CheckoutForm({
           slot,
           addons: selectedAddons.map((a) => ({ addon_id: a.id, quantity: 1 })),
           payment_method: paymentMethod,
+          workspace_count: workspaceCount,
           ...(userEmail ? {} : { guest_name: guestName, guest_email: guestEmail, guest_phone: guestPhone }),
         }),
       });
@@ -163,6 +176,32 @@ export function CheckoutForm({
           </section>
         )}
 
+        {space.total_inventory > 1 ? (
+          <section className="rounded-lg border bg-slate-50/50 p-4">
+            <h2 className="font-semibold text-brand-dark">Desks / Seats</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Select how many workspaces or seats you would like to reserve.
+            </p>
+            <div className="mt-3 flex items-center gap-3">
+              <Input
+                id="workspaceCount"
+                type="number"
+                min={1}
+                max={maxAllowed}
+                value={workspaceCount}
+                onChange={(e) => {
+                  const val = Math.min(maxAllowed, Math.max(1, Number(e.target.value) || 1));
+                  setWorkspaceCount(val);
+                }}
+                className="w-24 bg-white text-center font-semibold"
+              />
+              <span className="text-sm text-muted-foreground">
+                (Up to {maxAllowed} available for this slot)
+              </span>
+            </div>
+          </section>
+        ) : null}
+
         {addons.length > 0 ? (
           <section>
             <h2 className="font-semibold text-brand-dark">Add-ons</h2>
@@ -225,13 +264,13 @@ export function CheckoutForm({
               <dd>{SLOT_LABELS[slot] ?? slot}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">{durationLabel(pricing.duration)}</dt>
-              <dd>{formatLKR(pricing.price)}</dd>
+              <dt className="text-muted-foreground">{durationLabel(pricing.duration)} {workspaceCount > 1 ? `(x${workspaceCount})` : ""}</dt>
+              <dd>{formatLKR(pricing.price * workspaceCount)}</dd>
             </div>
             {discount ? (
               <div className="flex justify-between text-emerald-600">
                 <dt>Member discount ({discount.percent}%)</dt>
-                <dd>-{formatLKR(discount.amount)}</dd>
+                <dd>-{formatLKR(discountAmount)}</dd>
               </div>
             ) : null}
             {selectedAddons.map((a) => (

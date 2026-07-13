@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { LoginForm } from "@/components/auth/LoginForm";
 
-export const metadata = { title: "Admin Sign In | Cowork.lk" };
+export const metadata = { title: "Admin Sign In | Cowork.lk", robots: { index: false, follow: false } };
 
 export default function AdminLoginPage() {
   return (

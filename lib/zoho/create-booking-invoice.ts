@@ -32,7 +32,7 @@ export async function createBookingInvoice(
     const { data: booking, error } = await supabase
       .from("bookings")
       .select(
-        `id, booking_number, base_amount, discount_amount, guest_name, guest_email, guest_phone, user_id,
+        `id, booking_number, base_amount, discount_amount, guest_name, guest_email, guest_phone, user_id, workspace_count,
          pricing ( zoho_item_id ),
          users!bookings_user_id_fkey ( full_name, email, phone ),
          booking_addons ( quantity, unit_price, addons ( zoho_item_id ) )`
@@ -56,10 +56,11 @@ export async function createBookingInvoice(
 
     const lineItems: InvoiceLineItem[] = [];
     if (booking.pricing?.zoho_item_id) {
+      const workspaceCount = booking.workspace_count || 1;
       lineItems.push({
         item_id: booking.pricing.zoho_item_id,
-        quantity: 1,
-        rate: Number(booking.base_amount) - Number(booking.discount_amount),
+        quantity: workspaceCount,
+        rate: (Number(booking.base_amount) - Number(booking.discount_amount)) / workspaceCount,
       });
     }
     for (const addonLine of booking.booking_addons ?? []) {

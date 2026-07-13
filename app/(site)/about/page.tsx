@@ -1,6 +1,13 @@
 export const metadata = {
   title: "About Us | Cowork.lk",
   description: "Learn more about Cowork Lanka (Pvt) Ltd, our story, mission, and the premium coworking workspace we provide in Pannipitiya.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    siteName: "Cowork.lk",
+    title: "About Us | Cowork.lk",
+    description: "Learn more about Cowork Lanka (Pvt) Ltd, our story, mission, and the premium coworking workspace we provide in Pannipitiya.",
+    url: "/about",
+  },
 };
 
 export default function AboutPage() {

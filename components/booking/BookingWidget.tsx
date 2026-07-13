@@ -45,6 +45,7 @@ export function BookingWidget({ space }: { space: SpaceDTO }) {
       pricing_id: selectedOption.pricingId,
       date: selectedDateStr,
       slot: selectedOption.timeSlot,
+      remaining: selectedOption.remaining.toString(),
     });
     router.push(`/booking/checkout?${params.toString()}`);
   }

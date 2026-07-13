@@ -99,6 +99,7 @@ export async function POST(request: NextRequest) {
       guestPhone: body.customer.phone,
       createdBy: staff.user.id,
       markConfirmed,
+      workspaceCount: body.workspace_count,
     });
 
     if (markConfirmed) {

@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { BANK_DETAILS } from "@/lib/payhere/config";
 import { ConvertGuestPrompt } from "@/components/auth/ConvertGuestPrompt";
 
-export const metadata = { title: "Booking Confirmed | Cowork.lk" };
+export const metadata = { title: "Booking Confirmed | Cowork.lk", robots: { index: false, follow: false } };
 
 export default async function BookingSuccessPage({
   searchParams,

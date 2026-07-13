@@ -6,14 +6,56 @@ import Link from "next/link";
 export const metadata = {
   title: "Book a Space | Cowork.lk",
   description: "Browse premium coworking hot desks, dedicated workspaces, and meeting rooms. Book online instantly.",
+  alternates: { canonical: "/booking" },
+  openGraph: {
+    siteName: "Cowork.lk",
+    title: "Book a Space | Cowork.lk",
+    description: "Browse premium coworking hot desks, dedicated workspaces, and meeting rooms. Book online instantly.",
+    url: "/booking",
+  },
 };
 
 export default async function BookingPage() {
   const supabase = createClient();
   const spaces = await getActiveSpaces(supabase);
 
+  const spacesJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: spaces.map((space, index) => {
+      const lowestPrice = space.pricing.reduce(
+        (min, p) => (p.price < min ? p.price : min),
+        space.pricing[0]?.price ?? 0
+      );
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "Product",
+          name: space.name,
+          description: space.description ?? `${space.name} at Cowork.lk, Pannipitiya, Sri Lanka.`,
+          url: `${process.env.NEXT_PUBLIC_URL || "https://cowork.lk"}/booking/${space.id}`,
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "LKR",
+            price: lowestPrice,
+            availability: "https://schema.org/InStock",
+          },
+        },
+      };
+    }),
+  };
+
   return (
     <div className="bg-background min-h-screen text-brand-dark pb-24">
+      {spaces.length > 0 ? (
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(spacesJsonLd) }}
+        />
+      ) : null}
+
       {/* Decorative Curves (consistent with Home) */}
       <div className="absolute top-0 right-0 pointer-events-none opacity-10 hidden md:block">
         <svg width="400" height="400" viewBox="0 0 400 400" fill="none">

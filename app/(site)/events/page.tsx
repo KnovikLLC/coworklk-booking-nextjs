@@ -4,6 +4,14 @@ export const metadata = {
   title: "Events | Cowork.lk",
   description:
     "Explore past and upcoming events at Cowork.lk — from member celebrations to creative recording sessions, our community is always buzzing.",
+  alternates: { canonical: "/events" },
+  openGraph: {
+    siteName: "Cowork.lk",
+    title: "Events | Cowork.lk",
+    description:
+      "Explore past and upcoming events at Cowork.lk — from member celebrations to creative recording sessions, our community is always buzzing.",
+    url: "/events",
+  },
 };
 
 const PAST_EVENTS = [

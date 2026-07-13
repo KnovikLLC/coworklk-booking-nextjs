@@ -5,7 +5,7 @@ import { getActiveAddons } from "@/lib/data/addons";
 import { checkMemberDiscount } from "@/lib/pricing/discount";
 import { CheckoutForm } from "@/components/booking/CheckoutForm";
 
-export const metadata = { title: "Checkout | Cowork.lk" };
+export const metadata = { title: "Checkout | Cowork.lk", robots: { index: false, follow: false } };
 
 export default async function CheckoutPage({
   searchParams,

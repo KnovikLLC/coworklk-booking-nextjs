@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
       guestName: user ? undefined : body.guest_name,
       guestEmail: user ? undefined : body.guest_email,
       guestPhone: user ? undefined : body.guest_phone,
+      workspaceCount: body.workspace_count,
     });
 
     const responseBody: BookingCreateResponse = { booking };

@@ -4,6 +4,14 @@ export const metadata = {
   title: "Community | Cowork.lk",
   description:
     "Join the Cowork community — connect with entrepreneurs, developers, freelancers, and professionals across Sri Lanka. Exclusive discounts, hiring opportunities, and partner perks.",
+  alternates: { canonical: "/community" },
+  openGraph: {
+    siteName: "Cowork.lk",
+    title: "Community | Cowork.lk",
+    description:
+      "Join the Cowork community — connect with entrepreneurs, developers, freelancers, and professionals across Sri Lanka. Exclusive discounts, hiring opportunities, and partner perks.",
+    url: "/community",
+  },
 };
 
 const CONNECTED_COMMUNITIES = [

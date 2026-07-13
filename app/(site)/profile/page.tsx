@@ -4,7 +4,7 @@ import { checkMemberDiscount } from "@/lib/pricing/discount";
 import { MemberDashboard } from "@/components/member/MemberDashboard";
 import { ProfileNav } from "@/components/member/ProfileNav";
 
-export const metadata = { title: "My Account | Cowork.lk" };
+export const metadata = { title: "My Account | Cowork.lk", robots: { index: false, follow: false } };
 
 export default async function ProfilePage() {
   const { user, supabase } = await requireUser();

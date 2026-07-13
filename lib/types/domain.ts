@@ -65,6 +65,7 @@ export interface BookingCreateRequest {
   guest_phone?: string;
   addons?: BookingAddonInput[];
   payment_method: "payhere" | "qr_transfer" | "stripe";
+  workspace_count?: number;
   notes?: string;
 }
 

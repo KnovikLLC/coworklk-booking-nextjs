@@ -1,10 +1,46 @@
 import Link from "next/link";
 import Image from "next/image";
 
+const FAQS = [
+  {
+    question: "Where is Cowork.lk located?",
+    answer:
+      "Cowork.lk is at 279 Avissawella Road, Pannipitiya 10230, Western Province, Sri Lanka, open Monday to Sunday, 8:00 AM to 8:00 PM.",
+  },
+  {
+    question: "What coworking spaces can I book?",
+    answer:
+      "Hot desks and workspace seats from LKR 699, 4- and 5-seater meeting rooms from LKR 1,750, creative studios from LKR 1,500, and a classroom space from LKR 4,990 — all bookable online with real-time availability.",
+  },
+  {
+    question: "Is WiFi included at Cowork.lk?",
+    answer:
+      "Yes. Every space includes free WiFi on SLT Mobitel Fiber, plus unlimited coffee and tea, lounge access, and a foosball table.",
+  },
+  {
+    question: "How do I pay for a booking?",
+    answer:
+      "You can pay online by card through Stripe, or via QR/bank transfer with admin verification. Returning members who completed a booking in the prior 30 days automatically get a 10% discount.",
+  },
+  {
+    question: "Can I book a coworking space without signing up?",
+    answer:
+      "Yes, guest checkout is available for any space. You can optionally convert to a full member account right after checkout to track bookings and unlock the loyalty discount.",
+  },
+];
+
 export const metadata = {
   title: "Cowork.lk | Premium Coworking Space in Pannipitiya, Sri Lanka",
   description:
     "Discover hot desks, dedicated workspaces, and fully-equipped meeting rooms at Cowork Lanka (Pannipitiya). Book online with real-time availability.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    siteName: "Cowork.lk",
+    title: "Cowork.lk | Premium Coworking Space in Pannipitiya, Sri Lanka",
+    description:
+      "Discover hot desks, dedicated workspaces, and fully-equipped meeting rooms at Cowork Lanka (Pannipitiya). Book online with real-time availability.",
+    url: "/",
+  },
 };
 
 export default function HomePage() {
@@ -223,6 +259,38 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="mx-auto max-w-6xl w-full px-4 py-16">
+        <div className="max-w-2xl space-y-2">
+          <h2 className="text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">
+            Frequently Asked Questions
+          </h2>
+        </div>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+          {FAQS.map((faq) => (
+            <div key={faq.question} className="rounded-2xl border border-brand-dark/5 bg-white p-6">
+              <h3 className="font-bold text-sm text-brand-dark">{faq.question}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-brand-dark/65">{faq.answer}</p>
+            </div>
+          ))}
+        </div>
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: FAQS.map((faq) => ({
+                "@type": "Question",
+                name: faq.question,
+                acceptedAnswer: { "@type": "Answer", text: faq.answer },
+              })),
+            }),
+          }}
+        />
       </section>
 
       {/* WhatsApp Community Banner */}

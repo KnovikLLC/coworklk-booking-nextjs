@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 
-export const metadata = { title: "Reset Password | Cowork.lk" };
+export const metadata = { title: "Reset Password | Cowork.lk", robots: { index: false, follow: false } };
 
 export default function ForgotPasswordPage() {
   return (

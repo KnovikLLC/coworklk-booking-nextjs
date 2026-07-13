@@ -6,6 +6,13 @@ import { Textarea } from "@/components/ui/textarea";
 export const metadata = {
   title: "Contact Us | Cowork.lk",
   description: "Get in touch with Cowork Lanka. Send us a message, find our phone number, email address, and Google Map location.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    siteName: "Cowork.lk",
+    title: "Contact Us | Cowork.lk",
+    description: "Get in touch with Cowork Lanka. Send us a message, find our phone number, email address, and Google Map location.",
+    url: "/contact",
+  },
 };
 
 export default function ContactPage() {

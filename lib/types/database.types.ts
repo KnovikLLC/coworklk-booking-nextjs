@@ -138,6 +138,7 @@ export type Database = {
           total_amount: number
           updated_at: string | null
           user_id: string | null
+          workspace_count: number
           zoho_invoice_id: string | null
           zoho_invoice_number: string | null
         }
@@ -172,6 +173,7 @@ export type Database = {
           total_amount: number
           updated_at?: string | null
           user_id?: string | null
+          workspace_count?: number
           zoho_invoice_id?: string | null
           zoho_invoice_number?: string | null
         }
@@ -206,6 +208,7 @@ export type Database = {
           total_amount?: number
           updated_at?: string | null
           user_id?: string | null
+          workspace_count?: number
           zoho_invoice_id?: string | null
           zoho_invoice_number?: string | null
         }

@@ -2,7 +2,7 @@ import { requireUser } from "@/lib/auth/require-user";
 import { ProfileNav } from "@/components/member/ProfileNav";
 import { ProfileSettingsForm } from "@/components/member/ProfileSettingsForm";
 
-export const metadata = { title: "Account Settings | Cowork.lk" };
+export const metadata = { title: "Account Settings | Cowork.lk", robots: { index: false, follow: false } };
 
 export default async function ProfileSettingsPage() {
   const { user, supabase } = await requireUser();

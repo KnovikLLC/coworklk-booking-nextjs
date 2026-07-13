@@ -3,7 +3,7 @@ import { formatLKR } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { PayNowButton } from "@/components/booking/PayNowButton";
 
-export const metadata = { title: "Complete Payment | Cowork.lk" };
+export const metadata = { title: "Complete Payment | Cowork.lk", robots: { index: false, follow: false } };
 
 // Cowork Admin Assist's payment link destination: the front-desk app
 // creates an unpaid (pending_payment) booking over the phone and sends this
