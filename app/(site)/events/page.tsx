@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 export const metadata = {
   title: "Events | Cowork.lk",
@@ -201,20 +200,22 @@ export default function EventsPage() {
               Want to Be Part of Our Next Event?
             </h3>
             <p className="text-sm text-brand-dark/65 max-w-xl leading-relaxed">
-              Join the Cowork community and never miss out on networking
-              opportunities, celebrations, and creative sessions. Sign up today
-              and start your coworking journey.
+              Join our WhatsApp community to stay updated on upcoming events,
+              get early access to bookings, and connect with fellow Cowork
+              members. Be the first to know — it&apos;s free and just one click away.
             </p>
           </div>
-          <Link
-            href="/signup"
-            className="group inline-flex items-center gap-1.5 rounded-xl bg-brand-dark px-6 py-3 text-sm font-bold text-white transition-all hover:bg-brand-dark/95 hover:shadow-sm whitespace-nowrap"
+          <a
+            href="https://chat.whatsapp.com/FUHL35hZvOs35O4oeyexpa"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 text-sm font-bold text-white transition-all hover:bg-[#20BD5A] hover:shadow-sm whitespace-nowrap"
           >
-            Join The Community
+            Join WhatsApp Community
             <span className="transition-transform group-hover:translate-x-0.5">
               →
             </span>
-          </Link>
+          </a>
         </section>
       </main>
     </div>

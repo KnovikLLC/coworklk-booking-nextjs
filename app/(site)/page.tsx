@@ -225,25 +225,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Gallery Showcase Grid */}
-      <section className="mx-auto max-w-6xl w-full px-4 py-8">
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="relative h-64 w-full rounded-[20px] overflow-hidden border border-brand-dark/15 shadow-sm">
-            <Image
-              src="/images/spaces/placeholder.svg"
-              alt="Space Gallery 1"
-              fill
-              className="object-cover"
-            />
+      {/* WhatsApp Community Banner */}
+      <section className="mx-auto max-w-6xl w-full px-4 py-12">
+        <div className="rounded-2xl border border-brand-dark/5 bg-white p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
+          <div className="space-y-2">
+            <span className="text-[10px] uppercase font-extrabold tracking-wider text-[#25D366]">
+              WhatsApp Community
+            </span>
+            <h3 className="text-2xl font-bold tracking-tight text-brand-dark">
+              Join Our Growing Community
+            </h3>
+            <p className="text-sm text-brand-dark/65 max-w-xl leading-relaxed">
+              Stay connected with fellow Cowork members, get notified about upcoming events, exclusive offers, and be the first to know what&apos;s happening. It&apos;s free — just one tap away.
+            </p>
           </div>
-          <div className="relative h-64 w-full rounded-[20px] overflow-hidden border border-brand-dark/15 shadow-sm">
-            <Image
-              src="/images/spaces/placeholder.svg"
-              alt="Space Gallery 2"
-              fill
-              className="object-cover"
-            />
-          </div>
+          <a
+            href="https://chat.whatsapp.com/FUHL35hZvOs35O4oeyexpa"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3 text-sm font-bold text-white transition-all hover:bg-[#20BD5A] hover:shadow-sm whitespace-nowrap"
+          >
+            Join WhatsApp Community
+            <span className="transition-transform group-hover:translate-x-0.5">→</span>
+          </a>
         </div>
       </section>
     </div>

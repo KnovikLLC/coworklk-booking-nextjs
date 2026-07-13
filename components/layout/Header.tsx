@@ -1,9 +1,16 @@
 import Link from "next/link";
 
-const NAV_LINKS = [
+type NavLink = {
+  href: string;
+  label: string;
+  comingSoon?: boolean;
+  external?: boolean;
+};
+
+const NAV_LINKS: NavLink[] = [
   { href: "/booking", label: "Booking" },
   { href: "/about", label: "About" },
-  { href: "#", label: "Community", comingSoon: true },
+  { href: "https://chat.whatsapp.com/FUHL35hZvOs35O4oeyexpa", label: "Community", external: true },
   { href: "/events", label: "Events" },
   { href: "/contact", label: "Contact" },
 ];
@@ -34,6 +41,15 @@ export function Header({ isSignedIn = false }: { isSignedIn?: boolean }) {
                     {link.label}
                   </span>
                 </>
+              ) : link.external ? (
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-brand-dark/70 hover:text-brand transition-colors"
+                >
+                  {link.label}
+                </a>
               ) : (
                 <Link
                   href={link.href}

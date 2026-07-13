@@ -16,13 +16,15 @@ export function Footer() {
               Cowork is a dynamic community hub where collaboration meets productivity. With flexible workspace options and top-notch amenities, we provide the ideal environment for you to work and connect with like-minded individuals. Join us and thrive at Cowork.
             </p>
             <div className="pt-2">
-              <Link
-                href="/signup"
+              <a
+                href="https://chat.whatsapp.com/FUHL35hZvOs35O4oeyexpa"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-lg bg-brand-dark px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-dark/95"
               >
                 Join The Community
                 <span>→</span>
-              </Link>
+              </a>
             </div>
           </div>
 
