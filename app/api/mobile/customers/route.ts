@@ -28,10 +28,11 @@ export async function POST(request: NextRequest) {
       phone || ""
     );
     return NextResponse.json({ contact }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     console.error("[mobile/customers] Zoho customer creation failed:", error);
+    const message = error instanceof Error ? error.message : "Failed to create Zoho customer";
     return NextResponse.json(
-      { error: error.message || "Failed to create Zoho customer" },
+      { error: message },
       { status: 500 }
     );
   }
