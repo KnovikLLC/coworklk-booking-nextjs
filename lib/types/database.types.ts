@@ -599,6 +599,24 @@ export type Database = {
         }
         Relationships: []
       }
+      preconfigured_domains: {
+        Row: {
+          created_at: string | null
+          domain: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          domain: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          domain?: string
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -641,7 +659,7 @@ export type Database = {
         | "no_show"
         | "expired"
       booking_type: "member" | "guest"
-      payment_method: "payhere" | "qr_transfer" | "cash" | "card_terminal" | "stripe"
+      payment_method: "payhere" | "qr_transfer" | "cash" | "card_terminal" | "stripe" | "domain_verification"
       payment_status:
         | "pending"
         | "processing"
@@ -799,7 +817,7 @@ export const Constants = {
         "expired",
       ],
       booking_type: ["member", "guest"],
-      payment_method: ["payhere", "qr_transfer", "cash", "card_terminal", "stripe"],
+      payment_method: ["payhere", "qr_transfer", "cash", "card_terminal", "stripe", "domain_verification"],
       payment_status: [
         "pending",
         "processing",

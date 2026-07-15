@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { formatLKR } from "@/lib/utils";
 import { durationLabel } from "@/lib/spaces";
+import { redirectToPayhereCheckout } from "@/lib/payhere/redirect";
 import type { AddonDTO, SpaceDTO, SpacePricingDTO } from "@/lib/types/domain";
 
 const SLOT_LABELS: Record<string, string> = {
@@ -44,9 +45,23 @@ export function CheckoutForm({
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"qr_transfer" | "stripe" | "payhere">("qr_transfer");
+  const [paymentMethod, setPaymentMethod] = useState<"qr_transfer" | "payhere" | "domain_verification">("payhere");
   const [submitting, setSubmitting] = useState(false);
   const [workspaceCount, setWorkspaceCount] = useState(1);
+  const [preconfiguredDomains, setPreconfiguredDomains] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("/api/preconfigured-domains")
+      .then((res) => res.json())
+      .then((data) => setPreconfiguredDomains(data.domains ?? []))
+      .catch((err) => console.error("Error fetching preconfigured domains:", err));
+  }, []);
+
+  const isDomainVerifiedUser = useMemo(() => {
+    if (!userEmail) return false;
+    const domain = userEmail.split("@")[1]?.toLowerCase();
+    return preconfiguredDomains.includes(domain);
+  }, [userEmail, preconfiguredDomains]);
 
   // Read remaining count from URL if present
   const remaining = useMemo(() => {
@@ -107,8 +122,8 @@ export function CheckoutForm({
 
       const bookingId = data.booking.id as string;
 
-      if (paymentMethod === "stripe") {
-        const initiateRes = await fetch("/api/payments/stripe/initiate", {
+      if (paymentMethod === "payhere") {
+        const initiateRes = await fetch("/api/payments/payhere/initiate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ bookingId }),
@@ -116,12 +131,12 @@ export function CheckoutForm({
         const initiateData = await initiateRes.json();
 
         if (!initiateRes.ok) {
-          toast.error(initiateData.error ?? "Could not start Stripe payment");
+          toast.error(initiateData.error ?? "Could not start PayHere payment");
           router.push(`/booking/success?id=${bookingId}`);
           return;
         }
 
-        window.location.href = initiateData.url;
+        redirectToPayhereCheckout(initiateData.payhere_url, initiateData.form_data);
         return;
       }
 
@@ -233,20 +248,21 @@ export function CheckoutForm({
             className="mt-3 space-y-2"
           >
             <label className="flex cursor-pointer items-center gap-2 rounded-md border p-3 text-sm hover:bg-slate-50 transition-colors">
-              <RadioGroupItem value="qr_transfer" id="qr_transfer" />
-              QR / Bank Transfer
+              <RadioGroupItem value="payhere" id="payhere" />
+              Card Payment (PayHere)
             </label>
             <label className="flex cursor-pointer items-center gap-2 rounded-md border p-3 text-sm hover:bg-slate-50 transition-colors">
-              <RadioGroupItem value="stripe" id="stripe" />
-              Card Payment (Stripe)
+              <RadioGroupItem value="qr_transfer" id="qr_transfer" />
+              Bank Transfer
             </label>
-            <label className="flex items-start gap-2 rounded-md border p-3 text-sm opacity-60 cursor-not-allowed bg-slate-50">
-              <RadioGroupItem value="payhere" id="payhere" disabled />
-              <div className="flex flex-col">
-                <span className="font-medium text-slate-500">Card / PayHere</span>
-                <span className="text-xs text-amber-600 font-medium mt-0.5">Not ready yet - coming soon</span>
-              </div>
-            </label>
+            {isDomainVerifiedUser && (
+              <label className="flex cursor-pointer items-center gap-2 rounded-md border p-3 text-sm hover:bg-slate-50 transition-colors border-emerald-200 bg-emerald-50/30">
+                <RadioGroupItem value="domain_verification" id="domain_verification" />
+                <span className="flex items-center gap-1.5 font-medium text-emerald-800">
+                  Domain Verification <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-full font-bold">Auto-Confirm</span>
+                </span>
+              </label>
+            )}
           </RadioGroup>
         </section>
       </div>

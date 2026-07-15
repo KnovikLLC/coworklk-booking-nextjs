@@ -82,9 +82,9 @@ export default async function PayBookingPage({
         <div className="mt-6 space-y-4">
           <PayNowButton bookingId={booking.id} />
           
-          <div className="rounded-md border border-amber-100 bg-amber-50/50 p-3 text-xs text-amber-800">
-            <span className="font-semibold block mb-0.5">Note on PayHere:</span>
-            PayHere online card payment option is not ready yet, but will be ready soon. In the meantime, please complete your payment securely with Stripe above.
+          <div className="rounded-md border border-blue-100 bg-blue-50/30 p-3 text-xs text-blue-800">
+            <span className="font-semibold block mb-0.5">Online Payment:</span>
+            Payments are securely processed in LKR via the PayHere payment gateway.
           </div>
         </div>
       </div>

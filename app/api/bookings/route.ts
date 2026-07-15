@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { bookingCreateSchema } from "@/lib/validation/booking.schema";
 import { BookingError, createBooking } from "@/lib/bookings/create";
+import { markBookingPaid } from "@/lib/bookings/payments";
+import { createBookingInvoice } from "@/lib/zoho/create-booking-invoice";
 import type { BookingCreateResponse } from "@/lib/types/domain";
 
 // Doc: docs/cowork-booking-architecture.md §4.1 POST /api/bookings
@@ -32,6 +34,26 @@ export async function POST(request: NextRequest) {
 
   const admin = createAdminClient();
 
+  const isDomainVerification = body.payment_method === "domain_verification";
+  if (isDomainVerification) {
+    if (!user || !user.email || !user.email_confirmed_at) {
+      return NextResponse.json({ error: "Email verification is required for this payment method" }, { status: 400 });
+    }
+    const domain = user.email.split("@")[1]?.toLowerCase();
+    if (!domain) {
+      return NextResponse.json({ error: "Invalid email domain" }, { status: 400 });
+    }
+    const { data: domainRecord } = await admin
+      .from("preconfigured_domains")
+      .select("domain")
+      .eq("domain", domain)
+      .single();
+
+    if (!domainRecord) {
+      return NextResponse.json({ error: "Your email domain does not qualify for auto-confirmation" }, { status: 403 });
+    }
+  }
+
   try {
     const booking = await createBooking(admin, {
       spaceId: body.space_id,
@@ -46,6 +68,18 @@ export async function POST(request: NextRequest) {
       guestPhone: user ? undefined : body.guest_phone,
       workspaceCount: body.workspace_count,
     });
+
+    if (isDomainVerification) {
+      await markBookingPaid(admin, {
+        bookingId: booking.id,
+        amount: Number(booking.total_amount),
+        method: "domain_verification",
+      });
+      await createBookingInvoice(admin, booking.id);
+      
+      // Update status locally in reference so 201 returns confirmed status
+      booking.status = "confirmed";
+    }
 
     const responseBody: BookingCreateResponse = { booking };
     return NextResponse.json(responseBody, { status: 201 });

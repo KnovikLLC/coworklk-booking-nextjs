@@ -26,6 +26,8 @@ export async function sendBookingConfirmationEmail(bookingId: string): Promise<v
     if (booking) {
       console.log(`[Resend Email Mock]`);
       console.log(`  To: ${booking.guest_email}`);
+      console.log(`  CC: admin@cowork.lk, lakshan@cowork.lk`);
+      console.log(`  BCC: hasanthi@cowork.lk`);
       console.log(`  Subject: Booking Confirmed - #${booking.booking_number}`);
       console.log(`  Body: Hello ${booking.guest_name || "Customer"}, your booking for ${booking.spaces?.name} on ${booking.booking_date} (${booking.time_slot}) is confirmed. Total: LKR ${booking.total_amount}.`);
     }
@@ -94,6 +96,8 @@ export async function sendBookingConfirmationEmail(bookingId: string): Promise<v
   const { error: sendError } = await resend.emails.send({
     from: `Cowork.lk <${fromEmail}>`,
     to: booking.guest_email,
+    cc: ["admin@cowork.lk", "lakshan@cowork.lk"],
+    bcc: ["hasanthi@cowork.lk"],
     subject: `Booking Confirmed - #${booking.booking_number}`,
     html: htmlContent,
   });
@@ -125,6 +129,8 @@ export async function sendPaymentRequestEmail(bookingId: string, paymentLink: st
     console.warn(`[Resend] RESEND_API_KEY is not configured. Logging payment request email details instead:`);
     console.log(`[Resend Email Mock]`);
     console.log(`  To: ${booking.guest_email}`);
+    console.log(`  CC: admin@cowork.lk, lakshan@cowork.lk`);
+    console.log(`  BCC: hasanthi@cowork.lk`);
     console.log(`  Subject: Complete Your Booking - #${booking.booking_number}`);
     console.log(`  Body: Hello ${booking.guest_name || "Customer"}, please complete payment for your ${booking.spaces?.name} booking on ${booking.booking_date} (${booking.time_slot}). Total: LKR ${booking.total_amount}. Pay here: ${paymentLink}`);
     return;
@@ -175,6 +181,8 @@ export async function sendPaymentRequestEmail(bookingId: string, paymentLink: st
   const { error: sendError } = await resend.emails.send({
     from: `Cowork.lk <${fromEmail}>`,
     to: booking.guest_email,
+    cc: ["admin@cowork.lk", "lakshan@cowork.lk"],
+    bcc: ["hasanthi@cowork.lk"],
     subject: `Complete Your Booking - #${booking.booking_number}`,
     html: htmlContent,
   });

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { redirectToPayhereCheckout } from "@/lib/payhere/redirect";
 
 interface PayNowButtonProps {
   bookingId: string;
@@ -17,16 +18,16 @@ export function PayNowButton({ bookingId }: PayNowButtonProps) {
   async function handlePay() {
     setLoading(true);
     try {
-      const res = await fetch("/api/payments/stripe/initiate", {
+      const res = await fetch("/api/payments/payhere/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookingId }),
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error ?? "Failed to initiate Stripe payment");
+        throw new Error(data.error ?? "Failed to initiate PayHere payment");
       }
-      window.location.href = data.url;
+      redirectToPayhereCheckout(data.payhere_url, data.form_data);
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Could not initiate payment";
       toast.error(errorMessage);
@@ -42,7 +43,7 @@ export function PayNowButton({ bookingId }: PayNowButtonProps) {
       disabled={loading}
       onClick={handlePay}
     >
-      {loading ? "Redirecting to Stripe..." : "Pay Now with Card"}
+      {loading ? "Redirecting to PayHere..." : "Pay Now with Card (PayHere)"}
     </Button>
   );
 }

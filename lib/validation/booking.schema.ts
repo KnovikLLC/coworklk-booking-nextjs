@@ -25,7 +25,7 @@ export const bookingCreateSchema = z
     guest_email: z.string().email().optional(),
     guest_phone: z.string().min(9).optional(),
     addons: z.array(bookingAddonSchema).max(20).optional(),
-    payment_method: z.enum(["payhere", "qr_transfer", "stripe"]),
+    payment_method: z.enum(["payhere", "qr_transfer", "stripe", "domain_verification"]),
     workspace_count: z.number().int().min(1).max(20).default(1),
     notes: z.string().max(1000).optional(),
   })
@@ -57,7 +57,7 @@ export const adminBookingCreateSchema = z.object({
     phone: z.string().min(9),
   }),
   addons: z.array(bookingAddonSchema).max(20).optional(),
-  payment_method: z.enum(["cash", "card_terminal", "qr_transfer", "payhere", "stripe"]),
+  payment_method: z.enum(["cash", "card_terminal", "qr_transfer", "payhere", "stripe", "domain_verification"]),
   payment_received: z.boolean().optional(),
   workspace_count: z.number().int().min(1).max(20).default(1),
   notes: z.string().max(1000).optional(),
