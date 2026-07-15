@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -106,6 +107,7 @@ export default function RootLayout({
         </Script>
         {children}
         <Toaster richColors position="top-right" />
+        <SpeedInsights />
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
