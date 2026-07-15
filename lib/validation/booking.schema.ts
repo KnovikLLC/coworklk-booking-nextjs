@@ -28,6 +28,8 @@ export const bookingCreateSchema = z
     payment_method: z.enum(["payhere", "qr_transfer", "stripe", "domain_verification"]),
     workspace_count: z.number().int().min(1).max(20).default(1),
     notes: z.string().max(1000).optional(),
+    verification_email: z.string().email().optional(),
+    verification_code: z.string().optional(),
   })
   .refine((data) => !!data.guest_email === !!data.guest_name, {
     message: "guest_name and guest_email must be provided together",

@@ -617,6 +617,33 @@ export type Database = {
         }
         Relationships: []
       }
+      domain_verifications: {
+        Row: {
+          id: string
+          email: string
+          code: string
+          expires_at: string
+          verified_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          code: string
+          expires_at: string
+          verified_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          code?: string
+          expires_at?: string
+          verified_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -36,22 +36,63 @@ export async function POST(request: NextRequest) {
 
   const isDomainVerification = body.payment_method === "domain_verification";
   if (isDomainVerification) {
-    if (!user || !user.email || !user.email_confirmed_at) {
-      return NextResponse.json({ error: "Email verification is required for this payment method" }, { status: 400 });
+    const email = body.verification_email;
+    const code = body.verification_code;
+
+    if (!email || !code) {
+      return NextResponse.json(
+        { error: "Verification email and code are required for domain verification" },
+        { status: 400 }
+      );
     }
-    const domain = user.email.split("@")[1]?.toLowerCase();
+
+    const domain = email.split("@")[1]?.toLowerCase();
     if (!domain) {
-      return NextResponse.json({ error: "Invalid email domain" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid verification email domain" }, { status: 400 });
     }
-    const { data: domainRecord } = await admin
+
+    // A. Check domain is preconfigured
+    const { data: domainRecord, error: domainError } = await admin
       .from("preconfigured_domains")
       .select("domain")
       .eq("domain", domain)
       .single();
 
-    if (!domainRecord) {
-      return NextResponse.json({ error: "Your email domain does not qualify for auto-confirmation" }, { status: 403 });
+    if (domainError || !domainRecord) {
+      return NextResponse.json(
+        { error: "Your email domain does not qualify for auto-confirmation" },
+        { status: 403 }
+      );
     }
+
+    // B. Validate 2FA code matches and is active
+    const { data: verification, error: verificationError } = await admin
+      .from("domain_verifications")
+      .select("id, expires_at, verified_at")
+      .eq("email", email.toLowerCase().trim())
+      .eq("code", code.trim())
+      .is("verified_at", null)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (verificationError || !verification) {
+      return NextResponse.json(
+        { error: "Invalid or expired verification code" },
+        { status: 400 }
+      );
+    }
+
+    const hasExpired = new Date(verification.expires_at).getTime() < Date.now();
+    if (hasExpired) {
+      return NextResponse.json({ error: "Verification code has expired" }, { status: 400 });
+    }
+
+    // C. Mark verification as verified
+    await admin
+      .from("domain_verifications")
+      .update({ verified_at: new Date().toISOString() })
+      .eq("id", verification.id);
   }
 
   try {
@@ -64,7 +105,7 @@ export async function POST(request: NextRequest) {
       notes: body.notes,
       userId: user?.id ?? null,
       guestName: user ? undefined : body.guest_name,
-      guestEmail: user ? undefined : body.guest_email,
+      guestEmail: isDomainVerification ? body.verification_email : (user ? undefined : body.guest_email),
       guestPhone: user ? undefined : body.guest_phone,
       workspaceCount: body.workspace_count,
     });

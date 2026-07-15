@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -48,20 +48,38 @@ export function CheckoutForm({
   const [paymentMethod, setPaymentMethod] = useState<"qr_transfer" | "payhere" | "domain_verification">("payhere");
   const [submitting, setSubmitting] = useState(false);
   const [workspaceCount, setWorkspaceCount] = useState(1);
-  const [preconfiguredDomains, setPreconfiguredDomains] = useState<string[]>([]);
 
-  useEffect(() => {
-    fetch("/api/preconfigured-domains")
-      .then((res) => res.json())
-      .then((data) => setPreconfiguredDomains(data.domains ?? []))
-      .catch((err) => console.error("Error fetching preconfigured domains:", err));
-  }, []);
+  // Corporate Domain Verification 2FA states
+  const [verificationEmail, setVerificationEmail] = useState(userEmail ?? "");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [sendingCode, setSendingCode] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
 
-  const isDomainVerifiedUser = useMemo(() => {
-    if (!userEmail) return false;
-    const domain = userEmail.split("@")[1]?.toLowerCase();
-    return preconfiguredDomains.includes(domain);
-  }, [userEmail, preconfiguredDomains]);
+  async function handleSendVerificationCode() {
+    if (!verificationEmail || !verificationEmail.includes("@")) {
+      toast.error("Please enter a valid corporate email address.");
+      return;
+    }
+    setSendingCode(true);
+    try {
+      const res = await fetch("/api/auth/domain-verification/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: verificationEmail }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Failed to send verification code.");
+        return;
+      }
+      setCodeSent(true);
+      toast.success("Verification code sent! Please check your corporate email inbox.");
+    } catch {
+      toast.error("An error occurred while sending verification code.");
+    } finally {
+      setSendingCode(false);
+    }
+  }
 
   // Read remaining count from URL if present
   const remaining = useMemo(() => {
@@ -97,6 +115,13 @@ export function CheckoutForm({
       return;
     }
 
+    if (paymentMethod === "domain_verification") {
+      if (!verificationEmail || !verificationCode) {
+        toast.error("Please enter your corporate email and the 2FA verification code.");
+        return;
+      }
+    }
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/bookings", {
@@ -111,6 +136,9 @@ export function CheckoutForm({
           payment_method: paymentMethod,
           workspace_count: workspaceCount,
           ...(userEmail ? {} : { guest_name: guestName, guest_email: guestEmail, guest_phone: guestPhone }),
+          ...(paymentMethod === "domain_verification"
+            ? { verification_email: verificationEmail, verification_code: verificationCode }
+            : {}),
         }),
       });
       const data = await res.json();
@@ -255,15 +283,63 @@ export function CheckoutForm({
               <RadioGroupItem value="qr_transfer" id="qr_transfer" />
               Bank Transfer
             </label>
-            {isDomainVerifiedUser && (
-              <label className="flex cursor-pointer items-center gap-2 rounded-md border p-3 text-sm hover:bg-slate-50 transition-colors border-emerald-200 bg-emerald-50/30">
-                <RadioGroupItem value="domain_verification" id="domain_verification" />
-                <span className="flex items-center gap-1.5 font-medium text-emerald-800">
-                  Domain Verification <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-full font-bold">Auto-Confirm</span>
+            <label className="flex items-start gap-2 rounded-md border p-3 text-sm hover:bg-slate-50 transition-colors border-emerald-100 bg-emerald-50/10">
+              <RadioGroupItem value="domain_verification" id="domain_verification" />
+              <div className="flex flex-col">
+                <span className="font-semibold text-emerald-800 flex items-center gap-1.5">
+                  Domain Verification
+                  <span className="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-full font-bold">Auto-Confirm</span>
                 </span>
-              </label>
-            )}
+                <span className="text-xs text-muted-foreground mt-0.5">Instant booking confirmation for pre-approved corporate domains</span>
+              </div>
+            </label>
           </RadioGroup>
+
+          {paymentMethod === "domain_verification" && (
+            <div className="mt-3 rounded-lg border border-emerald-100 bg-emerald-50/20 p-4 space-y-3">
+              <div>
+                <Label htmlFor="verificationEmail" className="text-emerald-950 font-medium">Corporate Email</Label>
+                <div className="mt-1.5 flex gap-2">
+                  <Input
+                    id="verificationEmail"
+                    type="email"
+                    placeholder="you@company.com"
+                    value={verificationEmail}
+                    onChange={(e) => setVerificationEmail(e.target.value)}
+                    disabled={codeSent || sendingCode}
+                    className="bg-white"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleSendVerificationCode}
+                    disabled={sendingCode || !verificationEmail || !verificationEmail.includes("@")}
+                    className="shrink-0 border-emerald-300 text-emerald-800 hover:bg-emerald-50"
+                  >
+                    {sendingCode ? "Sending..." : codeSent ? "Resend Code" : "Send Code"}
+                  </Button>
+                </div>
+              </div>
+
+              {codeSent && (
+                <div className="animate-in fade-in slide-in-from-top-1 duration-200">
+                  <Label htmlFor="verificationCode" className="text-emerald-950 font-medium">Verification Code (6-digit)</Label>
+                  <Input
+                    id="verificationCode"
+                    type="text"
+                    maxLength={6}
+                    placeholder="123456"
+                    value={verificationCode}
+                    onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ""))}
+                    className="mt-1.5 bg-white tracking-widest font-mono text-center text-lg font-bold"
+                  />
+                  <p className="mt-1 text-[11px] text-emerald-700">
+                    Enter the 6-digit verification code sent to {verificationEmail}.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </section>
       </div>
 

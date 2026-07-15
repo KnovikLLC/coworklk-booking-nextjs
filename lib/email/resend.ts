@@ -191,3 +191,39 @@ export async function sendPaymentRequestEmail(bookingId: string, paymentLink: st
     throw new Error(sendError.message);
   }
 }
+
+export async function sendDomainVerificationEmail(email: string, code: string): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.warn(`[Resend] RESEND_API_KEY is not configured. Logging 2FA code instead:`);
+    console.log(`[Resend Email Mock]`);
+    console.log(`  To: ${email}`);
+    console.log(`  Subject: Corporate Verification Code`);
+    console.log(`  Code: ${code}`);
+    return;
+  }
+
+  const resend = new Resend(apiKey);
+  const fromEmail = process.env.EMAIL_FROM || "onboarding@resend.dev";
+
+  const { error: sendError } = await resend.emails.send({
+    from: `Cowork.lk <${fromEmail}>`,
+    to: email,
+    subject: "CoWork.lk - Corporate Domain Verification Code",
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+        <h2 style="color: #F97316;">Corporate Verification Code</h2>
+        <p>Hello,</p>
+        <p>You requested a corporate domain verification code for CoWork.lk. Please use the following 2FA code to confirm your booking instantly:</p>
+        <div style="background-color: #f3f4f6; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 4px; border-radius: 6px; margin: 20px 0; color: #1e293b;">
+          ${code}
+        </div>
+        <p style="color: #64748b; font-size: 12px;">This code is valid for 10 minutes. If you did not request this code, please ignore this email.</p>
+      </div>
+    `,
+  });
+
+  if (sendError) {
+    throw new Error(sendError.message);
+  }
+}
