@@ -148,8 +148,8 @@ export default function HomePage() {
           <div className="relative h-96 w-full rounded-[24px] overflow-hidden bg-white border border-brand-dark/10 shadow-sm">
             <div className="absolute inset-0 bg-gradient-to-tr from-brand-dark/10 to-brand/10 z-10" />
             <Image
-              src="/images/spaces/placeholder.svg"
-              alt="Collaboration"
+              src="/images/spaces/Lobby.jpeg"
+              alt="Collaboration at Cowork.lk"
               fill
               className="object-cover"
             />
