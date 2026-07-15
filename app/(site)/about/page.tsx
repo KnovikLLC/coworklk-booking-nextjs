@@ -40,7 +40,7 @@ export default function AboutPage() {
         <div className="mt-12 rounded-lg bg-muted/30 p-6 border">
           <h2 className="text-xl font-semibold text-brand-dark mb-3">Location &amp; Facility</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Our central location at 279 Avissawella Road, Pannipitiya, offers excellent accessibility. The facility features a backup power generator (ensuring 100% uptime during load shedding), dedicated clean washrooms, comfortable breakout zones, and safe on-premise parking.
+            Our central location at 349/A/3 Avissawella Road, Pannipitiya, offers excellent accessibility. 5 min from Kottawa, 10 min from Maharagama and within 30min drive from Kadawatha via expressway. clean washrooms (planning for dedicated really soon), comfortable breakout zones, and safe on-premise parking for limited vehicles. Fully air conditioned, free coffee and ozone water dispenser etc.
           </p>
         </div>
 
