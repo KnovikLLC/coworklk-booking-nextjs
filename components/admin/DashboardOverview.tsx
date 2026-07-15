@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { formatLKR } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChevronDown, ChevronUp, FileText } from "lucide-react";
 import {
   Calendar,
   DollarSign,
@@ -79,6 +81,52 @@ export function DashboardOverview({
   const [todayBookings, setTodayBookings] = useState<DashboardBooking[]>(initialTodayBookings);
   const [currentStats, setCurrentStats] = useState<DashboardStats>(stats);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Tabs & Billing states
+  interface CorporateBillingGroup {
+    domain: string;
+    month: string;
+    bookingCount: number;
+    totalAmount: number;
+    bookings: {
+      id: string;
+      booking_number: string;
+      booking_date: string;
+      time_slot: string;
+      customer_name: string;
+      customer_email: string | null;
+      total_amount: number;
+      space_name: string;
+    }[];
+  }
+
+  const [activeTab, setActiveTab] = useState("operations");
+  const [billingReport, setBillingReport] = useState<CorporateBillingGroup[]>([]);
+  const [loadingReport, setLoadingReport] = useState(false);
+  const [expandedRowKey, setExpandedRowKey] = useState<string | null>(null);
+
+  async function fetchBillingReport() {
+    setLoadingReport(true);
+    try {
+      const res = await fetch("/api/admin/reports/corporate-billing");
+      const data = await res.json();
+      if (res.ok) {
+        setBillingReport(data.report ?? []);
+      } else {
+        toast.error(data.error ?? "Failed to load billing report");
+      }
+    } catch {
+      toast.error("Failed to load billing report");
+    } finally {
+      setLoadingReport(false);
+    }
+  }
+
+  useEffect(() => {
+    if (activeTab === "billing") {
+      fetchBillingReport();
+    }
+  }, [activeTab]);
 
   // Helper to refresh page data
   async function refreshDashboard() {
@@ -164,13 +212,27 @@ export function DashboardOverview({
           <h1 className="text-3xl font-bold text-brand-dark">Dashboard</h1>
           <p className="text-sm text-muted-foreground">Operational overview for today&apos;s co-working slots.</p>
         </div>
-        <Button variant="outline" size="sm" onClick={refreshDashboard} disabled={refreshing}>
-          <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          {activeTab === "billing" && (
+            <Button variant="outline" size="sm" onClick={fetchBillingReport} disabled={loadingReport}>
+              <RefreshCw className={`mr-2 h-4 w-4 ${loadingReport ? "animate-spin" : ""}`} />
+              Refresh Report
+            </Button>
+          )}
+          <Button variant="outline" size="sm" onClick={refreshDashboard} disabled={refreshing}>
+            <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
+            Refresh
+          </Button>
+        </div>
       </div>
 
-      {/* Metrics Cards */}
+      <Tabs defaultValue="operations" value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid w-80 grid-cols-2 mb-6">
+          <TabsTrigger value="operations">Operations</TabsTrigger>
+          <TabsTrigger value="billing">Corporate Billing</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="operations" className="space-y-6 animate-in fade-in duration-150">
       <div className="grid gap-4 md:grid-cols-3">
         {/* Card 1: Today&apos;s Bookings */}
         <div className="flex items-center gap-4 rounded-xl border bg-white p-5 shadow-sm">
@@ -360,6 +422,131 @@ export function DashboardOverview({
           </div>
         </div>
       </div>
+      </TabsContent>
+
+      <TabsContent value="billing" className="animate-in fade-in duration-150">
+        <div className="rounded-xl border bg-white p-5 shadow-sm">
+          <div className="mb-4 flex items-center gap-2">
+            <FileText className="h-5 w-5 text-brand" />
+            <h2 className="text-lg font-semibold text-slate-800">Monthly Billing Summary</h2>
+          </div>
+          
+          <p className="text-sm text-slate-500 mb-6">
+            This report compiles all confirmed or completed reservations processed via corporate domain 2FA verification. Use this summary to invoice and collect payments from the client organizations.
+          </p>
+
+          {loadingReport ? (
+            <div className="flex flex-col items-center justify-center py-10 text-center">
+              <RefreshCw className="h-8 w-8 animate-spin text-brand/60" />
+              <h4 className="mt-2 font-medium text-slate-700">Loading Billing Report...</h4>
+            </div>
+          ) : billingReport.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center border rounded-lg border-dashed">
+              <FileText className="h-10 w-10 text-slate-300" />
+              <h4 className="mt-2 font-semibold text-slate-700">No Corporate Bookings</h4>
+              <p className="text-xs text-slate-400 mt-0.5">No domain verification bookings have been made yet.</p>
+            </div>
+          ) : (
+            <div className="overflow-hidden rounded-lg border border-slate-100">
+              <Table>
+                <TableHeader className="bg-slate-50/50">
+                  <TableRow>
+                    <TableHead>Organization (Domain)</TableHead>
+                    <TableHead>Billing Month</TableHead>
+                    <TableHead className="text-center">Total Bookings</TableHead>
+                    <TableHead className="text-right">Total Amount Due</TableHead>
+                    <TableHead className="w-[120px]"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {billingReport.map((item) => {
+                    const key = `${item.domain}_${item.month}`;
+                    const isExpanded = expandedRowKey === key;
+                    const dateObj = new Date(`${item.month}-02`);
+                    const formattedMonth = dateObj.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+
+                    return (
+                      <React.Fragment key={key}>
+                        <TableRow className={isExpanded ? "bg-slate-50/30" : ""}>
+                          <TableCell className="font-semibold text-slate-700">{item.domain}</TableCell>
+                          <TableCell className="text-slate-600">{formattedMonth}</TableCell>
+                          <TableCell className="text-center font-medium text-slate-700">{item.bookingCount}</TableCell>
+                          <TableCell className="text-right font-bold text-slate-800">{formatLKR(item.totalAmount)}</TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => setExpandedRowKey(isExpanded ? null : key)}
+                              className="text-brand hover:text-brand-dark"
+                            >
+                              {isExpanded ? (
+                                <span className="flex items-center gap-1">Hide <ChevronUp className="h-4 w-4" /></span>
+                              ) : (
+                                <span className="flex items-center gap-1">Details <ChevronDown className="h-4 w-4" /></span>
+                              )}
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+
+                        {isExpanded && (
+                          <TableRow className="bg-slate-50/30">
+                            <TableCell colSpan={5} className="p-4 border-t border-slate-100">
+                              <div className="rounded-lg border bg-white p-4 shadow-inner space-y-3">
+                                <div className="flex items-center justify-between">
+                                  <h4 className="font-semibold text-xs uppercase tracking-wider text-slate-500">
+                                    Booking Breakdown for {item.domain} - {formattedMonth}
+                                  </h4>
+                                  <span className="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium">
+                                    {item.bookingCount} Booking(s)
+                                  </span>
+                                </div>
+                                
+                                <div className="overflow-x-auto">
+                                  <Table>
+                                    <TableHeader className="bg-slate-50/30 text-[11px]">
+                                      <TableRow>
+                                        <TableHead className="h-8">Ref</TableHead>
+                                        <TableHead className="h-8">Date</TableHead>
+                                        <TableHead className="h-8">Space / Slot</TableHead>
+                                        <TableHead className="h-8">Customer</TableHead>
+                                        <TableHead className="h-8 text-right">Amount</TableHead>
+                                      </TableRow>
+                                    </TableHeader>
+                                    <TableBody className="text-xs">
+                                      {item.bookings.map((b) => (
+                                        <TableRow key={b.id} className="hover:bg-slate-50/50">
+                                          <TableCell className="font-semibold text-slate-700">{b.booking_number}</TableCell>
+                                          <TableCell>{b.booking_date}</TableCell>
+                                          <TableCell>
+                                            <span className="font-medium text-slate-700">{b.space_name}</span>
+                                            <span className="text-[10px] text-muted-foreground block">
+                                              {SLOT_LABEL[b.time_slot] || b.time_slot}
+                                            </span>
+                                          </TableCell>
+                                          <TableCell>
+                                            <div>{b.customer_name}</div>
+                                            <div className="text-[10px] text-muted-foreground font-mono">{b.customer_email}</div>
+                                          </TableCell>
+                                          <TableCell className="text-right font-semibold text-slate-800">{formatLKR(b.total_amount)}</TableCell>
+                                        </TableRow>
+                                      ))}
+                                    </TableBody>
+                                  </Table>
+                                </div>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </div>
+      </TabsContent>
+      </Tabs>
     </div>
   );
 }
