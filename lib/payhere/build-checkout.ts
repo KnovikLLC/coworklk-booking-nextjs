@@ -35,6 +35,7 @@ export function buildPayhereCheckout(booking: PayhereCheckoutBooking): PayhereCh
   const [firstName, ...rest] = name.split(" ");
 
   const amount = Number(booking.total_amount);
+  const amountFormatted = amount.toFixed(2);
   const formData: Record<string, string | number> = {
     merchant_id: merchantId,
     return_url: `${process.env.NEXT_PUBLIC_URL}/booking/success?id=${booking.id}`,
@@ -43,7 +44,7 @@ export function buildPayhereCheckout(booking: PayhereCheckoutBooking): PayhereCh
     order_id: booking.booking_number,
     items: booking.space_name ?? "Cowork.lk Booking",
     currency: "LKR",
-    amount,
+    amount: amountFormatted,
     first_name: firstName || "Customer",
     last_name: rest.join(" ") || "-",
     email,
