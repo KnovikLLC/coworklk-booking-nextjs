@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter } from "next/font/google";
+import { Red_Hat_Text, Red_Hat_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
+const redHatText = Red_Hat_Text({ subsets: ["latin"], variable: "--font-sans" });
+const redHatDisplay = Red_Hat_Display({ subsets: ["latin"], variable: "--font-display" });
 
 const SITE_URL = process.env.NEXT_PUBLIC_URL || "https://cowork.lk";
-const SITE_NAME = "Cowork.lk";
+const SITE_NAME = "Cowork Sri Lanka";
 const DEFAULT_DESCRIPTION =
-  "Book hot desks, dedicated workspaces, and meeting rooms at Cowork Lanka's coworking space in Pannipitiya, Sri Lanka. Real-time availability, instant online booking.";
+  "Book hot desks, dedicated workspaces, and meeting rooms at Cowork Lanka's coworking space in Pannipitiya, Colombo, Sri Lanka. Real-time availability, instant online booking.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   // Every page in this app already bakes "| Cowork.lk" into its own title
   // string, so no title.template here — it would double up the suffix.
-  title: "Cowork.lk | Coworking Space in Pannipitiya, Sri Lanka",
+  title: "Cowork.lk | Coworking Space in Pannipitiya, Colombo, Sri Lanka",
   description: DEFAULT_DESCRIPTION,
   keywords: [
     "coworking space Sri Lanka",
@@ -30,12 +31,12 @@ export const metadata: Metadata = {
     locale: "en_LK",
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: "Cowork.lk | Coworking Space in Pannipitiya, Sri Lanka",
+    title: "Cowork.lk | Coworking Space in Pannipitiya, Colombo, Sri Lanka",
     description: DEFAULT_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cowork.lk | Coworking Space in Pannipitiya, Sri Lanka",
+    title: "Cowork.lk | Coworking Space in Pannipitiya, Colombo, Sri Lanka",
     description: DEFAULT_DESCRIPTION,
   },
   alternates: {
@@ -90,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`${redHatText.variable} ${redHatDisplay.variable}`}>
       <body className="font-sans antialiased">
         {/* Google Analytics */}
         <Script
