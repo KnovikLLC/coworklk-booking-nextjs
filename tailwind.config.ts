@@ -13,6 +13,12 @@ const config: Config = {
         sans: ["var(--font-sans)", "sans-serif"],
         display: ["var(--font-display)", "sans-serif"],
       },
+      fontSize: {
+        xs: ["0.8rem", { lineHeight: "1.25rem" }],
+        sm: ["0.925rem", { lineHeight: "1.35rem" }],
+        base: ["1.05rem", { lineHeight: "1.55rem" }],
+        lg: ["1.15rem", { lineHeight: "1.65rem" }],
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
