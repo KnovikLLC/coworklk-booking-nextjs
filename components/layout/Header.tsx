@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type NavLink = {
   href: string;
@@ -16,6 +19,8 @@ const NAV_LINKS: NavLink[] = [
 ];
 
 export function Header({ isSignedIn = false }: { isSignedIn?: boolean }) {
+  const pathname = usePathname();
+
   return (
     <header className="sticky top-0 z-40 border-b border-brand-dark/10 bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
@@ -53,7 +58,11 @@ export function Header({ isSignedIn = false }: { isSignedIn?: boolean }) {
               ) : (
                 <Link
                   href={link.href}
-                  className="text-sm font-semibold text-brand-dark/70 hover:text-brand transition-colors"
+                  className={`text-sm font-semibold transition-colors ${
+                    pathname === link.href || (link.href !== "/" && pathname?.startsWith(link.href))
+                      ? "text-brand"
+                      : "text-brand-dark/70 hover:text-brand"
+                  }`}
                 >
                   {link.label}
                 </Link>
