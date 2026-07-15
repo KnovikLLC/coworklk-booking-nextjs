@@ -35,9 +35,9 @@ The platform acts as a unified hub for space management, invoicing, community en
 *   **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [shadcn/ui](https://ui.shadcn.com/)
 *   **Email Notifications**: [Resend](https://resend.com/)
 
----
 
 ## Contributors
 
 *   **Madusanka Premaratne** — [madusankapremaratne.com](https://madusankapremaratne.com)
 *   **Iroshana Wickremasingha** — [iroshana.com](https://iroshana.com)
+*   **Dinithi Viranga De Silva** — [dinithi.com](https://dinithi.com)
