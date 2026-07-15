@@ -6,7 +6,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-16">
         <div className="grid gap-12 lg:grid-cols-12">
           {/* Brand Info */}
-          <div className="space-y-4 lg:col-span-5">
+          <div className="space-y-4 lg:col-span-4">
             <img
               src="/images/logos/cowork-logo.svg"
               alt="Cowork.lk"
@@ -17,8 +17,30 @@ export function Footer() {
             </p>
           </div>
 
+          {/* Quick Links */}
+          <div className="space-y-4 lg:col-span-2">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-brand-dark/80">Explore</h3>
+            <ul className="space-y-2.5 text-sm font-semibold text-brand-dark/70">
+              <li>
+                <Link href="/about" className="hover:text-brand transition-colors">About Us</Link>
+              </li>
+              <li>
+                <Link href="/booking" className="hover:text-brand transition-colors">Book a Space</Link>
+              </li>
+              <li>
+                <Link href="/community" className="hover:text-brand transition-colors">Community</Link>
+              </li>
+              <li>
+                <Link href="/events" className="hover:text-brand transition-colors">Events</Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-brand transition-colors">Contact</Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Location & Map */}
-          <div className="space-y-4 lg:col-span-4">
+          <div className="space-y-4 lg:col-span-3">
             <h3 className="text-sm font-bold uppercase tracking-wider text-brand-dark/80">Location</h3>
             <p className="text-sm leading-relaxed text-brand-dark/70">
               <span className="text-brand font-bold mr-1.5">A</span>
