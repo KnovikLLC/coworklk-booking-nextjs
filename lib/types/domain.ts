@@ -27,6 +27,10 @@ export interface SpacesResponse {
   spaces: SpaceDTO[];
 }
 
+export interface SpaceResponse {
+  space: SpaceDTO;
+}
+
 export interface AvailabilitySlot {
   available: boolean;
   remaining: number;

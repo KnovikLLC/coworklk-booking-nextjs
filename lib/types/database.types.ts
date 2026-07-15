@@ -630,6 +630,12 @@ export type Database = {
         Returns: string
       }
       is_staff: { Args: never; Returns: boolean }
+      // Hand-added ahead of `supabase gen types` regeneration — matches
+      // supabase/migrations/20260715090500_rate_limit.sql exactly.
+      check_rate_limit: {
+        Args: { p_key: string; p_window_seconds: number; p_max_hits: number }
+        Returns: boolean
+      }
     }
     Enums: {
       booking_status:

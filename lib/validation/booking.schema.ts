@@ -63,3 +63,20 @@ export const adminBookingCreateSchema = z.object({
   notes: z.string().max(1000).optional(),
 });
 export type AdminBookingCreateInput = z.infer<typeof adminBookingCreateSchema>;
+
+// PATCH /api/bookings/:id/reschedule — date/slot only, see lib/bookings/reschedule.ts.
+export const bookingRescheduleSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "date must be YYYY-MM-DD"),
+  slot: z.enum([
+    "morning",
+    "afternoon",
+    "evening",
+    "night",
+    "full_day",
+    "unlimited",
+    "1hr",
+    "2hr",
+    "30min",
+  ]),
+});
+export type BookingRescheduleInput = z.infer<typeof bookingRescheduleSchema>;

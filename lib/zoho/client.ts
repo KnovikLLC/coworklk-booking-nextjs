@@ -70,6 +70,10 @@ export interface ZohoResponse<T = unknown> {
 export interface ZohoClient {
   get<T = unknown>(path: string, opts?: { params?: Record<string, string | number> }): Promise<ZohoResponse<T>>;
   post<T = unknown>(path: string, body?: unknown): Promise<ZohoResponse<T>>;
+  // Zoho Books' `?accept=pdf` variant returns raw PDF bytes, not JSON — a
+  // separate method rather than a flag on get() so callers can't
+  // accidentally .json() a binary response.
+  getPdf(path: string, opts?: { params?: Record<string, string | number> }): Promise<ArrayBuffer>;
 }
 
 const ZOHO_BOOKS_BASE_URL = "https://www.zohoapis.com/books/v3";
@@ -110,8 +114,30 @@ export async function getZohoClient(): Promise<ZohoClient> {
     return { data: (await res.json()) as T };
   }
 
+  async function requestPdf(path: string, params?: Record<string, string | number>): Promise<ArrayBuffer> {
+    const url = new URL(ZOHO_BOOKS_BASE_URL + path);
+    url.searchParams.set("organization_id", env.organizationId);
+    url.searchParams.set("accept", "pdf");
+    if (params) {
+      for (const [key, value] of Object.entries(params)) {
+        url.searchParams.set(key, String(value));
+      }
+    }
+
+    const res = await fetch(url.toString(), {
+      headers: { Authorization: `Zoho-oauthtoken ${accessToken}` },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Zoho API error ${res.status}: ${await res.text()}`);
+    }
+
+    return res.arrayBuffer();
+  }
+
   return {
     get: (path, opts) => request("GET", path, opts),
     post: (path, body) => request("POST", path, { body }),
+    getPdf: (path, opts) => requestPdf(path, opts?.params),
   };
 }

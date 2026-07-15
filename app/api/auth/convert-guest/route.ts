@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { convertGuestSchema } from "@/lib/validation/auth.schema";
 import { createOrUpdateZohoContact } from "@/lib/zoho/customers";
 import { ZohoNotConfiguredError } from "@/lib/zoho/client";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 // Doc §8.6 lines 1829-1893, adapted:
 // - Uses lib/supabase/server's cookie-aware client for signUp() so the
@@ -22,6 +23,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
   const { email, password } = parsed.data;
+
+  // Account-creation endpoint — tighter than booking-create since it's a
+  // prime target for enumeration/brute-force account spam.
+  const allowed = await checkRateLimit({
+    key: `convert-guest:${getClientIp(request)}`,
+    windowSeconds: 300,
+    maxHits: 5,
+  });
+  if (!allowed) {
+    return NextResponse.json({ error: "Too many attempts. Please try again shortly." }, { status: 429 });
+  }
 
   const admin = createAdminClient();
   const { data: guestProfile } = await admin

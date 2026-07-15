@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { getOptionalRequestUser } from "@/lib/auth/get-request-user";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { calculateRefund } from "@/lib/bookings/cancellation";
 
 // Doc: docs/cowork-booking-architecture.md §7.3 POST /api/bookings/:id/cancel
+// Dual-mode auth (cookie session or Bearer token) via getOptionalRequestUser
+// — guest-email-match and staff cancellation both still work.
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -12,10 +14,7 @@ export async function POST(
   const body = await request.json().catch(() => null);
   const userReason = body?.reason ?? "Cancelled by user";
 
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, supabase } = await getOptionalRequestUser(request);
 
   const admin = createAdminClient();
 

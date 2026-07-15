@@ -63,3 +63,11 @@ export async function createInvoice(
 
   return { invoice_id: invoiceId, invoice_number: invoiceNumber };
 }
+
+// Backs GET /api/bookings/:id/invoice (Flutter app's invoice download).
+// Throws ZohoNotConfiguredError (via getZohoClient) if unset — caller must
+// degrade to a 404/503 rather than letting it bubble into a 500.
+export async function getInvoicePdf(invoiceId: string): Promise<ArrayBuffer> {
+  const zoho = await getZohoClient();
+  return zoho.getPdf(`/invoices/${invoiceId}`);
+}
