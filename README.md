@@ -2,7 +2,6 @@
 
 A real-time coworking space booking platform built for **Cowork Lanka (Pvt) Ltd** (Pannipitiya, Sri Lanka). This web application provides a premium, responsive, and seamless booking experience for hot desks, dedicated desks, meeting rooms, and creative studio spaces.
 
----
 
 ## What It Does
 
