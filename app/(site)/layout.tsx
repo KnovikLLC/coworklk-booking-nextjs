@@ -10,7 +10,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header isSignedIn={!!user} />
+      <Header user={user} />
       <div className="flex-1">{children}</div>
       <Footer />
     </div>

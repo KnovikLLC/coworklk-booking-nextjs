@@ -36,11 +36,12 @@ export function buildPayhereCheckout(booking: PayhereCheckoutBooking): PayhereCh
 
   const amount = Number(booking.total_amount);
   const amountFormatted = amount.toFixed(2);
+  const siteUrl = process.env.NEXT_PUBLIC_URL || "https://cowork.lk";
   const formData: Record<string, string | number> = {
     merchant_id: merchantId,
-    return_url: `${process.env.NEXT_PUBLIC_URL}/booking/success?id=${booking.id}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_URL}/booking/cancel?id=${booking.id}`,
-    notify_url: `${process.env.NEXT_PUBLIC_URL}/api/webhooks/payhere`,
+    return_url: `${siteUrl}/booking/success?id=${booking.id}`,
+    cancel_url: `${siteUrl}/booking/cancel?id=${booking.id}`,
+    notify_url: `${siteUrl}/api/webhooks/payhere`,
     order_id: booking.booking_number,
     items: booking.space_name ?? "Cowork.lk Booking",
     currency: "LKR",
