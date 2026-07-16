@@ -17,7 +17,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "1",
     name: "Entrance",
     panorama: "/images/tour/1-enterance.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "270deg", pitch: "0deg" },
     links: [
       { targetSceneId: "2", yaw: "210deg", pitch: "0deg", label: "Reception" },
       { targetSceneId: "14", yaw: "270deg", pitch: "0deg", label: "Coffee Area" },
@@ -28,7 +28,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "2",
     name: "Reception & Workspace Entrance",
     panorama: "/images/tour/2-reception-and-workspace-enterance.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "270deg", pitch: "0deg" },
     links: [
       { targetSceneId: "1", yaw: "30deg", pitch: "0deg", label: "Back to Entrance" },
       { targetSceneId: "3", yaw: "180deg", pitch: "-5deg", label: "Workspaces" },
@@ -39,7 +39,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "3",
     name: "Workspaces",
     panorama: "/images/tour/3-workspaces.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "270deg", pitch: "0deg" },
     links: [
       { targetSceneId: "2", yaw: "0deg", pitch: "0deg", label: "Reception" },
       { targetSceneId: "4", yaw: "265deg", pitch: "0deg", label: "Meeting Room 2" },
@@ -50,7 +50,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "4",
     name: "Meeting Room 2 (5-Seater)",
     panorama: "/images/tour/4-meeting-room2-5seater.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "270deg", pitch: "0deg" },
     links: [
       { targetSceneId: "3", yaw: "180deg", pitch: "0deg", label: "Back to Workspaces" },
       { targetSceneId: "5", yaw: "70.3deg", pitch: "-7.9deg", label: "Look Inside" },
@@ -69,7 +69,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "6",
     name: "Meeting Room 3 (Soundproof)",
     panorama: "/images/tour/6-meeting-room3-soundproof.jpg",
-    initialView: { yaw: "180deg", pitch: "0deg" },
+    initialView: { yaw: "270deg", pitch: "0deg" },
     links: [
       { targetSceneId: "3", yaw: "114deg", pitch: "-11.9deg", label: "Back to Workspaces" },
       { targetSceneId: "7", yaw: "245.9deg", pitch: "-12deg", label: "Look Inside" },
@@ -79,7 +79,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "7",
     name: "Meeting Room 3 (Soundproof) — Inside",
     panorama: "/images/tour/7-meeting-room3-soundproof-inside.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "90deg", pitch: "0deg" },
     links: [
       { targetSceneId: "6", yaw: "0deg", pitch: "-10deg", label: "Back" },
     ],
@@ -88,7 +88,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "8",
     name: "Lobby (Middle)",
     panorama: "/images/tour/8-lobby-middle.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "270deg", pitch: "0deg" },
     links: [
       { targetSceneId: "2", yaw: "273deg", pitch: "-10.8deg", label: "Back to Reception" },
       { targetSceneId: "9", yaw: "129.3deg", pitch: "-13.1deg", label: "Lobby End" },
@@ -98,7 +98,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "9",
     name: "Lobby (End)",
     panorama: "/images/tour/9-lobby-end.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "90deg", pitch: "0deg" },
     links: [
       { targetSceneId: "8", yaw: "67.9deg", pitch: "-1.8deg", label: "Back to Lobby" },
       { targetSceneId: "13", yaw: "257.7deg", pitch: "-2.5deg", label: "Hot Desks" },
@@ -108,7 +108,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "10",
     name: "Meeting Room 1 (4-Seater)",
     panorama: "/images/tour/10-meeting-room-1-4seater.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "270deg", pitch: "0deg" },
     links: [
       { targetSceneId: "1", yaw: "120.5deg", pitch: "-17.7deg", label: "Back to Entrance" },
       { targetSceneId: "12", yaw: "65.9deg", pitch: "-1.9deg", label: "Hot Desks" },
@@ -119,7 +119,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "11",
     name: "Meeting Room 1 (4-Seater) — Inside",
     panorama: "/images/tour/11-meeting-room-1-4seater-inside.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "90deg", pitch: "0deg" },
     links: [
       { targetSceneId: "10", yaw: "42.8deg", pitch: "1.1deg", label: "Back" },
     ],
@@ -128,7 +128,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "12",
     name: "Hot Desks (Right)",
     panorama: "/images/tour/12-hotdesks-right.jpg",
-    initialView: { yaw: "150deg", pitch: "0deg" },
+    initialView: { yaw: "240deg", pitch: "0deg" },
     links: [
       { targetSceneId: "13", yaw: "90deg", pitch: "0deg", label: "Hot Desks (Left)" },
       { targetSceneId: "10", yaw: "185.3deg", pitch: "-3.8deg", label: "Meeting Room 1" },
@@ -138,7 +138,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "13",
     name: "Hot Desks (Left)",
     panorama: "/images/tour/13-hotdesks-left.jpg",
-    initialView: { yaw: "220deg", pitch: "0deg" },
+    initialView: { yaw: "310deg", pitch: "0deg" },
     links: [
       { targetSceneId: "9", yaw: "57.7deg", pitch: "7.5deg", label: "Back to Lobby" },
       { targetSceneId: "12", yaw: "262.8deg", pitch: "-16.7deg", label: "Hot Desks (Right)" },
@@ -148,7 +148,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "14",
     name: "Coffee Area",
     panorama: "/images/tour/14-coffee-area.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "180deg", pitch: "0deg" },
     links: [
       { targetSceneId: "1", yaw: "356.7deg", pitch: "-4.7deg", label: "Back to Entrance" },
       { targetSceneId: "16", yaw: "69.5deg", pitch: "-1.6deg", label: "Washroom" },
@@ -158,7 +158,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "15",
     name: "Kitchen & Lunch Area",
     panorama: "/images/tour/15-kitchen-and-lunch.jpg",
-    initialView: { yaw: "0deg", pitch: "0deg" },
+    initialView: { yaw: "270deg", pitch: "0deg" },
     links: [
       { targetSceneId: "16", yaw: "287.2deg", pitch: "-14.1deg", label: "Washroom" },
     ],
@@ -167,7 +167,7 @@ export const TOUR_SCENES: TourScene[] = [
     id: "16",
     name: "Washroom",
     panorama: "/images/tour/16-washroom.jpg",
-    initialView: { yaw: "180deg", pitch: "0deg" },
+    initialView: { yaw: "270deg", pitch: "0deg" },
     links: [
       { targetSceneId: "14", yaw: "120.5deg", pitch: "-2.4deg", label: "Coffee Area" },
       { targetSceneId: "15", yaw: "90deg", pitch: "0deg", label: "Kitchen" },

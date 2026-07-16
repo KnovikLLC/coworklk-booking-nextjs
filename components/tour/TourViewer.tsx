@@ -118,7 +118,7 @@ export function TourViewer() {
         </div>
 
         {currentScene.links.length > 0 && (
-          <div className="absolute inset-x-0 bottom-4 flex flex-wrap justify-center gap-2 px-4">
+          <div className="absolute inset-x-0 bottom-14 flex flex-wrap justify-center gap-2 px-4">
             {currentScene.links.map((link) => {
               const target = TOUR_SCENES.find((s) => s.id === link.targetSceneId);
               return (
