@@ -28,6 +28,9 @@ export function Footer() {
                 <Link href="/booking" className="hover:text-brand transition-colors">Book a Space</Link>
               </li>
               <li>
+                <Link href="/tour" className="hover:text-brand transition-colors">Cowork Tour</Link>
+              </li>
+              <li>
                 <Link href="/community" className="hover:text-brand transition-colors">Community</Link>
               </li>
               <li>

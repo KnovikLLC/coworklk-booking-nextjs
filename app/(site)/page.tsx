@@ -78,15 +78,15 @@ export default function HomePage() {
               <span>→</span>
             </Link>
 
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-full border-2 border-brand flex items-center justify-center text-brand font-bold text-lg bg-white/50 cursor-pointer">
+            <Link href="/tour" className="group flex items-center gap-3">
+              <div className="h-12 w-12 rounded-full border-2 border-brand flex items-center justify-center text-brand font-bold text-lg bg-white/50 transition-colors group-hover:bg-brand group-hover:text-white">
                 ▶
               </div>
               <div>
                 <p className="text-sm font-bold text-brand-dark">Cowork Tour</p>
-                <p className="text-xs text-brand font-semibold uppercase tracking-wider">Coming Soon</p>
+                <p className="text-xs text-brand font-semibold uppercase tracking-wider">Take a 360° Look Inside</p>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
