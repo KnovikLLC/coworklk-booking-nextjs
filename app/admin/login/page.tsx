@@ -1,11 +1,25 @@
 import { Suspense } from "react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Admin Sign In | Cowork.lk", robots: { index: false, follow: false } };
 
-export default function AdminLoginPage() {
+export default async function AdminLoginPage() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).single();
+    if (profile && ["admin", "frontdesk"].includes(profile.role ?? "")) {
+      redirect("/admin/dashboard");
+    }
+  }
+
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4">
       <Link

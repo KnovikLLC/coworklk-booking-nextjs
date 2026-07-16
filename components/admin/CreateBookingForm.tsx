@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SlotSelector } from "@/components/booking/SlotSelector";
 import { buildBookableOptions, type BookableOption } from "@/lib/bookings/slot-options";
 import { formatLKR } from "@/lib/utils";
@@ -107,86 +109,111 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
   }
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <section>
-        <h2 className="mb-2 font-semibold text-brand-dark">1. Select Resource &amp; Date</h2>
-        <div className="flex gap-3">
-          <select
-            value={spaceId}
-            onChange={(e) => setSpaceId(e.target.value)}
-            className="h-9 flex-1 rounded-md border border-input bg-background px-3 text-sm"
-          >
-            {spaces.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
-            ))}
-          </select>
-          <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-40" />
-        </div>
-      </section>
+    <div className="max-w-2xl space-y-4">
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base text-brand-dark">1. Select Resource &amp; Date</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-3">
+            <Select value={spaceId} onValueChange={setSpaceId}>
+              <SelectTrigger className="flex-1">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {spaces.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-40" />
+          </div>
+        </CardContent>
+      </Card>
 
-      <section>
-        <h2 className="mb-2 font-semibold text-brand-dark">2. Select Slot</h2>
-        <SlotSelector options={options} selected={selectedOption} onSelect={setSelectedOption} />
-      </section>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base text-brand-dark">2. Select Slot</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <SlotSelector options={options} selected={selectedOption} onSelect={setSelectedOption} />
+        </CardContent>
+      </Card>
 
-      <section>
-        <h2 className="mb-2 font-semibold text-brand-dark">3. Customer Details</h2>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <div>
-            <Label htmlFor="customerName">Name</Label>
-            <Input id="customerName" value={name} onChange={(e) => setName(e.target.value)} />
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base text-brand-dark">3. Customer Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div>
+              <Label htmlFor="customerName">Name</Label>
+              <Input id="customerName" value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="customerEmail">Email</Label>
+              <Input id="customerEmail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+            <div>
+              <Label htmlFor="customerPhone">Phone</Label>
+              <Input id="customerPhone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </div>
           </div>
-          <div>
-            <Label htmlFor="customerEmail">Email</Label>
-            <Input id="customerEmail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          </div>
-          <div>
-            <Label htmlFor="customerPhone">Phone</Label>
-            <Input id="customerPhone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
-          </div>
-        </div>
-      </section>
+        </CardContent>
+      </Card>
 
       {addons.length > 0 ? (
-        <section>
-          <h2 className="mb-2 font-semibold text-brand-dark">4. Add-ons (Optional)</h2>
-          <div className="flex flex-wrap gap-3">
-            {addons.map((addon) => (
-              <label key={addon.id} className="flex items-center gap-1.5 text-sm">
-                <Checkbox checked={selectedAddonIds.has(addon.id)} onCheckedChange={() => toggleAddon(addon.id)} />
-                {addon.name} ({formatLKR(addon.price)})
-              </label>
-            ))}
-          </div>
-        </section>
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base text-brand-dark">4. Add-ons (Optional)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-3">
+              {addons.map((addon) => (
+                <label key={addon.id} className="flex items-center gap-1.5 text-sm">
+                  <Checkbox checked={selectedAddonIds.has(addon.id)} onCheckedChange={() => toggleAddon(addon.id)} />
+                  {addon.name} ({formatLKR(addon.price)})
+                </label>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       ) : null}
 
-      <section>
-        <h2 className="mb-2 font-semibold text-brand-dark">5. Payment Method</h2>
-        <div className="flex gap-2">
-          {(["cash", "card_terminal", "qr_transfer"] as const).map((method) => (
-            <button
-              key={method}
-              type="button"
-              onClick={() => setPaymentMethod(method)}
-              className={`rounded-md border px-3 py-1.5 text-sm ${
-                paymentMethod === method ? "border-brand bg-brand/10 text-brand-dark" : "text-muted-foreground"
-              }`}
-            >
-              {method === "cash" ? "Cash (Received)" : method === "card_terminal" ? "Card Terminal" : "QR Transfer (Pending)"}
-            </button>
-          ))}
-        </div>
-      </section>
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base text-brand-dark">5. Payment Method</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            {(["cash", "card_terminal", "qr_transfer"] as const).map((method) => (
+              <button
+                key={method}
+                type="button"
+                onClick={() => setPaymentMethod(method)}
+                className={`rounded-md border px-3 py-1.5 text-sm transition-colors ${
+                  paymentMethod === method
+                    ? "border-brand bg-brand/10 font-medium text-brand-dark"
+                    : "text-muted-foreground hover:border-brand-dark/20"
+                }`}
+              >
+                {method === "cash" ? "Cash (Received)" : method === "card_terminal" ? "Card Terminal" : "QR Transfer (Pending)"}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-      <section>
-        <Label htmlFor="notes">Notes</Label>
-        <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
-      </section>
+      <Card>
+        <CardContent className="pt-6">
+          <Label htmlFor="notes">Notes</Label>
+          <Textarea id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
+        </CardContent>
+      </Card>
 
-      <div className="flex items-center justify-between border-t pt-4">
+      <div className="flex items-center justify-between rounded-lg border bg-white p-4">
         <span className="text-lg font-semibold text-brand-dark">Total: {formatLKR(total)}</span>
         <Button disabled={submitting} onClick={handleSubmit}>
           {submitting ? "Creating..." : "Create Booking"}

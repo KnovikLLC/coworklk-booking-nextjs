@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { addDays, format, subDays } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -47,7 +48,8 @@ export function AvailabilityGrid() {
   }, [date]);
 
   return (
-    <div className="rounded-lg border bg-white p-4">
+    <Card>
+      <CardContent className="p-4">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => setDate((d) => format(subDays(new Date(d), 1), "yyyy-MM-dd"))}>
@@ -64,6 +66,11 @@ export function AvailabilityGrid() {
 
       {loading || !resources ? (
         <Skeleton className="h-64 w-full" />
+      ) : resources.length === 0 ? (
+        <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed py-10 text-center">
+          <p className="font-medium text-brand-dark">No resources found</p>
+          <p className="text-sm text-muted-foreground">There are no bookable spaces configured yet.</p>
+        </div>
       ) : (
         <div className="space-y-3">
           {resources.map((resource) => (
@@ -101,6 +108,7 @@ export function AvailabilityGrid() {
           ))}
         </div>
       )}
-    </div>
+      </CardContent>
+    </Card>
   );
 }

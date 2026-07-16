@@ -3,6 +3,17 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
 interface CancelBookingButtonProps {
@@ -25,11 +36,6 @@ export function CancelBookingButton({
   if (!canCancel) return null;
 
   async function handleCancel() {
-    const confirmed = window.confirm(
-      `Are you sure you want to cancel booking #${bookingNumber}? Depending on when the booking starts, a cancellation charge may apply.`
-    );
-    if (!confirmed) return;
-
     setSubmitting(true);
     try {
       const res = await fetch(`/api/bookings/${bookingId}/cancel`, {
@@ -61,14 +67,34 @@ export function CancelBookingButton({
   }
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      className="h-8 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
-      disabled={submitting}
-      onClick={handleCancel}
-    >
-      {submitting ? "Cancelling..." : "Cancel"}
-    </Button>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+          disabled={submitting}
+        >
+          {submitting ? "Cancelling..." : "Cancel"}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Cancel booking #{bookingNumber}?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Depending on when the booking starts, a cancellation charge may apply. This action can&apos;t be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Keep booking</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleCancel}
+            className="bg-red-600 text-white hover:bg-red-700 focus:ring-red-600"
+          >
+            Yes, cancel booking
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

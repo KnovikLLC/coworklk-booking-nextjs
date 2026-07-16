@@ -25,16 +25,27 @@ export function LoginForm({ defaultRedirect = "/profile" }: { defaultRedirect?: 
   async function onSubmit(values: LoginInput) {
     setSubmitting(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword(values);
-    setSubmitting(false);
+    const { error, data } = await supabase.auth.signInWithPassword(values);
 
     if (error) {
+      setSubmitting(false);
       toast.error(error.message);
       return;
     }
 
+    // Staff accounts (admin/frontdesk) don't have a customer profile —
+    // send them to the admin dashboard regardless of where they signed in.
+    let redirectTo = searchParams.get("redirect") ?? defaultRedirect;
+    if (data.user) {
+      const { data: profile } = await supabase.from("users").select("role").eq("id", data.user.id).single();
+      if (profile && ["admin", "frontdesk"].includes(profile.role ?? "") && !redirectTo.startsWith("/admin")) {
+        redirectTo = "/admin/login";
+      }
+    }
+
+    setSubmitting(false);
     toast.success("Welcome back!");
-    router.push(searchParams.get("redirect") ?? defaultRedirect);
+    router.push(redirectTo);
     router.refresh();
   }
 

@@ -1,5 +1,4 @@
 import { requireUser } from "@/lib/auth/require-user";
-import { ProfileNav } from "@/components/member/ProfileNav";
 import { ProfileSettingsForm } from "@/components/member/ProfileSettingsForm";
 
 export const metadata = { title: "Account Settings | Cowork.lk", robots: { index: false, follow: false } };
@@ -13,14 +12,14 @@ export default async function ProfileSettingsPage() {
     .single();
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
-      <ProfileNav />
-      <h1 className="mb-4 text-xl font-bold text-brand-dark">Account Settings</h1>
+    <div>
+      <h1 className="mb-1 text-2xl font-bold text-brand-dark">Account Settings</h1>
+      <p className="mb-6 text-sm text-brand-dark/50">Manage your profile information and password.</p>
       <ProfileSettingsForm
         email={user.email ?? ""}
         fullName={profile?.full_name ?? null}
         phone={profile?.phone ?? null}
       />
-    </main>
+    </div>
   );
 }

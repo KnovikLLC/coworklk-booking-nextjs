@@ -32,6 +32,19 @@ export async function checkMemberDiscount(
     };
   }
 
+  // Staff accounts (admin/frontdesk) aren't customers — no loyalty discount.
+  const { data: profile } = await supabase.from("users").select("role").eq("id", userId).single();
+  if (profile && ["admin", "frontdesk"].includes(profile.role ?? "")) {
+    return {
+      eligible: false,
+      discount_percent: 0,
+      discount_amount: 0,
+      reason: "Staff accounts are not eligible for member discounts",
+      last_booking_date: null,
+      days_since_last: null,
+    };
+  }
+
   const { data: lastBooking } = await supabase
     .from("bookings")
     .select("booking_date")

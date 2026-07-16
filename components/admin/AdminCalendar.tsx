@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/dialog";
 import { formatLKR } from "@/lib/utils";
 import { toast } from "sonner";
+import { ConfirmQrPaymentButton } from "@/components/admin/ConfirmQrPaymentButton";
+import { StatusChangeMenu } from "@/components/admin/StatusChangeMenu";
 
 interface Space {
   id: string;
@@ -81,6 +83,7 @@ export function AdminCalendar() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(currentWeekStart, i));
   const startDateStr = format(weekDays[0], "yyyy-MM-dd");
@@ -101,7 +104,12 @@ export function AdminCalendar() {
       .catch((err) => {
         toast.error(err.message || "Failed to fetch calendar data");
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+        // See BookingList's identical comment: clear only once the
+        // refetched rows land, not when the mutation itself resolves.
+        setUpdatingId(null);
+      });
   }, [startDateStr, endDateStr, refreshKey]);
 
   const handlePrevWeek = () => setCurrentWeekStart((d) => subWeeks(d, 1));
@@ -109,6 +117,8 @@ export function AdminCalendar() {
   const handleToday = () => setCurrentWeekStart(startOfWeek(new Date(), { weekStartsOn: 1 }));
 
   async function updateBookingStatus(id: string, newStatus: string) {
+    if (updatingId) return; // already processing an action
+    setUpdatingId(id);
     try {
       const res = await fetch(`/api/admin/bookings/${id}`, {
         method: "PATCH",
@@ -118,22 +128,24 @@ export function AdminCalendar() {
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.error ?? "Failed to update status");
+        setUpdatingId(null);
         return;
       }
       toast.success(`Booking status updated to ${newStatus.replace("_", " ")}`);
-      setRefreshKey((k) => k + 1);
+      setRefreshKey((k) => k + 1); // clears updatingId once the refetch above lands
       // Update selected booking context
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking({ ...selectedBooking, status: newStatus });
       }
     } catch {
       toast.error("An error occurred");
+      setUpdatingId(null);
     }
   }
 
-  async function confirmQrPayment(id: string) {
-    const note = window.prompt("Enter optional QR/bank confirmation note:");
-    if (note === null) return; // User cancelled
+  async function confirmQrPayment(id: string, note: string) {
+    if (updatingId) return;
+    setUpdatingId(id);
     try {
       const res = await fetch(`/api/admin/payments/confirm-qr`, {
         method: "POST",
@@ -143,15 +155,17 @@ export function AdminCalendar() {
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.error ?? "Failed to confirm payment");
+        setUpdatingId(null);
         return;
       }
       toast.success("QR/Bank payment confirmed");
-      setRefreshKey((k) => k + 1);
+      setRefreshKey((k) => k + 1); // clears updatingId once the refetch above lands
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking({ ...selectedBooking, status: "confirmed" });
       }
     } catch {
       toast.error("An error occurred");
+      setUpdatingId(null);
     }
   }
 
@@ -371,40 +385,19 @@ export function AdminCalendar() {
 
               <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-end">
                 {selectedBooking.status === "pending_payment" && (
-                  <Button
-                    variant="outline"
+                  <ConfirmQrPaymentButton
                     className="w-full sm:w-auto"
-                    onClick={() => confirmQrPayment(selectedBooking.id)}
-                  >
-                    Confirm QR Payment
-                  </Button>
+                    disabled={updatingId !== null}
+                    onConfirm={(note) => confirmQrPayment(selectedBooking.id, note)}
+                  />
                 )}
-                {selectedBooking.status === "confirmed" && (
-                  <>
-                    <Button
-                      variant="destructive"
-                      className="w-full sm:w-auto"
-                      onClick={() => updateBookingStatus(selectedBooking.id, "no_show")}
-                    >
-                      Mark No Show
-                    </Button>
-                    <Button
-                      variant="default"
-                      className="bg-brand hover:bg-brand/90 w-full sm:w-auto"
-                      onClick={() => updateBookingStatus(selectedBooking.id, "checked_in")}
-                    >
-                      Check-in
-                    </Button>
-                  </>
-                )}
-                {selectedBooking.status === "checked_in" && (
-                  <Button
-                    variant="outline"
-                    className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 w-full sm:w-auto"
-                    onClick={() => updateBookingStatus(selectedBooking.id, "completed")}
-                  >
-                    Complete
-                  </Button>
+                {(selectedBooking.status === "confirmed" || selectedBooking.status === "checked_in") && (
+                  <StatusChangeMenu
+                    currentStatus={selectedBooking.status}
+                    bookingNumber={selectedBooking.booking_number}
+                    disabled={updatingId !== null}
+                    onChange={(newStatus) => updateBookingStatus(selectedBooking.id, newStatus)}
+                  />
                 )}
                 <Button variant="ghost" onClick={() => setDialogOpen(false)} className="w-full sm:w-auto">
                   Close

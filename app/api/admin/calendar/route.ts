@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
   // Query bookings in the range
   let bookingsQuery = admin
     .from("bookings")
-    .select("id, booking_number, space_id, booking_date, time_slot, start_time, end_time, guest_name, guest_email, status, total_amount, spaces ( name, type ), users!bookings_user_id_fkey ( full_name, email )")
+    .select("id, booking_number, space_id, booking_date, time_slot, start_time, end_time, guest_name, guest_email, status, total_amount, workspace_count, spaces ( name, type ), users!bookings_user_id_fkey ( full_name, email )")
     .gte("booking_date", startDateStr)
     .lte("booking_date", endDateStr);
 
@@ -123,13 +123,17 @@ export async function GET(request: NextRequest) {
       } else {
         const total = typeSpaces.reduce((sum, s) => sum + s.total_inventory, 0);
 
-        // Find max simultaneous bookings in any slot
+        // Find max simultaneous seats used in any slot. Sums workspace_count
+        // rather than counting rows — a single booking can cover multiple
+        // seats/desks (e.g. a full-office buyout), and .length undercounts
+        // that exactly like check_availability's booked_count would if it
+        // didn't SUM() too (see check_availability_function.sql).
         const slots = slotKeysForSpaceType(spaceType);
         let maxUsed = 0;
         for (const slot of slots) {
-          const usedInSlot = typeBookings.filter((b) =>
-            slotOverlaps(b.time_slot, slot)
-          ).length;
+          const usedInSlot = typeBookings
+            .filter((b) => slotOverlaps(b.time_slot, slot))
+            .reduce((sum, b) => sum + (b.workspace_count ?? 1), 0);
           if (usedInSlot > maxUsed) {
             maxUsed = usedInSlot;
           }

@@ -5,9 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
+import { User, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
 
 const profileSchema = z.object({
@@ -81,50 +83,70 @@ export function ProfileSettingsForm({
   }
 
   return (
-    <div className="space-y-8">
-      <section>
-        <h2 className="mb-3 font-semibold text-brand-dark">Profile Information</h2>
-        <form onSubmit={profileForm.handleSubmit(onSaveProfile)} className="max-w-sm space-y-3">
-          <div>
-            <Label>Email</Label>
-            <Input value={email} disabled />
+    <div className="space-y-6">
+      <Card>
+        <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand">
+            <User className="h-4 w-4" />
           </div>
           <div>
-            <Label htmlFor="fullName">Full Name</Label>
-            <Input id="fullName" {...profileForm.register("fullName")} />
-            {profileForm.formState.errors.fullName ? (
-              <p className="mt-1 text-xs text-destructive">
-                {profileForm.formState.errors.fullName.message}
-              </p>
-            ) : null}
+            <CardTitle className="text-base">Profile Information</CardTitle>
+            <CardDescription>Your name and contact details.</CardDescription>
           </div>
-          <div>
-            <Label htmlFor="phone">Phone</Label>
-            <Input id="phone" type="tel" {...profileForm.register("phone")} />
-          </div>
-          <Button type="submit" disabled={savingProfile}>
-            {savingProfile ? "Saving..." : "Save Changes"}
-          </Button>
-        </form>
-      </section>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={profileForm.handleSubmit(onSaveProfile)} className="max-w-sm space-y-3">
+            <div>
+              <Label>Email</Label>
+              <Input value={email} disabled />
+            </div>
+            <div>
+              <Label htmlFor="fullName">Full Name</Label>
+              <Input id="fullName" {...profileForm.register("fullName")} />
+              {profileForm.formState.errors.fullName ? (
+                <p className="mt-1 text-xs text-destructive">
+                  {profileForm.formState.errors.fullName.message}
+                </p>
+              ) : null}
+            </div>
+            <div>
+              <Label htmlFor="phone">Phone</Label>
+              <Input id="phone" type="tel" {...profileForm.register("phone")} />
+            </div>
+            <Button type="submit" disabled={savingProfile}>
+              {savingProfile ? "Saving..." : "Save Changes"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
 
-      <section>
-        <h2 className="mb-3 font-semibold text-brand-dark">Change Password</h2>
-        <form onSubmit={passwordForm.handleSubmit(onChangePassword)} className="max-w-sm space-y-3">
-          <div>
-            <Label htmlFor="newPassword">New Password</Label>
-            <Input id="newPassword" type="password" {...passwordForm.register("password")} />
-            {passwordForm.formState.errors.password ? (
-              <p className="mt-1 text-xs text-destructive">
-                {passwordForm.formState.errors.password.message}
-              </p>
-            ) : null}
+      <Card>
+        <CardHeader className="flex flex-row items-center gap-3 space-y-0">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand">
+            <Lock className="h-4 w-4" />
           </div>
-          <Button type="submit" disabled={savingPassword}>
-            {savingPassword ? "Updating..." : "Update Password"}
-          </Button>
-        </form>
-      </section>
+          <div>
+            <CardTitle className="text-base">Change Password</CardTitle>
+            <CardDescription>Use a password that&apos;s at least 8 characters long.</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={passwordForm.handleSubmit(onChangePassword)} className="max-w-sm space-y-3">
+            <div>
+              <Label htmlFor="newPassword">New Password</Label>
+              <Input id="newPassword" type="password" {...passwordForm.register("password")} />
+              {passwordForm.formState.errors.password ? (
+                <p className="mt-1 text-xs text-destructive">
+                  {passwordForm.formState.errors.password.message}
+                </p>
+              ) : null}
+            </div>
+            <Button type="submit" disabled={savingPassword}>
+              {savingPassword ? "Updating..." : "Update Password"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

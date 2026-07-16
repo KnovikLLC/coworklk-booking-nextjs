@@ -14,6 +14,13 @@ export async function requireUser(): Promise<{ user: User; supabase: ReturnType<
     redirect("/login?redirect=/profile");
   }
 
+  // Staff accounts (admin/frontdesk) don't have a customer profile — send
+  // them to the admin area instead of the member dashboard.
+  const { data: profile } = await supabase.from("users").select("role").eq("id", user.id).single();
+  if (profile && ["admin", "frontdesk"].includes(profile.role ?? "")) {
+    redirect("/admin/login");
+  }
+
   // Check and auto-confirm pending bookings if user has a verified preconfigured email domain
   const isConfirmed = !!user.email_confirmed_at;
   checkAndConfirmDomainBookings(user.id, user.email ?? "", isConfirmed, supabase).catch((err) => {
