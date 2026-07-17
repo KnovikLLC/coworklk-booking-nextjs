@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { convertGuestSchema } from "@/lib/validation/auth.schema";
-import { createOrUpdateZohoContact } from "@/lib/zoho/customers";
+import { syncUserContactById } from "@/lib/zoho/sync-user-contacts";
 import { ZohoNotConfiguredError } from "@/lib/zoho/client";
 
 // Doc §8.6 lines 1829-1893, adapted:
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    await createOrUpdateZohoContact(email, guestProfile?.full_name, guestProfile?.phone);
+    await syncUserContactById(admin, userId);
   } catch (error) {
     if (!(error instanceof ZohoNotConfiguredError)) {
       console.error(`[zoho] contact sync failed for ${email}`, error);

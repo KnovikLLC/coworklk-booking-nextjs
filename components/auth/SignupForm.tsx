@@ -38,6 +38,13 @@ export function SignupForm() {
       return;
     }
 
+    // Fire-and-forget: creates the Zoho contact for this member. Never
+    // blocks signup — if Zoho is down or unconfigured, the account still
+    // works and the admin "Sync Now" backfill will pick it up later.
+    fetch("/api/auth/sync-zoho-contact", { method: "POST" }).catch((err) => {
+      console.error("[zoho] contact sync request failed", err);
+    });
+
     toast.success("Account created! You now qualify for member discounts.");
     router.push("/profile");
     router.refresh();

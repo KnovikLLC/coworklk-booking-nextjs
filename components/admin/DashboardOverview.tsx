@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { formatLKR } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChevronDown, ChevronUp, FileText } from "lucide-react";
+import { ConfirmBankTransferButton } from "@/components/admin/ConfirmBankTransferButton";
 import {
   Calendar,
   DollarSign,
@@ -162,10 +163,8 @@ export function DashboardOverview({
     }
   }
 
-  // Confirm QR Payment
-  async function handleConfirmQr(id: string) {
-    const note = window.prompt("Enter optional QR/bank confirmation note:");
-    if (note === null) return;
+  // Confirm bank transfer payment
+  async function handleConfirmBankTransfer(id: string, note: string) {
     try {
       const res = await fetch(`/api/admin/payments/confirm-qr`, {
         method: "POST",
@@ -177,7 +176,7 @@ export function DashboardOverview({
         toast.error(data.error ?? "Failed to confirm payment");
         return;
       }
-      toast.success("QR/Bank payment confirmed");
+      toast.success("Bank transfer payment confirmed");
       refreshDashboard();
     } catch {
       toast.error("An error occurred while confirming payment");
@@ -327,9 +326,10 @@ export function DashboardOverview({
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1.5">
                             {b.status === "pending_payment" && (
-                              <Button size="sm" onClick={() => handleConfirmQr(b.id)}>
-                                Confirm QR
-                              </Button>
+                              <ConfirmBankTransferButton
+                                variant="default"
+                                onConfirm={(note) => handleConfirmBankTransfer(b.id, note)}
+                              />
                             )}
                             {b.status === "confirmed" && (
                               <Button size="sm" variant="outline" onClick={() => handleUpdateStatus(b.id, "checked_in")}>

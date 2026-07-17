@@ -116,11 +116,17 @@ export async function POST(request: NextRequest) {
         amount: Number(booking.total_amount),
         method: "domain_verification",
       });
-      await createBookingInvoice(admin, booking.id);
-      
+
       // Update status locally in reference so 201 returns confirmed status
       booking.status = "confirmed";
     }
+
+    // Invoice every booking at creation time, paid or not — a still-pending
+    // booking gets an unpaid invoice now (createBookingInvoice never
+    // throws); when payment later confirms via a webhook/QR-confirm, that
+    // same call records payment against this invoice instead of creating a
+    // second one (see createBookingInvoice's zoho_invoice_id check).
+    await createBookingInvoice(admin, booking.id, { paymentReceived: booking.status === "confirmed" });
 
     const responseBody: BookingCreateResponse = { booking };
     return NextResponse.json(responseBody, { status: 201 });

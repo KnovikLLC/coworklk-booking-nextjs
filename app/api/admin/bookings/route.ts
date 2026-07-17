@@ -108,8 +108,13 @@ export async function POST(request: NextRequest) {
         amount: booking.total_amount,
         method: body.payment_method,
       });
-      await createBookingInvoice(admin, booking.id);
     }
+
+    // Invoice every walk-in booking at creation time, paid or not — mirrors
+    // /api/bookings and /api/mobile/bookings (see createBookingInvoice's
+    // zoho_invoice_id check for why this doesn't double-invoice once
+    // confirm-qr later marks a pending one paid).
+    await createBookingInvoice(admin, booking.id, { paymentReceived: markConfirmed });
 
     return NextResponse.json({ booking }, { status: 201 });
   } catch (err) {

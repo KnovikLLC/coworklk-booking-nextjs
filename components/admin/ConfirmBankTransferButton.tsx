@@ -13,12 +13,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-/** Replaces window.prompt() for the QR/bank payment confirmation note. */
-export function ConfirmQrPaymentButton({
+/** Replaces window.prompt() for the bank transfer payment confirmation note. */
+export function ConfirmBankTransferButton({
   onConfirm,
   variant = "outline",
   className,
-  label = "Confirm QR Payment",
+  label = "Confirm Bank Transfer",
   disabled = false,
 }: {
   onConfirm: (note: string) => void;
@@ -47,7 +47,7 @@ export function ConfirmQrPaymentButton({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Confirm QR / Bank Payment</DialogTitle>
+          <DialogTitle>Confirm Bank Transfer Payment</DialogTitle>
           <DialogDescription>
             Optionally add a note (e.g. a reference number) for this confirmation.
           </DialogDescription>

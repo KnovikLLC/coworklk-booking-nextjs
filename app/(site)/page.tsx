@@ -20,7 +20,7 @@ const FAQS = [
   {
     question: "How do I pay for a booking?",
     answer:
-      "You can pay online by card through Stripe, or via QR/bank transfer with admin verification. Returning members who completed a booking in the prior 30 days automatically get a 10% discount.",
+      "You can pay online by card through Stripe, or via bank transfer with admin verification. Returning members who completed a booking in the prior 30 days automatically get a 10% discount.",
   },
   {
     question: "Can I book a coworking space without signing up?",

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { formatLKR } from "@/lib/utils";
 import { toast } from "sonner";
-import { ConfirmQrPaymentButton } from "@/components/admin/ConfirmQrPaymentButton";
+import { ConfirmBankTransferButton } from "@/components/admin/ConfirmBankTransferButton";
 import { StatusChangeMenu } from "@/components/admin/StatusChangeMenu";
 
 interface Space {
@@ -158,7 +158,7 @@ export function AdminCalendar() {
         setUpdatingId(null);
         return;
       }
-      toast.success("QR/Bank payment confirmed");
+      toast.success("Bank transfer payment confirmed");
       setRefreshKey((k) => k + 1); // clears updatingId once the refetch above lands
       if (selectedBooking && selectedBooking.id === id) {
         setSelectedBooking({ ...selectedBooking, status: "confirmed" });
@@ -385,7 +385,7 @@ export function AdminCalendar() {
 
               <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-end">
                 {selectedBooking.status === "pending_payment" && (
-                  <ConfirmQrPaymentButton
+                  <ConfirmBankTransferButton
                     className="w-full sm:w-auto"
                     disabled={updatingId !== null}
                     onConfirm={(note) => confirmQrPayment(selectedBooking.id, note)}

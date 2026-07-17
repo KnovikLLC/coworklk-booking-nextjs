@@ -30,7 +30,7 @@ export default function TermsPage() {
 
           <h2 className="text-lg font-semibold text-brand-dark">3. Payments &amp; Invoicing</h2>
           <p>
-            All bookings must be paid in full to secure the reservation. Online payments are integrated via PayHere. For bank/QR manual transfers, bookings remain pending until verified and manually approved by the front desk.
+            All bookings must be paid in full to secure the reservation. Online payments are integrated via PayHere. For bank transfer payments, bookings remain pending until verified and manually approved by the front desk.
           </p>
 
           <h2 className="text-lg font-semibold text-brand-dark">4. Limitation of Liability</h2>

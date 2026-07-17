@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
   if ("notConfigured" in checkout) {
     return NextResponse.json(
-      { error: "PayHere is not configured. Use QR / bank transfer instead." },
+      { error: "PayHere is not configured. Use bank transfer instead." },
       { status: 503 }
     );
   }

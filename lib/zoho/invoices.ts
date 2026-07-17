@@ -42,11 +42,11 @@ export async function createInvoice(
   const invoiceNumber = invoice.data.invoice.invoice_number;
 
   if (paymentReceived) {
-    await zoho.post(`/invoices/${invoiceId}/payments`, {
-      amount: lineItems.reduce((sum, item) => sum + item.rate * item.quantity, 0),
-      date: new Date().toISOString().split("T")[0],
-      payment_mode: "Online Payment",
-    });
+    await recordInvoicePayment(
+      customerId,
+      invoiceId,
+      lineItems.reduce((sum, item) => sum + item.rate * item.quantity, 0)
+    );
   }
 
   // Cowork Admin Assist passes sendEmail: false here, since its own Resend
@@ -62,4 +62,30 @@ export async function createInvoice(
   }
 
   return { invoice_id: invoiceId, invoice_number: invoiceNumber };
+}
+
+// Records a payment against an already-existing invoice. Split out of
+// createInvoice so a booking that was invoiced unpaid at creation time
+// (see createBookingInvoice's zoho_invoice_id check) can be marked paid
+// later without POSTing a second /invoices — Zoho doesn't dedupe on
+// reference_number, so calling createInvoice twice for one booking would
+// silently create two invoices for the same charge.
+//
+// Zoho Books v3 has no POST /invoices/{id}/payments endpoint (that 405s) —
+// payments are recorded via the customer-level /customerpayments endpoint,
+// applied against one or more invoices.
+export async function recordInvoicePayment(
+  customerId: string,
+  invoiceId: string,
+  amount: number,
+  paymentMode: string = "Online Payment"
+): Promise<void> {
+  const zoho = await getZohoClient();
+  await zoho.post(`/customerpayments`, {
+    customer_id: customerId,
+    payment_mode: paymentMode,
+    amount,
+    date: new Date().toISOString().split("T")[0],
+    invoices: [{ invoice_id: invoiceId, amount_applied: amount }],
+  });
 }

@@ -12,10 +12,33 @@ export async function GET() {
 
   const admin = createAdminClient();
 
-  const [{ data: lastSync }, { data: mappings }] = await Promise.all([
-    admin.from("zoho_sync_log").select("*").order("started_at", { ascending: false }).limit(1).maybeSingle(),
-    admin.from("zoho_item_mapping").select("zoho_status, local_entity_type"),
-  ]);
+  const [{ data: lastSync }, { data: mappings }, { data: lastUserSync }, { count: totalUsers }, { count: syncedUsers }] =
+    await Promise.all([
+      admin
+        .from("zoho_sync_log")
+        .select("*")
+        .eq("sync_type", "items")
+        .order("started_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      admin.from("zoho_item_mapping").select("zoho_status, local_entity_type"),
+      admin
+        .from("zoho_sync_log")
+        .select("*")
+        .eq("sync_type", "user_contacts")
+        .order("started_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      // Staff (admin/frontdesk) aren't customers and are never synced — see
+      // lib/zoho/sync-user-contacts.ts — so they're excluded here too,
+      // otherwise "unsynced" would never reach 0.
+      admin.from("users").select("id", { count: "exact", head: true }).eq("role", "customer"),
+      admin
+        .from("users")
+        .select("id", { count: "exact", head: true })
+        .eq("role", "customer")
+        .not("zoho_contact_id", "is", null),
+    ]);
 
   const active = (mappings ?? []).filter((m) => m.zoho_status === "active").length;
   const inactive = (mappings ?? []).filter((m) => m.zoho_status === "inactive").length;
@@ -33,5 +56,11 @@ export async function GET() {
     configured,
     last_sync: lastSync ?? null,
     mapping_status: { active, inactive, mapped, unmapped },
+    last_user_sync: lastUserSync ?? null,
+    user_contact_status: {
+      total: totalUsers ?? 0,
+      synced: syncedUsers ?? 0,
+      unsynced: (totalUsers ?? 0) - (syncedUsers ?? 0),
+    },
   });
 }

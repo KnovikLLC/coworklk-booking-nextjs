@@ -7,7 +7,7 @@ const stripeSecretKey = process.env.STRIPE_SECRET_KEY || process.env.STRIPE_TEST
 export async function POST(request: NextRequest) {
   if (!stripeSecretKey) {
     return NextResponse.json(
-      { error: "Stripe is not configured. Use QR / bank transfer instead." },
+      { error: "Stripe is not configured. Use bank transfer instead." },
       { status: 503 }
     );
   }

@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ConfirmQrPaymentButton } from "@/components/admin/ConfirmQrPaymentButton";
+import { ConfirmBankTransferButton } from "@/components/admin/ConfirmBankTransferButton";
 import { StatusChangeMenu } from "@/components/admin/StatusChangeMenu";
 import { formatLKR } from "@/lib/utils";
 import { BOOKING_STATUS_VARIANT, bookingStatusLabel } from "@/lib/bookings/status";
@@ -109,7 +109,7 @@ export function BookingList() {
         setUpdatingId(null);
         return;
       }
-      toast.success("QR/Bank payment confirmed");
+      toast.success("Bank transfer payment confirmed");
       setRefreshKey((k) => k + 1); // clears updatingId once the refetch above lands
     } catch {
       toast.error("An error occurred while confirming payment");
@@ -206,7 +206,7 @@ export function BookingList() {
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1.5">
                       {b.status === "pending_payment" && (
-                        <ConfirmQrPaymentButton
+                        <ConfirmBankTransferButton
                           disabled={updatingId !== null}
                           onConfirm={(note) => confirmQr(b.id, note)}
                         />

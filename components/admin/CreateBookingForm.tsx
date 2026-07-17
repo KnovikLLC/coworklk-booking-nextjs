@@ -199,7 +199,7 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
                     : "text-muted-foreground hover:border-brand-dark/20"
                 }`}
               >
-                {method === "cash" ? "Cash (Received)" : method === "card_terminal" ? "Card Terminal" : "QR Transfer (Pending)"}
+                {method === "cash" ? "Cash (Received)" : method === "card_terminal" ? "Card Terminal" : "Bank Transfer (Pending)"}
               </button>
             ))}
           </div>

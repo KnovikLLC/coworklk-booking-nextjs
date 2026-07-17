@@ -25,20 +25,21 @@ export async function findOrCreateCustomer(
 ): Promise<ZohoCustomer> {
   const zoho = await getZohoClient();
 
-  const searchParams: Record<string, string> = {};
+  // Check both email and phone (not email-else-phone) — someone can already
+  // exist in Zoho under a different email with the same phone (or vice
+  // versa), and creating a second contact for them would split their
+  // invoice history across two records.
   if (email) {
-    searchParams.email = email;
-  } else if (phone) {
-    searchParams.phone = phone;
+    const byEmail = await zoho.get<ZohoContactsSearchResponse>("/contacts", { params: { email } });
+    if (byEmail.data.contacts && byEmail.data.contacts.length > 0) {
+      return byEmail.data.contacts[0];
+    }
   }
 
-  if (email || phone) {
-    const searchResult = await zoho.get<ZohoContactsSearchResponse>("/contacts", {
-      params: searchParams,
-    });
-
-    if (searchResult.data.contacts && searchResult.data.contacts.length > 0) {
-      return searchResult.data.contacts[0];
+  if (phone) {
+    const byPhone = await zoho.get<ZohoContactsSearchResponse>("/contacts", { params: { phone } });
+    if (byPhone.data.contacts && byPhone.data.contacts.length > 0) {
+      return byPhone.data.contacts[0];
     }
   }
 
