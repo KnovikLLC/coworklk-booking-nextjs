@@ -40,6 +40,7 @@ export async function getAvailabilityForRange(
           slot,
           available: row?.is_available ?? false,
           remaining: row ? row.total_inventory - row.booked_count : 0,
+          isHoliday: row?.is_holiday ?? false,
         };
       })
     )
@@ -48,11 +49,12 @@ export async function getAvailabilityForRange(
   const byDate = new Map<string, AvailabilityDay>();
   for (const date of dates) {
     const dateStr = format(date, "yyyy-MM-dd");
-    byDate.set(dateStr, { date: dateStr, slots: {} });
+    byDate.set(dateStr, { date: dateStr, slots: {}, is_holiday: false });
   }
   for (const r of results) {
     const day = byDate.get(r.dateStr)!;
     day.slots[r.slot] = { available: r.available, remaining: Math.max(0, r.remaining) };
+    if (r.isHoliday) day.is_holiday = true;
   }
 
   return dates.map((date) => byDate.get(format(date, "yyyy-MM-dd"))!);
@@ -88,6 +90,7 @@ export interface AdminResource {
   space_type: string;
   total_inventory: number;
   slots: Record<string, AdminSlotInfo>;
+  is_holiday: boolean;
 }
 
 // Doc §4.2 GET /api/admin/availability response shape.
@@ -128,7 +131,9 @@ export async function getAdminAvailabilityForDate(
       ]);
 
       const slots: Record<string, AdminSlotInfo> = {};
+      let isHoliday = false;
       for (const { slot, row } of availabilityRows) {
+        if (row?.is_holiday) isHoliday = true;
         const matchingBooking = (bookings ?? []).find((b) => slotOverlaps(b.time_slot, slot));
         slots[slot] = {
           available: row ? row.total_inventory - row.booked_count : space.total_inventory,
@@ -149,6 +154,7 @@ export async function getAdminAvailabilityForDate(
         space_type: space.type,
         total_inventory: space.total_inventory,
         slots,
+        is_holiday: isHoliday,
       };
     })
   );

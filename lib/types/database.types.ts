@@ -42,6 +42,7 @@ export type Database = {
           is_active: boolean | null
           name: string
           price: number
+          space_id: string | null
           zoho_item_id: string
         }
         Insert: {
@@ -51,6 +52,7 @@ export type Database = {
           is_active?: boolean | null
           name: string
           price: number
+          space_id?: string | null
           zoho_item_id: string
         }
         Update: {
@@ -60,9 +62,18 @@ export type Database = {
           is_active?: boolean | null
           name?: string
           price?: number
+          space_id?: string | null
           zoho_item_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "addons_space_id_fkey"
+            columns: ["space_id"]
+            isOneToOne: false
+            referencedRelation: "spaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       booking_addons: {
         Row: {
@@ -112,6 +123,7 @@ export type Database = {
           agent_name: string | null
           base_amount: number
           booking_date: string
+          booking_group_id: string | null
           booking_number: string
           booking_type: Database["public"]["Enums"]["booking_type"]
           cancellation_reason: string | null
@@ -147,6 +159,7 @@ export type Database = {
           agent_name?: string | null
           base_amount: number
           booking_date: string
+          booking_group_id?: string | null
           booking_number: string
           booking_type?: Database["public"]["Enums"]["booking_type"]
           cancellation_reason?: string | null
@@ -182,6 +195,7 @@ export type Database = {
           agent_name?: string | null
           base_amount?: number
           booking_date?: string
+          booking_group_id?: string | null
           booking_number?: string
           booking_type?: Database["public"]["Enums"]["booking_type"]
           cancellation_reason?: string | null
@@ -244,6 +258,38 @@ export type Database = {
           {
             foreignKeyName: "bookings_user_id_fkey"
             columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      holidays: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          date: string
+          id: string
+          reason: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          date: string
+          id?: string
+          reason?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          date?: string
+          id?: string
+          reason?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "holidays_created_by_fkey"
+            columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -658,6 +704,7 @@ export type Database = {
         Returns: {
           booked_count: number
           is_available: boolean
+          is_holiday: boolean
           total_inventory: number
         }[]
       }

@@ -24,7 +24,10 @@ export function AvailabilityCalendar({
           <button
             key={day.date}
             type="button"
+            data-testid="date-option"
+            data-date={day.date}
             onClick={() => onSelectDate(date)}
+            title={day.is_holiday ? "Closed for a holiday" : undefined}
             className={cn(
               "flex min-w-[64px] flex-col items-center rounded-lg border px-3 py-2 text-sm transition-colors",
               isSelected
@@ -34,13 +37,19 @@ export function AvailabilityCalendar({
           >
             <span className="text-xs uppercase opacity-70">{format(date, "EEE")}</span>
             <span className="text-lg font-semibold">{format(date, "d")}</span>
-            <span
-              className={cn(
-                "mt-1 h-1.5 w-1.5 rounded-full",
-                hasAvailability ? "bg-emerald-500" : "bg-destructive",
-                isSelected && "bg-white"
-              )}
-            />
+            {day.is_holiday ? (
+              <span className={cn("mt-1 text-[9px] font-medium uppercase", isSelected ? "text-white" : "text-amber-600")}>
+                Closed
+              </span>
+            ) : (
+              <span
+                className={cn(
+                  "mt-1 h-1.5 w-1.5 rounded-full",
+                  hasAvailability ? "bg-emerald-500" : "bg-destructive",
+                  isSelected && "bg-white"
+                )}
+              />
+            )}
           </button>
         );
       })}

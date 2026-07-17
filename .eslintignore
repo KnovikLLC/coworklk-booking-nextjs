@@ -1,0 +1,4 @@
+**/*.test.ts
+test/**
+e2e/**
+playwright.config.ts

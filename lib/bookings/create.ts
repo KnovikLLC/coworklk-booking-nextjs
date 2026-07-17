@@ -32,6 +32,9 @@ export interface CreateBookingParams {
    *  (shared-device/shared-API-key trust model, no per-agent login). */
   agentName?: string;
   workspaceCount?: number;
+  /** Links multiple bookings created together in one admin "order" (multi-space
+   *  and/or multi-day) for grouped Zoho invoicing. NULL for every other caller. */
+  bookingGroupId?: string;
 }
 
 export interface CreatedBooking {
@@ -83,13 +86,18 @@ export async function createBooking(
 
   const workspaceCount = params.workspaceCount ?? 1;
   const availabilityRow = !availabilityError && availability ? availability[0] : null;
+
+  if (availabilityRow?.is_holiday) {
+    throw new BookingError("This date is a holiday — the space is closed.", 409);
+  }
+
   const remainingInventory = (availabilityRow?.total_inventory ?? 0) - (availabilityRow?.booked_count ?? 0);
 
   if (remainingInventory < workspaceCount) {
     throw new BookingError(
-      remainingInventory > 0 
-        ? `Only ${remainingInventory} seat(s) are available for this slot` 
-        : "This slot is no longer available", 
+      remainingInventory > 0
+        ? `Only ${remainingInventory} seat(s) are available for this slot`
+        : "This slot is no longer available",
       409
     );
   }
@@ -182,6 +190,7 @@ export async function createBooking(
       created_by: params.createdBy ?? null,
       agent_name: params.agentName ?? null,
       workspace_count: workspaceCount,
+      booking_group_id: params.bookingGroupId ?? null,
     })
     .select("id, booking_number, total_amount, status")
     .single();

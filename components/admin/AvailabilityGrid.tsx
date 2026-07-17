@@ -28,6 +28,7 @@ interface AdminResource {
   space_type: string;
   total_inventory: number;
   slots: Record<string, AdminSlotInfo>;
+  is_holiday: boolean;
 }
 
 // Doc §10.3 mockup. Renders one row per space with whatever slot keys apply
@@ -70,6 +71,11 @@ export function AvailabilityGrid() {
         <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed py-10 text-center">
           <p className="font-medium text-brand-dark">No resources found</p>
           <p className="text-sm text-muted-foreground">There are no bookable spaces configured yet.</p>
+        </div>
+      ) : resources[0]?.is_holiday ? (
+        <div className="flex flex-col items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 py-10 text-center">
+          <p className="font-medium text-amber-800">Closed — Holiday</p>
+          <p className="text-sm text-amber-700">The venue is closed on this date. Remove it under Settings → Holidays to reopen.</p>
         </div>
       ) : (
         <div className="space-y-3">

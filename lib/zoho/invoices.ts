@@ -21,21 +21,22 @@ export async function createInvoice(
   bookingNumber: string,
   lineItems: InvoiceLineItem[],
   paymentReceived: boolean = true,
-  sendEmail: boolean = true
+  sendEmail: boolean = true,
+  options: { invoiceDate?: string; notes?: string } = {}
 ): Promise<{ invoice_id: string; invoice_number: string }> {
   const zoho = await getZohoClient();
 
   const invoice = await zoho.post<ZohoInvoiceCreateResponse>("/invoices", {
     customer_id: customerId,
     reference_number: bookingNumber,
-    date: new Date().toISOString().split("T")[0],
+    date: options.invoiceDate ?? new Date().toISOString().split("T")[0],
     payment_terms: 0, // Due on receipt
     line_items: lineItems.map((item) => ({
       item_id: item.item_id,
       quantity: item.quantity,
       rate: item.rate,
     })),
-    notes: `Booking Reference: ${bookingNumber}\nThank you for choosing Cowork!`,
+    notes: options.notes ?? `Booking Reference: ${bookingNumber}\nThank you for choosing Cowork!`,
   });
 
   const invoiceId = invoice.data.invoice.invoice_id;

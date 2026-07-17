@@ -26,6 +26,7 @@ export function SlotSelector({
           <button
             key={`${option.pricingId}-${option.timeSlot}`}
             type="button"
+            data-testid="slot-option"
             disabled={!option.available}
             onClick={() => onSelect(option)}
             className={cn(

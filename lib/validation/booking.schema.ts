@@ -65,3 +65,38 @@ export const adminBookingCreateSchema = z.object({
   notes: z.string().max(1000).optional(),
 });
 export type AdminBookingCreateInput = z.infer<typeof adminBookingCreateSchema>;
+
+// Doc: multi-space / multi-day admin booking ("order") — one submission
+// creates several bookings sharing a booking_group_id, invoiced one Zoho
+// invoice per calendar date.
+export const adminBookingBatchItemSchema = z.object({
+  space_id: z.string().uuid(),
+  pricing_id: z.string().uuid(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "date must be YYYY-MM-DD"),
+  slot: z.enum([
+    "morning",
+    "afternoon",
+    "evening",
+    "night",
+    "full_day",
+    "unlimited",
+    "1hr",
+    "2hr",
+    "30min",
+  ]),
+  addons: z.array(bookingAddonSchema).max(20).optional(),
+  workspace_count: z.number().int().min(1).max(20).default(1),
+  notes: z.string().max(1000).optional(),
+});
+
+export const adminBookingBatchCreateSchema = z.object({
+  customer: z.object({
+    name: z.string().min(2),
+    email: z.string().email(),
+    phone: z.string().min(9),
+  }),
+  payment_method: z.enum(["cash", "card_terminal", "qr_transfer", "payhere", "stripe", "domain_verification"]),
+  payment_received: z.boolean().optional(),
+  items: z.array(adminBookingBatchItemSchema).min(1).max(20),
+});
+export type AdminBookingBatchCreateInput = z.infer<typeof adminBookingBatchCreateSchema>;

@@ -8,15 +8,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { SlotSelector } from "@/components/booking/SlotSelector";
+import { AddonQuantityStepper } from "@/components/booking/AddonQuantityStepper";
 import { buildBookableOptions, type BookableOption } from "@/lib/bookings/slot-options";
 import { formatLKR } from "@/lib/utils";
 import type { AddonDTO, AvailabilityResponse, SpaceDTO } from "@/lib/types/domain";
+import { X } from "lucide-react";
 
 import { useSearchParams } from "next/navigation";
+
+interface OrderItem {
+  key: string;
+  spaceId: string;
+  spaceName: string;
+  date: string;
+  option: BookableOption;
+  addons: { id: string; name: string; price: number; quantity: number }[];
+  itemTotal: number;
+}
 
 export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addons: AddonDTO[] }) {
   const router = useRouter();
@@ -34,7 +46,8 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
 
   const [availability, setAvailability] = useState<AvailabilityResponse | null>(null);
   const [selectedOption, setSelectedOption] = useState<BookableOption | null>(null);
-  const [selectedAddonIds, setSelectedAddonIds] = useState<Set<string>>(new Set());
+  const [addonQuantities, setAddonQuantities] = useState<Record<string, number>>({});
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -57,40 +70,69 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
     [space, availability]
   );
 
-  const selectedAddons = addons.filter((a) => selectedAddonIds.has(a.id));
-  const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price, 0);
-  const total = (selectedOption?.price ?? 0) + addonsTotal;
+  // Addons can be scoped to one space (space_id set) or offered everywhere
+  // (space_id null) — filter client-side on the already-loaded full list so
+  // switching resources doesn't need a re-fetch.
+  const availableAddons = addons.filter((a) => !a.space_id || a.space_id === spaceId);
+  const selectedAddons = availableAddons
+    .filter((a) => (addonQuantities[a.id] ?? 0) > 0)
+    .map((a) => ({ ...a, quantity: addonQuantities[a.id] }));
+  const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price * a.quantity, 0);
+  const lineTotal = (selectedOption?.price ?? 0) + addonsTotal;
+  const orderTotal = orderItems.reduce((sum, item) => sum + item.itemTotal, 0);
 
-  function toggleAddon(id: string) {
-    setSelectedAddonIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+  function setAddonQuantity(id: string, quantity: number) {
+    setAddonQuantities((prev) => ({ ...prev, [id]: quantity }));
+  }
+
+  function addToOrder() {
+    if (!space || !selectedOption) {
+      toast.error("Please select a resource and slot first.");
+      return;
+    }
+    setOrderItems((prev) => [
+      ...prev,
+      {
+        key: `${space.id}-${date}-${selectedOption.timeSlot}-${prev.length}`,
+        spaceId: space.id,
+        spaceName: space.name,
+        date,
+        option: selectedOption,
+        addons: selectedAddons.map((a) => ({ id: a.id, name: a.name, price: a.price, quantity: a.quantity })),
+        itemTotal: lineTotal,
+      },
+    ]);
+    setSelectedOption(null);
+    setAddonQuantities({});
+  }
+
+  function removeOrderItem(key: string) {
+    setOrderItems((prev) => prev.filter((item) => item.key !== key));
   }
 
   async function handleSubmit() {
-    if (!space || !selectedOption || !name || !email || !phone) {
-      toast.error("Please fill in resource, slot, and customer details.");
+    if (orderItems.length === 0 || !name || !email || !phone) {
+      toast.error("Add at least one item to the order and fill in customer details.");
       return;
     }
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/admin/bookings", {
+      const res = await fetch("/api/admin/bookings/batch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          space_id: space.id,
-          pricing_id: selectedOption.pricingId,
-          date,
-          slot: selectedOption.timeSlot,
           customer: { name, email, phone },
-          addons: selectedAddons.map((a) => ({ addon_id: a.id, quantity: 1 })),
           payment_method: paymentMethod,
           payment_received: paymentMethod !== "qr_transfer",
-          notes: notes || undefined,
+          items: orderItems.map((item) => ({
+            space_id: item.spaceId,
+            pricing_id: item.option.pricingId,
+            date: item.date,
+            slot: item.option.timeSlot,
+            addons: item.addons.map((a) => ({ addon_id: a.id, quantity: a.quantity })),
+            notes: notes || undefined,
+          })),
         }),
       });
       const data = await res.json();
@@ -100,7 +142,11 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
         return;
       }
 
-      toast.success(`Booking ${data.booking.booking_number} created`);
+      toast.success(
+        data.bookings.length > 1
+          ? `${data.bookings.length} bookings created`
+          : `Booking ${data.bookings[0].booking_number} created`
+      );
       router.push("/admin/bookings");
       router.refresh();
     } finally {
@@ -142,9 +188,75 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
         </CardContent>
       </Card>
 
+      {availableAddons.length > 0 ? (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base text-brand-dark">3. Add-ons (Optional)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {availableAddons.map((addon) => (
+                <div key={addon.id} className="flex items-center justify-between rounded-md border p-2 text-sm">
+                  <span>
+                    {addon.name} <span className="text-muted-foreground">({formatLKR(addon.price)} each)</span>
+                  </span>
+                  <AddonQuantityStepper
+                    quantity={addonQuantities[addon.id] ?? 0}
+                    onChange={(next) => setAddonQuantity(addon.id, next)}
+                  />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      <div className="flex items-center justify-between rounded-lg border bg-white p-4">
+        <span className="text-sm text-muted-foreground">Item total: {formatLKR(lineTotal)}</span>
+        <Button type="button" variant="outline" onClick={addToOrder}>
+          Add to Order
+        </Button>
+      </div>
+
+      {orderItems.length > 0 ? (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base text-brand-dark">Order Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Space</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Slot</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead className="text-right"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {orderItems.map((item) => (
+                  <TableRow key={item.key}>
+                    <TableCell>{item.spaceName}</TableCell>
+                    <TableCell>{item.date}</TableCell>
+                    <TableCell className="capitalize">{item.option.label}</TableCell>
+                    <TableCell>{formatLKR(item.itemTotal)}</TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm" onClick={() => removeOrderItem(item.key)}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      ) : null}
+
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-brand-dark">3. Customer Details</CardTitle>
+          <CardTitle className="text-base text-brand-dark">4. Customer Details</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-3">
@@ -163,24 +275,6 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
           </div>
         </CardContent>
       </Card>
-
-      {addons.length > 0 ? (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base text-brand-dark">4. Add-ons (Optional)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-3">
-              {addons.map((addon) => (
-                <label key={addon.id} className="flex items-center gap-1.5 text-sm">
-                  <Checkbox checked={selectedAddonIds.has(addon.id)} onCheckedChange={() => toggleAddon(addon.id)} />
-                  {addon.name} ({formatLKR(addon.price)})
-                </label>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
 
       <Card>
         <CardHeader className="pb-3">
@@ -214,8 +308,8 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
       </Card>
 
       <div className="flex items-center justify-between rounded-lg border bg-white p-4">
-        <span className="text-lg font-semibold text-brand-dark">Total: {formatLKR(total)}</span>
-        <Button disabled={submitting} onClick={handleSubmit}>
+        <span className="text-lg font-semibold text-brand-dark">Order Total: {formatLKR(orderTotal)}</span>
+        <Button disabled={submitting || orderItems.length === 0} onClick={handleSubmit}>
           {submitting ? "Creating..." : "Create Booking"}
         </Button>
       </div>

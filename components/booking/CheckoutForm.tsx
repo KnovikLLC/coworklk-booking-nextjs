@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { AddonQuantityStepper } from "@/components/booking/AddonQuantityStepper";
 import { formatLKR } from "@/lib/utils";
 import { durationLabel } from "@/lib/spaces";
 import { redirectToPayhereCheckout } from "@/lib/payhere/redirect";
@@ -41,7 +41,7 @@ export function CheckoutForm({
   discount: { percent: number; amount: number; reason: string | null } | null;
 }) {
   const router = useRouter();
-  const [selectedAddonIds, setSelectedAddonIds] = useState<Set<string>>(new Set());
+  const [addonQuantities, setAddonQuantities] = useState<Record<string, number>>({});
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
@@ -92,21 +92,19 @@ export function CheckoutForm({
   const maxAllowed = Math.min(space.total_inventory, remaining);
 
   const selectedAddons = useMemo(
-    () => addons.filter((a) => selectedAddonIds.has(a.id)),
-    [addons, selectedAddonIds]
+    () =>
+      addons
+        .filter((a) => (addonQuantities[a.id] ?? 0) > 0)
+        .map((a) => ({ ...a, quantity: addonQuantities[a.id] })),
+    [addons, addonQuantities]
   );
-  const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price, 0);
+  const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price * a.quantity, 0);
   const discountPercent = discount?.percent ?? 0;
   const discountAmount = Math.round((pricing.price * workspaceCount) * (discountPercent / 100));
   const total = (pricing.price * workspaceCount) - discountAmount + addonsTotal;
 
-  function toggleAddon(id: string) {
-    setSelectedAddonIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+  function setAddonQuantity(id: string, quantity: number) {
+    setAddonQuantities((prev) => ({ ...prev, [id]: quantity }));
   }
 
   async function handleSubmit() {
@@ -132,7 +130,7 @@ export function CheckoutForm({
           pricing_id: pricing.id,
           date,
           slot,
-          addons: selectedAddons.map((a) => ({ addon_id: a.id, quantity: 1 })),
+          addons: selectedAddons.map((a) => ({ addon_id: a.id, quantity: a.quantity })),
           payment_method: paymentMethod,
           workspace_count: workspaceCount,
           ...(userEmail ? {} : { guest_name: guestName, guest_email: guestEmail, guest_phone: guestPhone }),
@@ -250,19 +248,16 @@ export function CheckoutForm({
             <h2 className="font-semibold text-brand-dark">Add-ons</h2>
             <div className="mt-3 space-y-2">
               {addons.map((addon) => (
-                <label
-                  key={addon.id}
-                  className="flex cursor-pointer items-center justify-between rounded-md border p-3 text-sm"
-                >
-                  <span className="flex items-center gap-2">
-                    <Checkbox
-                      checked={selectedAddonIds.has(addon.id)}
-                      onCheckedChange={() => toggleAddon(addon.id)}
-                    />
+                <div key={addon.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
+                  <span className="flex flex-col">
                     {addon.name}
+                    <span className="text-xs text-muted-foreground">{formatLKR(addon.price)} each</span>
                   </span>
-                  <span className="text-muted-foreground">{formatLKR(addon.price)}</span>
-                </label>
+                  <AddonQuantityStepper
+                    quantity={addonQuantities[addon.id] ?? 0}
+                    onChange={(next) => setAddonQuantity(addon.id, next)}
+                  />
+                </div>
               ))}
             </div>
           </section>
@@ -367,8 +362,11 @@ export function CheckoutForm({
             ) : null}
             {selectedAddons.map((a) => (
               <div key={a.id} className="flex justify-between">
-                <dt className="text-muted-foreground">{a.name}</dt>
-                <dd>{formatLKR(a.price)}</dd>
+                <dt className="text-muted-foreground">
+                  {a.name}
+                  {a.quantity > 1 ? ` (x${a.quantity})` : ""}
+                </dt>
+                <dd>{formatLKR(a.price * a.quantity)}</dd>
               </div>
             ))}
           </dl>

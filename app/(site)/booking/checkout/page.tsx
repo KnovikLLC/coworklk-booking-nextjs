@@ -20,7 +20,7 @@ export default async function CheckoutPage({
   const supabase = createClient();
   const [space, addons] = await Promise.all([
     getActiveSpaceById(supabase, space_id),
-    getActiveAddons(supabase),
+    getActiveAddons(supabase, space_id),
   ]);
 
   const pricing = space?.pricing.find((p) => p.id === pricing_id);

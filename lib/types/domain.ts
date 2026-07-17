@@ -35,6 +35,7 @@ export interface AvailabilitySlot {
 export interface AvailabilityDay {
   date: string;
   slots: Record<string, AvailabilitySlot>;
+  is_holiday: boolean;
 }
 
 export interface AvailabilityResponse {
@@ -48,6 +49,8 @@ export interface AddonDTO {
   description: string | null;
   price: number;
   category: string | null;
+  /** NULL = offered for every space; set = offered only for that specific space. */
+  space_id: string | null;
 }
 
 export interface BookingAddonInput {
