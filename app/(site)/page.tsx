@@ -5,12 +5,17 @@ const FAQS = [
   {
     question: "Where is Cowork.lk located?",
     answer:
-      "Cowork.lk is at 279 Avissawella Road, Pannipitiya 10230, Western Province, Sri Lanka, open Monday to Sunday, 8:00 AM to 8:00 PM.",
+      "Cowork.lk is at 349/A/3 Avissawella Road, Pannipitiya 10230, Western Province, Sri Lanka — 5 minutes from Kottawa, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway. Open Monday to Sunday, 8:00 AM to 8:00 PM.",
   },
   {
     question: "What coworking spaces can I book?",
     answer:
-      "Hot desks and workspace seats from LKR 699, 4- and 5-seater meeting rooms from LKR 1,750, creative studios from LKR 1,500, and a classroom space from LKR 4,990 — all bookable online with real-time availability.",
+      "Hot desks from LKR 490, workspace seats from LKR 790, and 4- and 5-seater meeting rooms from LKR 3,450 — all bookable online with real-time availability.",
+  },
+  {
+    question: "Can I rent office space for just a day?",
+    answer:
+      "Yes. Every space offers half-day and full-day pricing, so you can rent a desk, workspace seat, or meeting room for a single day with no long-term commitment.",
   },
   {
     question: "Is WiFi included at Cowork.lk?",
@@ -113,13 +118,16 @@ export default function HomePage() {
           </div>
 
           {/* Card 2: Meeting Room */}
-          <div className="group rounded-2xl border border-brand-dark/5 bg-white p-6 text-center transition-all hover:border-brand/20 hover:shadow-md">
+          <Link
+            href="/meeting-rooms"
+            className="group rounded-2xl border border-brand-dark/5 bg-white p-6 text-center transition-all hover:border-brand/20 hover:shadow-md"
+          >
             <div className="mx-auto h-16 w-16 rounded-full bg-brand/5 text-brand flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
               👥
             </div>
             <h3 className="mt-4 text-base font-bold text-brand-dark">Meeting Room</h3>
-            <p className="mt-1 text-xs text-brand-dark/45">Starting 1,750.00 LKR</p>
-          </div>
+            <p className="mt-1 text-xs text-brand-dark/45">Starting 3,450.00 LKR</p>
+          </Link>
 
           {/* Card 3: Creative Studio */}
           <div className="group rounded-2xl border border-brand-dark/5 bg-white p-6 text-center transition-all hover:border-brand/20 hover:shadow-md">

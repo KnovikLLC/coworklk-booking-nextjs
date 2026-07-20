@@ -33,7 +33,7 @@ export default function ContactPage() {
             <div>
               <h2 className="text-xl font-semibold text-brand-dark mb-2">Cowork Lanka (Pvt) Ltd</h2>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                279 Avissawella Road,
+                349/A/3 Avissawella Road,
                 <br />
                 Pannipitiya 10230,
                 <br />
@@ -63,7 +63,7 @@ export default function ContactPage() {
             </div>
             <div>
               <h3 className="text-base font-semibold text-brand-dark mb-1">Email Address</h3>
-              <p className="text-sm text-muted-foreground">hello@cowork.lk</p>
+              <p className="text-sm text-muted-foreground">admin@cowork.lk</p>
             </div>
             <div className="rounded-lg bg-muted/40 p-4 border text-xs text-muted-foreground">
               <strong>Operating Hours:</strong> Monday – Sunday: 8:00 AM – 8:00 PM
@@ -91,6 +91,18 @@ export default function ContactPage() {
               </Button>
             </form>
           </div>
+        </div>
+
+        <div className="mt-4 overflow-hidden rounded-lg border">
+          <iframe
+            title="Cowork Lanka location — 349/A/3 Avissawella Road, Pannipitiya"
+            src="https://www.google.com/maps?q=349%2FA%2F3+Avissawella+Road%2C+Pannipitiya+10230%2C+Sri+Lanka&output=embed"
+            width="100%"
+            height="320"
+            style={{ border: 0 }}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </div>
     </main>

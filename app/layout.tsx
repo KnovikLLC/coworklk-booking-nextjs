@@ -63,12 +63,27 @@ const localBusinessJsonLd = {
   priceRange: "LKR 490 - LKR 6750",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "279 Avissawella Road",
+    streetAddress: "349/A/3 Avissawella Road",
     addressLocality: "Pannipitiya",
     postalCode: "10230",
     addressRegion: "Western Province",
     addressCountry: "LK",
   },
+  // Real proximity facts already published on the About page's "Location &
+  // Facility" section (Kottawa, Maharagama, Kadawatha drive times) — not
+  // invented — surfaced here for "near me" local-intent queries.
+  areaServed: [
+    { "@type": "City", name: "Pannipitiya" },
+    { "@type": "City", name: "Kottawa" },
+    { "@type": "City", name: "Maharagama" },
+    { "@type": "City", name: "Kadawatha" },
+  ],
+  amenityFeature: [
+    { "@type": "LocationFeatureSpecification", name: "Free Fiber WiFi", value: true },
+    { "@type": "LocationFeatureSpecification", name: "Air Conditioning", value: true },
+    { "@type": "LocationFeatureSpecification", name: "Free Coffee & Tea", value: true },
+    { "@type": "LocationFeatureSpecification", name: "On-Site Parking", value: true },
+  ],
   openingHoursSpecification: {
     "@type": "OpeningHoursSpecification",
     dayOfWeek: [

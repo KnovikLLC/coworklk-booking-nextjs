@@ -22,6 +22,16 @@ export function spaceTypeLabel(type: string) {
   return SPACE_TYPE_LABELS[type] ?? type;
 }
 
+// Space names double as their public URL slug (see lib/data/spaces.ts's
+// getActiveSpaceBySlug) — keep this in sync with any slug-lookup logic.
+export function slugify(name: string) {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export function durationLabel(duration: string) {
   return DURATION_LABELS[duration] ?? duration;
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { formatLKR } from "@/lib/utils";
+import { slugify } from "@/lib/spaces";
 import type { SpaceDTO } from "@/lib/types/domain";
 
 export function SpaceCard({ space }: { space: SpaceDTO }) {
@@ -49,7 +50,7 @@ export function SpaceCard({ space }: { space: SpaceDTO }) {
         {/* Action and Pricing */}
         <div className="mt-6 pt-4 border-t border-brand-dark/5 flex items-center justify-between gap-4">
           <Link
-            href={`/booking/${space.id}`}
+            href={`/booking/${slugify(space.name)}`}
             className="group flex items-center gap-1.5 rounded-xl border border-brand-dark/25 px-5 py-2.5 text-xs font-bold text-brand-dark transition-all hover:bg-brand-dark/5 hover:border-brand-dark"
           >
             Book Now

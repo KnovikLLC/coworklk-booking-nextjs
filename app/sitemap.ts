@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveSpaces } from "@/lib/data/spaces";
+import { slugify } from "@/lib/spaces";
 
 const SITE_URL = process.env.NEXT_PUBLIC_URL || "https://cowork.lk";
 
@@ -10,6 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
     { path: "", priority: 1, changeFrequency: "weekly" },
     { path: "/booking", priority: 0.9, changeFrequency: "daily" },
+    { path: "/meeting-rooms", priority: 0.8, changeFrequency: "weekly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
     { path: "/community", priority: 0.6, changeFrequency: "weekly" },
     { path: "/events", priority: 0.6, changeFrequency: "weekly" },
@@ -29,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const spaces = await getActiveSpaces(createAdminClient());
     spaceEntries = spaces.map((space) => ({
-      url: `${SITE_URL}/booking/${space.id}`,
+      url: `${SITE_URL}/booking/${slugify(space.name)}`,
       lastModified: now,
       changeFrequency: "daily" as const,
       priority: 0.8,

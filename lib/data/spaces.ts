@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/types/database.types";
 import type { SpaceDTO } from "@/lib/types/domain";
+import { slugify } from "@/lib/spaces";
 
 const SPACES_SELECT = `id, name, type, capacity, description, image_url, amenities, requires_specific_seat, total_inventory,
   pricing:pricing!pricing_space_id_fkey ( id, duration, slot_type, price, description, includes_data_gb, is_active )`;
@@ -37,6 +38,18 @@ export async function getActiveSpaces(
         includes_data_gb: p.includes_data_gb ?? 0,
       })),
   }));
+}
+
+// No dedicated slug column — at this scale (a handful of space categories,
+// not per-unit rows) the slugified name is unique in practice, so we resolve
+// it by fetching active spaces and matching in memory rather than adding a
+// migration/backfill for a computed value.
+export async function getActiveSpaceBySlug(
+  supabase: SupabaseClient<Database>,
+  slug: string
+): Promise<SpaceDTO | null> {
+  const spaces = await getActiveSpaces(supabase);
+  return spaces.find((space) => slugify(space.name) === slug) ?? null;
 }
 
 export async function getActiveSpaceById(

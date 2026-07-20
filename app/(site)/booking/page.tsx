@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getActiveSpaces } from "@/lib/data/spaces";
 import { SpaceCard } from "@/components/booking/SpaceCard";
+import { slugify } from "@/lib/spaces";
 import Link from "next/link";
 
 export const metadata = {
@@ -35,7 +36,7 @@ export default async function BookingPage() {
           "@type": "Product",
           name: space.name,
           description: space.description ?? `${space.name} at Cowork.lk, Pannipitiya, Sri Lanka.`,
-          url: `${process.env.NEXT_PUBLIC_URL || "https://cowork.lk"}/booking/${space.id}`,
+          url: `${process.env.NEXT_PUBLIC_URL || "https://cowork.lk"}/booking/${slugify(space.name)}`,
           offers: {
             "@type": "Offer",
             priceCurrency: "LKR",
@@ -76,7 +77,7 @@ export default async function BookingPage() {
             <span className="text-brand">Let&apos;s Cowork!</span>
           </h1>
           <p className="text-sm text-brand-dark/65 max-w-lg leading-relaxed pt-2">
-            Explore our curated list of workspace offerings. Find the perfect environment for your productive day, or book private, soundproofed spaces for your team huddles.
+            Explore our curated list of workspace offerings. Rent office space for a day, book a shared desk by the hour, or reserve a private meeting room for your team huddles — all with real-time availability.
           </p>
         </div>
 

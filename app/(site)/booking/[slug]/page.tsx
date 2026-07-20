@@ -1,36 +1,63 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
-import { getActiveSpaceById } from "@/lib/data/spaces";
+import { getActiveSpaceById, getActiveSpaceBySlug } from "@/lib/data/spaces";
+import { slugify } from "@/lib/spaces";
 import { BookingWidget } from "@/components/booking/BookingWidget";
 import { Badge } from "@/components/ui/badge";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/lib/types/database.types";
+import type { SpaceDTO } from "@/lib/types/domain";
 
 const SITE_URL = process.env.NEXT_PUBLIC_URL || "https://cowork.lk";
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// Old space URLs were raw UUIDs (/booking/<uuid>) before slugs existed.
+// Resolve by slug first; if that misses and the param looks like one of
+// those old IDs, resolve by ID and 308-redirect to the real slug so any
+// bookmarked/shared old links keep working and carry link equity forward.
+async function resolveSpace(
+  supabase: SupabaseClient<Database>,
+  slug: string
+): Promise<{ space: SpaceDTO; redirectTo: string | null } | null> {
+  const bySlug = await getActiveSpaceBySlug(supabase, slug);
+  if (bySlug) return { space: bySlug, redirectTo: null };
+
+  if (UUID_RE.test(slug)) {
+    const byId = await getActiveSpaceById(supabase, slug);
+    if (byId) return { space: byId, redirectTo: `/booking/${slugify(byId.name)}` };
+  }
+
+  return null;
+}
 
 export async function generateMetadata({
   params,
 }: {
-  params: { spaceId: string };
+  params: { slug: string };
 }): Promise<Metadata> {
   const supabase = createClient();
-  const space = await getActiveSpaceById(supabase, params.spaceId);
-  if (!space) return {};
+  const resolved = await resolveSpace(supabase, params.slug);
+  if (!resolved) return {};
+  const { space, redirectTo } = resolved;
+  if (redirectTo) return {};
 
   const title = `${space.name} | Cowork.lk`;
   const description =
     space.description ??
     `Book the ${space.name} at Cowork.lk, Pannipitiya — real-time availability, instant online booking.`;
+  const slug = slugify(space.name);
 
   return {
     title,
     description,
-    alternates: { canonical: `/booking/${space.id}` },
+    alternates: { canonical: `/booking/${slug}` },
     openGraph: {
       siteName: "Cowork.lk",
       title,
       description,
-      url: `/booking/${space.id}`,
+      url: `/booking/${slug}`,
       images: [space.image_url || "/opengraph-image"],
     },
   };
@@ -39,30 +66,33 @@ export async function generateMetadata({
 export default async function SpaceDetailPage({
   params,
 }: {
-  params: { spaceId: string };
+  params: { slug: string };
 }) {
   const supabase = createClient();
-  const space = await getActiveSpaceById(supabase, params.spaceId);
+  const resolved = await resolveSpace(supabase, params.slug);
 
-  if (!space) notFound();
+  if (!resolved) notFound();
+  const { space, redirectTo } = resolved;
+  if (redirectTo) permanentRedirect(redirectTo);
 
   const lowestPrice = space.pricing.reduce(
     (min, p) => (p.price < min ? p.price : min),
     space.pricing[0]?.price ?? 0
   );
+  const slug = slugify(space.name);
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: space.name,
     description: space.description ?? `${space.name} at Cowork.lk, Pannipitiya, Sri Lanka.`,
     image: space.image_url ? `${SITE_URL}${space.image_url}` : undefined,
-    url: `${SITE_URL}/booking/${space.id}`,
+    url: `${SITE_URL}/booking/${slug}`,
     offers: {
       "@type": "Offer",
       priceCurrency: "LKR",
       price: lowestPrice,
       availability: "https://schema.org/InStock",
-      url: `${SITE_URL}/booking/${space.id}`,
+      url: `${SITE_URL}/booking/${slug}`,
     },
   };
 
