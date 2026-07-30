@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
   const date = params.get("date");
   const status = params.get("status");
   const spaceId = params.get("space_id");
+  const customer = params.get("customer")?.trim();
   const page = Math.max(1, Number(params.get("page") ?? "1"));
   const limit = Math.min(100, Math.max(1, Number(params.get("limit") ?? "20")));
   const from = (page - 1) * limit;
@@ -37,6 +38,17 @@ export async function GET(request: NextRequest) {
   if (date) query = query.eq("booking_date", date);
   if (status) query = query.eq("status", status as never);
   if (spaceId) query = query.eq("space_id", spaceId);
+  // Guest name/email only — member (users-joined) bookings aren't reachable
+  // via PostgREST .or() across an embedded resource. Good enough for the
+  // corporate-invoicing search use case, since admin walk-in bookings are
+  // guest-type.
+  if (customer) {
+    // Strip characters that are syntactically special to PostgREST's
+    // .or() filter grammar so a stray comma/paren in the search term
+    // doesn't break the query rather than just matching nothing.
+    const safeCustomer = customer.replace(/[,()]/g, "");
+    if (safeCustomer) query = query.or(`guest_name.ilike.%${safeCustomer}%,guest_email.ilike.%${safeCustomer}%`);
+  }
 
   const { data, error, count } = await query;
 

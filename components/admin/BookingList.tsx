@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,6 +14,7 @@ import { ConfirmBankTransferButton } from "@/components/admin/ConfirmBankTransfe
 import { StatusChangeMenu } from "@/components/admin/StatusChangeMenu";
 import { DeleteBookingButton } from "@/components/admin/DeleteBookingButton";
 import { MatchInvoiceDialog } from "@/components/admin/MatchInvoiceDialog";
+import { CreateCombinedInvoiceDialog } from "@/components/admin/CreateCombinedInvoiceDialog";
 import { formatLKR } from "@/lib/utils";
 import { BOOKING_STATUS_VARIANT, bookingStatusLabel } from "@/lib/bookings/status";
 import { toast } from "sonner";
@@ -44,12 +46,14 @@ const STATUS_OPTIONS = [
 export function BookingList() {
   const [dateFilter, setDateFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [customerFilter, setCustomerFilter] = useState("");
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const limit = 20;
 
   useEffect(() => {
@@ -57,12 +61,14 @@ export function BookingList() {
     const params = new URLSearchParams({ page: String(page), limit: String(limit) });
     if (dateFilter) params.set("date", dateFilter);
     if (statusFilter !== "all") params.set("status", statusFilter);
+    if (customerFilter) params.set("customer", customerFilter);
 
     fetch(`/api/admin/bookings?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => {
         setBookings(data.bookings ?? []);
         setTotal(data.total ?? 0);
+        setSelectedIds(new Set()); // clear selection whenever the list changes underneath it
       })
       .finally(() => {
         setLoading(false);
@@ -73,7 +79,20 @@ export function BookingList() {
         // exactly what let a fast double-tap fire two different actions.
         setUpdatingId(null);
       });
-  }, [dateFilter, statusFilter, page, refreshKey]);
+  }, [dateFilter, statusFilter, customerFilter, page, refreshKey]);
+
+  function toggleSelected(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    setSelectedIds((prev) => (prev.size === bookings.length ? new Set() : new Set(bookings.map((b) => b.id))));
+  }
 
   async function updateStatus(id: string, newStatus: string) {
     if (updatingId) return; // already processing an action on some row
@@ -145,6 +164,15 @@ export function BookingList() {
       <CardContent className="p-4">
         <div className="mb-4 flex flex-wrap items-center gap-2">
           <Input
+            placeholder="Search customer name/email"
+            value={customerFilter}
+            onChange={(e) => {
+              setCustomerFilter(e.target.value);
+              setPage(1);
+            }}
+            className="w-56"
+          />
+          <Input
             type="date"
             value={dateFilter}
             onChange={(e) => {
@@ -171,13 +199,14 @@ export function BookingList() {
               ))}
             </SelectContent>
           </Select>
-          {(dateFilter || statusFilter !== "all") && (
+          {(dateFilter || statusFilter !== "all" || customerFilter) && (
             <Button
               variant="ghost"
               size="sm"
               onClick={() => {
                 setDateFilter("");
                 setStatusFilter("all");
+                setCustomerFilter("");
                 setPage(1);
               }}
             >
@@ -185,6 +214,23 @@ export function BookingList() {
             </Button>
           )}
         </div>
+
+        {selectedIds.size > 0 ? (
+          <div className="mb-4 flex items-center justify-between rounded-lg border bg-muted/30 p-3">
+            <span className="text-sm text-muted-foreground">{selectedIds.size} booking(s) selected</span>
+            <CreateCombinedInvoiceDialog
+              bookings={bookings
+                .filter((b) => selectedIds.has(b.id))
+                .map((b) => ({
+                  id: b.id,
+                  booking_number: b.booking_number,
+                  total_amount: b.total_amount,
+                  zoho_invoice_number: b.zoho_invoice_number,
+                }))}
+              onCreated={() => setRefreshKey((k) => k + 1)}
+            />
+          </div>
+        ) : null}
 
         {loading ? (
           <div className="space-y-2">
@@ -202,6 +248,13 @@ export function BookingList() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-8">
+                  <Checkbox
+                    checked={bookings.length > 0 && selectedIds.size === bookings.length}
+                    onCheckedChange={toggleSelectAll}
+                    aria-label="Select all bookings on this page"
+                  />
+                </TableHead>
                 <TableHead>Booking ID</TableHead>
                 <TableHead>Customer</TableHead>
                 <TableHead>Space</TableHead>
@@ -216,6 +269,13 @@ export function BookingList() {
             <TableBody>
               {bookings.map((b) => (
                 <TableRow key={b.id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedIds.has(b.id)}
+                      onCheckedChange={() => toggleSelected(b.id)}
+                      aria-label={`Select booking ${b.booking_number}`}
+                    />
+                  </TableCell>
                   <TableCell className="font-mono text-xs">{b.booking_number}</TableCell>
                   <TableCell>{b.customer_name}</TableCell>
                   <TableCell>{b.space_name}</TableCell>
