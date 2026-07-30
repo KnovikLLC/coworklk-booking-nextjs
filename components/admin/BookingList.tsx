@@ -11,6 +11,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ConfirmBankTransferButton } from "@/components/admin/ConfirmBankTransferButton";
 import { StatusChangeMenu } from "@/components/admin/StatusChangeMenu";
+import { DeleteBookingButton } from "@/components/admin/DeleteBookingButton";
+import { MatchInvoiceDialog } from "@/components/admin/MatchInvoiceDialog";
 import { formatLKR } from "@/lib/utils";
 import { BOOKING_STATUS_VARIANT, bookingStatusLabel } from "@/lib/bookings/status";
 import { toast } from "sonner";
@@ -24,6 +26,8 @@ interface AdminBooking {
   slot: string;
   status: string;
   total_amount: number;
+  zoho_invoice_id: string | null;
+  zoho_invoice_number: string | null;
 }
 
 const STATUS_OPTIONS = [
@@ -90,6 +94,25 @@ export function BookingList() {
       setRefreshKey((k) => k + 1); // clears updatingId once the refetch above lands
     } catch {
       toast.error("An error occurred while updating status");
+      setUpdatingId(null);
+    }
+  }
+
+  async function deleteBooking(id: string) {
+    if (updatingId) return;
+    setUpdatingId(id);
+    try {
+      const res = await fetch(`/api/admin/bookings/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error ?? "Failed to delete booking");
+        setUpdatingId(null);
+        return;
+      }
+      toast.success("Booking deleted");
+      setRefreshKey((k) => k + 1); // clears updatingId once the refetch above lands
+    } catch {
+      toast.error("An error occurred while deleting the booking");
       setUpdatingId(null);
     }
   }
@@ -186,6 +209,7 @@ export function BookingList() {
                 <TableHead>Slot</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Invoice</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -203,6 +227,28 @@ export function BookingList() {
                       {bookingStatusLabel(b.status)}
                     </Badge>
                   </TableCell>
+                  <TableCell>
+                    <MatchInvoiceDialog
+                      bookingId={b.id}
+                      bookingNumber={b.booking_number}
+                      onMatched={() => setRefreshKey((k) => k + 1)}
+                      trigger={
+                        b.zoho_invoice_number ? (
+                          <button
+                            type="button"
+                            className="font-mono text-xs text-brand hover:underline"
+                            title="Click to re-match"
+                          >
+                            {b.zoho_invoice_number}
+                          </button>
+                        ) : (
+                          <Button size="sm" variant="outline">
+                            Match
+                          </Button>
+                        )
+                      }
+                    />
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1.5">
                       {b.status === "pending_payment" && (
@@ -219,7 +265,14 @@ export function BookingList() {
                           onChange={(newStatus) => updateStatus(b.id, newStatus)}
                         />
                       )}
-                      {!["pending_payment", "confirmed", "checked_in"].includes(b.status) && (
+                      {(b.status === "pending_payment" || b.status === "cancelled") && (
+                        <DeleteBookingButton
+                          bookingNumber={b.booking_number}
+                          disabled={updatingId !== null}
+                          onConfirm={() => deleteBooking(b.id)}
+                        />
+                      )}
+                      {!["pending_payment", "confirmed", "checked_in", "cancelled"].includes(b.status) && (
                         <span className="text-xs text-muted-foreground">-</span>
                       )}
                     </div>

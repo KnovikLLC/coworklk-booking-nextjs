@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
   let query = admin
     .from("bookings")
     .select(
-      "id, booking_number, booking_date, time_slot, status, total_amount, guest_name, guest_email, spaces ( name, type ), users!bookings_user_id_fkey ( full_name, email )",
+      "id, booking_number, booking_date, time_slot, status, total_amount, guest_name, guest_email, zoho_invoice_id, zoho_invoice_number, spaces ( name, type ), users!bookings_user_id_fkey ( full_name, email )",
       { count: "exact" }
     )
     .order("booking_date", { ascending: false })
@@ -55,6 +55,8 @@ export async function GET(request: NextRequest) {
     slot: b.time_slot,
     status: b.status,
     total_amount: Number(b.total_amount),
+    zoho_invoice_id: b.zoho_invoice_id,
+    zoho_invoice_number: b.zoho_invoice_number,
   }));
 
   return NextResponse.json({

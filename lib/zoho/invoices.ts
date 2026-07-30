@@ -1,4 +1,4 @@
-import { getZohoClient } from "@/lib/zoho/client";
+import { getZohoClient, ZohoNotConfiguredError } from "@/lib/zoho/client";
 
 // Doc §5.4 lines 1295-1346, adapted to use our getZohoClient() and fixed
 // email recipient bug: the doc's version passes an empty `to_mail_ids`
@@ -89,4 +89,57 @@ export async function recordInvoicePayment(
     date: new Date().toISOString().split("T")[0],
     invoices: [{ invoice_id: invoiceId, amount_applied: amount }],
   });
+}
+
+export interface InvoiceSearchResult {
+  invoice_id: string;
+  invoice_number: string;
+  status: string;
+  total: number;
+  date: string;
+  reference_number: string | null;
+}
+
+interface ZohoInvoiceListResponse {
+  invoices: {
+    invoice_id: string;
+    invoice_number: string;
+    status: string;
+    total: number;
+    date: string;
+    reference_number: string | null;
+  }[];
+}
+
+// Admin "match invoice to booking" lookup — a booking can be missing its
+// zoho_invoice_id if invoicing failed silently or the invoice was created
+// manually in Zoho under a different reference. This is a lookup, not a
+// critical write, so it swallows errors and returns [] instead of throwing
+// (matches the rest of lib/zoho/*'s best-effort convention).
+export async function searchInvoices(query: {
+  reference_number?: string;
+  invoice_number?: string;
+}): Promise<InvoiceSearchResult[]> {
+  try {
+    const zoho = await getZohoClient();
+    const params: Record<string, string> = {};
+    if (query.reference_number) params.reference_number = query.reference_number;
+    if (query.invoice_number) params.invoice_number = query.invoice_number;
+
+    const res = await zoho.get<ZohoInvoiceListResponse>("/invoices", { params });
+    return (res.data.invoices ?? []).map((inv) => ({
+      invoice_id: inv.invoice_id,
+      invoice_number: inv.invoice_number,
+      status: inv.status,
+      total: Number(inv.total),
+      date: inv.date,
+      reference_number: inv.reference_number,
+    }));
+  } catch (error) {
+    if (error instanceof ZohoNotConfiguredError) {
+      return [];
+    }
+    console.error("[zoho] invoice search failed", error);
+    return [];
+  }
 }
