@@ -1,15 +1,45 @@
+import Link from "next/link";
+
 export const metadata = {
-  title: "About Us | Cowork.lk",
-  description: "Learn more about Cowork Lanka (Pvt) Ltd, our story, mission, and the premium coworking workspace we provide in Pannipitiya.",
+  title: "About Cowork.lk | Pannipitiya's Coworking Space & Story",
+  description:
+    "Meet the team behind Cowork.lk — Sri Lanka's flexible coworking space in Pannipitiya. Hot desks, private rooms & meeting rooms, no long-term lease. See why members choose us.",
   alternates: { canonical: "/about" },
   openGraph: {
     siteName: "Cowork.lk",
-    title: "About Us | Cowork.lk",
-    description: "Learn more about Cowork Lanka (Pvt) Ltd, our story, mission, and the premium coworking workspace we provide in Pannipitiya.",
+    title: "About Cowork.lk | Pannipitiya's Coworking Space & Story",
+    description:
+      "Meet the team behind Cowork.lk — Sri Lanka's flexible coworking space in Pannipitiya. Hot desks, private rooms & meeting rooms, no long-term lease. See why members choose us.",
     url: "/about",
     images: ["/opengraph-image"],
   },
 };
+
+// Entity-clarification FAQ ("what is X" queries are the content type AI
+// answer engines cite most) — every answer is sourced from the real content
+// already on this page (mission statement, founders, origin story below).
+const ABOUT_FAQS = [
+  {
+    question: "What is Cowork.lk?",
+    answer:
+      "Cowork.lk is a coworking space in Pannipitiya, Sri Lanka, run by Cowork Lanka (Pvt) Ltd. It offers hot desks, dedicated workspaces, and meeting rooms on a flexible, slot-based booking system with real-time online availability — no long-term lease required.",
+  },
+  {
+    question: "What is a coworking space?",
+    answer:
+      "A coworking space is a shared work environment where freelancers, remote employees, and small teams rent desks, private rooms, or meeting rooms instead of committing to a traditional office lease — typically with amenities like WiFi, meeting rooms, and a built-in professional community included.",
+  },
+  {
+    question: "Who founded Cowork.lk?",
+    answer:
+      "Cowork.lk was founded by three co-founders — Charith, Madusanka Premaratne, and Amila Gunawardhana — who met in the Sri Lankan Online Entrepreneurs Club and built the space after experiencing the isolation of working alone as freelancers and remote developers.",
+  },
+  {
+    question: "How is Cowork.lk different from renting a traditional office?",
+    answer:
+      "Cowork.lk uses slot-based bookings (hourly, half-day, or full-day) instead of long-term leases, so freelancers and small teams get office infrastructure — WiFi, meeting rooms, air conditioning — without the overhead of a fixed commercial lease.",
+  },
+];
 
 export default function AboutPage() {
   return (
@@ -17,7 +47,11 @@ export default function AboutPage() {
       <div className="space-y-6">
         <h1 className="text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl">About Cowork.lk</h1>
         <p className="text-lg text-muted-foreground">
-          Cowork Lanka (Pvt) Ltd is a premier workspace solutions provider based in Pannipitiya, Sri Lanka. Our mission is to build highly productive, inspiring, and collaborative environments for professionals, entrepreneurs, freelancers, and small teams.
+          Cowork Lanka (Pvt) Ltd is a premier workspace solutions provider based in Pannipitiya, Sri Lanka. Our mission is to build highly productive, inspiring, and collaborative environments for professionals, entrepreneurs, freelancers, and small teams. Explore our{" "}
+          <Link href="/" className="text-brand font-semibold hover:underline">
+            cowork space
+          </Link>{" "}
+          in Pannipitiya to see available desks, seats, and meeting rooms.
         </p>
 
         <hr className="my-8" />
@@ -94,6 +128,33 @@ export default function AboutPage() {
               </a>
             </div>
           </div>
+        </div>
+
+        <div className="mt-12">
+          <h2 className="text-xl font-semibold text-brand-dark mb-4">Frequently Asked Questions</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {ABOUT_FAQS.map((faq) => (
+              <div key={faq.question} className="rounded-xl border bg-white p-5 shadow-sm">
+                <h3 className="font-bold text-sm text-brand-dark">{faq.question}</h3>
+                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+          <script
+            type="application/ld+json"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: ABOUT_FAQS.map((faq) => ({
+                  "@type": "Question",
+                  name: faq.question,
+                  acceptedAnswer: { "@type": "Answer", text: faq.answer },
+                })),
+              }),
+            }}
+          />
         </div>
       </div>
     </main>

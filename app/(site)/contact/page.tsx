@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +24,11 @@ export default function ContactPage() {
         <h1 className="text-3xl font-bold tracking-tight text-brand-dark sm:text-4xl">Contact Us</h1>
         <p className="text-lg text-muted-foreground">
           Have questions about our workspaces, bookings, or amenities? Drop us a line or visit us.
+          Ready to book? Visit our{" "}
+          <Link href="/" className="text-brand font-semibold hover:underline">
+            cowork space
+          </Link>{" "}
+          page to check real-time availability.
         </p>
 
         <hr className="my-8" />

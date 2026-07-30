@@ -1,15 +1,15 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Community | Cowork.lk",
+  title: "Cowork.lk Community | Network, Discounts & Events in Sri Lanka",
   description:
-    "Join the Cowork community — connect with entrepreneurs, developers, freelancers, and professionals across Sri Lanka. Exclusive discounts, hiring opportunities, and partner perks.",
+    "Join entrepreneurs, developers & freelancers in Sri Lanka's Cowork.lk community — exclusive discounts, hiring leads, and monthly networking events.",
   alternates: { canonical: "/community" },
   openGraph: {
     siteName: "Cowork.lk",
-    title: "Community | Cowork.lk",
+    title: "Cowork.lk Community | Network, Discounts & Events in Sri Lanka",
     description:
-      "Join the Cowork community — connect with entrepreneurs, developers, freelancers, and professionals across Sri Lanka. Exclusive discounts, hiring opportunities, and partner perks.",
+      "Join entrepreneurs, developers & freelancers in Sri Lanka's Cowork.lk community — exclusive discounts, hiring leads, and monthly networking events.",
     url: "/community",
     images: ["/opengraph-image"],
   },

@@ -74,6 +74,12 @@ export default function HomePage() {
             <span className="text-brand">Let&apos;s Cowork!</span>
           </h1>
 
+          <p className="text-sm sm:text-base text-brand-dark/70 max-w-xl">
+            Sri Lanka&apos;s premium cowork space in Pannipitiya — just 5 minutes from Kottawa and
+            10 minutes from Maharagama, with hot desks, workspace seats, and meeting rooms bookable
+            online in real time.
+          </p>
+
           <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center gap-6">
             <Link
               href="/booking"
@@ -267,6 +273,27 @@ export default function HomePage() {
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* What Is Coworking */}
+      <section className="mx-auto max-w-6xl w-full px-4 py-16">
+        <div className="max-w-3xl space-y-4">
+          <h2 className="text-2xl font-bold tracking-tight text-brand-dark sm:text-3xl">
+            What Is Coworking?
+          </h2>
+          <p className="text-sm leading-relaxed text-brand-dark/70">
+            Coworking — sometimes written as co work or co working — means sharing a professional
+            workspace with independent professionals, startups, and remote teams instead of signing
+            a traditional office lease. At Cowork.lk, that means hot desks, private workspace seats,
+            and fully-equipped meeting rooms you can book by the hour or day, with real-time
+            availability and no long-term contracts.
+          </p>
+          <p className="text-sm leading-relaxed text-brand-dark/70">
+            Whether you need a quiet desk for a day, a dedicated seat for the week, or a meeting room
+            for a client pitch, Cowork.lk in Pannipitiya is built for how coworking actually works
+            today.
+          </p>
         </div>
       </section>
 
