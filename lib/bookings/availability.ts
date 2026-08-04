@@ -8,8 +8,8 @@ import type { AvailabilityDay } from "@/lib/types/domain";
 // morning/afternoon/full_day/unlimited for most space types, but lobby's
 // pricing (§3.2 seed) only has 1hr/2hr — there's no "half day" or
 // "unlimited" lobby product, so lobby needs its own slot set.
-const DEFAULT_SLOT_KEYS = ["morning", "afternoon", "full_day", "unlimited"] as const;
-const LOBBY_SLOT_KEYS = ["1hr", "2hr"] as const;
+const DEFAULT_SLOT_KEYS = ["morning", "afternoon", "evening", "full_day", "unlimited"] as const;
+const LOBBY_SLOT_KEYS = ["1hr", "2hr", "4hr", "8hr", "unlimited"] as const;
 
 export function slotKeysForSpaceType(spaceType: string): readonly string[] {
   return spaceType === "lobby" ? LOBBY_SLOT_KEYS : DEFAULT_SLOT_KEYS;

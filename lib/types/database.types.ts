@@ -40,6 +40,7 @@ export type Database = {
           description: string | null
           id: string
           is_active: boolean | null
+          is_evening_fee: boolean
           name: string
           price: number
           space_id: string | null
@@ -50,6 +51,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean | null
+          is_evening_fee?: boolean
           name: string
           price: number
           space_id?: string | null
@@ -60,6 +62,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_active?: boolean | null
+          is_evening_fee?: boolean
           name?: string
           price?: number
           space_id?: string | null
@@ -751,6 +754,8 @@ export type Database = {
         | "1hr"
         | "2hr"
         | "30min"
+        | "4hr"
+        | "8hr"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -910,6 +915,8 @@ export const Constants = {
         "1hr",
         "2hr",
         "30min",
+        "4hr",
+        "8hr",
       ],
     },
   },

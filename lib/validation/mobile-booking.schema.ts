@@ -20,6 +20,8 @@ export const mobileBookingCreateSchema = z.object({
     "1hr",
     "2hr",
     "30min",
+    "4hr",
+    "8hr",
   ]),
   guest_name: z.string().min(2).optional(),
   guest_email: z.string().email().optional(),

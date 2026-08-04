@@ -18,11 +18,14 @@ export interface BookableOption {
 const SLOT_LABELS: Record<string, string> = {
   morning: "Morning (8am - 12pm)",
   afternoon: "Afternoon (12pm - 4pm)",
+  evening: "Evening (5pm - 9pm)",
   full_day: "Full Day (8am - 5pm)",
   unlimited: "Unlimited (8am - 8pm)",
   "1hr": "1 Hour",
   "2hr": "2 Hours",
   "30min": "30 Minutes",
+  "4hr": "4 Hours",
+  "8hr": "8 Hours",
 };
 
 function slotsForDuration(duration: string): string[] {

@@ -102,9 +102,27 @@ export async function createBooking(
     );
   }
 
+  // Evening Convenience Fee: every evening booking gets this LKR 500 addon
+  // attached automatically, regardless of caller (customer checkout, admin
+  // single/batch booking, mobile) — enforced here server-side rather than
+  // relying on every client to remember to add it.
+  let effectiveAddons = params.addons ?? [];
+  if (params.slot === "evening") {
+    const { data: eveningFee } = await supabase
+      .from("addons")
+      .select("id")
+      .eq("is_evening_fee", true)
+      .eq("is_active", true)
+      .maybeSingle();
+
+    if (eveningFee && !effectiveAddons.some((a) => a.addon_id === eveningFee.id)) {
+      effectiveAddons = [...effectiveAddons, { addon_id: eveningFee.id, quantity: 1 }];
+    }
+  }
+
   let addonLines: { addon_id: string; unitPrice: number; quantity: number }[] = [];
-  if (params.addons && params.addons.length > 0) {
-    const addonIds = params.addons.map((a) => a.addon_id);
+  if (effectiveAddons.length > 0) {
+    const addonIds = effectiveAddons.map((a) => a.addon_id);
     const { data: addonRows, error: addonError } = await supabase
       .from("addons")
       .select("id, price")
@@ -116,7 +134,7 @@ export async function createBooking(
     }
 
     const priceById = new Map(addonRows.map((a) => [a.id, Number(a.price)]));
-    addonLines = params.addons.map((a) => ({
+    addonLines = effectiveAddons.map((a) => ({
       addon_id: a.addon_id,
       unitPrice: priceById.get(a.addon_id)!,
       quantity: a.quantity,

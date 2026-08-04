@@ -16,11 +16,14 @@ import type { AddonDTO, SpaceDTO, SpacePricingDTO } from "@/lib/types/domain";
 const SLOT_LABELS: Record<string, string> = {
   morning: "Morning (8am - 12pm)",
   afternoon: "Afternoon (12pm - 4pm)",
+  evening: "Evening (5pm - 9pm)",
   full_day: "Full Day (8am - 5pm)",
   unlimited: "Unlimited (8am - 8pm)",
   "1hr": "1 Hour",
   "2hr": "2 Hours",
   "30min": "30 Minutes",
+  "4hr": "4 Hours",
+  "8hr": "8 Hours",
 };
 
 export function CheckoutForm({
@@ -29,6 +32,7 @@ export function CheckoutForm({
   date,
   slot,
   addons,
+  eveningFeeAmount,
   userEmail,
   discount,
 }: {
@@ -37,6 +41,7 @@ export function CheckoutForm({
   date: string;
   slot: string;
   addons: AddonDTO[];
+  eveningFeeAmount: number;
   userEmail: string | null;
   discount: { percent: number; amount: number; reason: string | null } | null;
 }) {
@@ -99,9 +104,11 @@ export function CheckoutForm({
     [addons, addonQuantities]
   );
   const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price * a.quantity, 0);
+  const isEvening = slot === "evening";
+  const eveningFee = isEvening ? eveningFeeAmount : 0;
   const discountPercent = discount?.percent ?? 0;
   const discountAmount = Math.round((pricing.price * workspaceCount) * (discountPercent / 100));
-  const total = (pricing.price * workspaceCount) - discountAmount + addonsTotal;
+  const total = (pricing.price * workspaceCount) - discountAmount + addonsTotal + eveningFee;
 
   function setAddonQuantity(id: string, quantity: number) {
     setAddonQuantities((prev) => ({ ...prev, [id]: quantity }));
@@ -369,6 +376,12 @@ export function CheckoutForm({
                 <dd>{formatLKR(a.price * a.quantity)}</dd>
               </div>
             ))}
+            {isEvening && eveningFee > 0 ? (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Evening Convenience Fee</dt>
+                <dd>{formatLKR(eveningFee)}</dd>
+              </div>
+            ) : null}
           </dl>
           {discount ? (
             <p className="mt-2 rounded-md bg-emerald-50 p-2 text-xs text-emerald-700">

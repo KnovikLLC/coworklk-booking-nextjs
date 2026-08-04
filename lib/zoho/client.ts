@@ -70,6 +70,7 @@ export interface ZohoResponse<T = unknown> {
 export interface ZohoClient {
   get<T = unknown>(path: string, opts?: { params?: Record<string, string | number> }): Promise<ZohoResponse<T>>;
   post<T = unknown>(path: string, body?: unknown): Promise<ZohoResponse<T>>;
+  put<T = unknown>(path: string, body?: unknown): Promise<ZohoResponse<T>>;
 }
 
 const ZOHO_BOOKS_BASE_URL = "https://www.zohoapis.com/books/v3";
@@ -82,7 +83,7 @@ export async function getZohoClient(): Promise<ZohoClient> {
   const accessToken = await getAccessToken(env);
 
   async function request<T>(
-    method: "GET" | "POST",
+    method: "GET" | "POST" | "PUT",
     path: string,
     opts?: { params?: Record<string, string | number>; body?: unknown }
   ): Promise<ZohoResponse<T>> {
@@ -113,5 +114,6 @@ export async function getZohoClient(): Promise<ZohoClient> {
   return {
     get: (path, opts) => request("GET", path, opts),
     post: (path, body) => request("POST", path, { body }),
+    put: (path, body) => request("PUT", path, { body }),
   };
 }

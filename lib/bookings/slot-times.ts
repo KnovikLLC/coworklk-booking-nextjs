@@ -5,11 +5,13 @@
 export const SLOT_TIMES: Record<string, { start: string; end: string } | null> = {
   morning: { start: "08:00", end: "12:00" },
   afternoon: { start: "12:00", end: "16:00" },
-  evening: { start: "16:00", end: "20:00" },
+  evening: { start: "17:00", end: "21:00" },
   night: { start: "20:00", end: "23:59" },
   full_day: { start: "08:00", end: "17:00" },
   unlimited: { start: "08:00", end: "20:00" },
   "1hr": null,
   "2hr": null,
   "30min": null,
+  "4hr": null,
+  "8hr": null,
 };

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getActiveSpaceById } from "@/lib/data/spaces";
-import { getActiveAddons } from "@/lib/data/addons";
+import { getActiveAddons, getEveningFeeAmount } from "@/lib/data/addons";
 import { checkMemberDiscount } from "@/lib/pricing/discount";
 import { CheckoutForm } from "@/components/booking/CheckoutForm";
 
@@ -18,9 +18,10 @@ export default async function CheckoutPage({
   }
 
   const supabase = createClient();
-  const [space, addons] = await Promise.all([
+  const [space, addons, eveningFeeAmount] = await Promise.all([
     getActiveSpaceById(supabase, space_id),
     getActiveAddons(supabase, space_id),
+    getEveningFeeAmount(supabase),
   ]);
 
   const pricing = space?.pricing.find((p) => p.id === pricing_id);
@@ -43,6 +44,7 @@ export default async function CheckoutPage({
         date={date}
         slot={slot}
         addons={addons}
+        eveningFeeAmount={eveningFeeAmount}
         userEmail={user?.email ?? null}
         discount={discount.eligible ? { percent: discount.discount_percent, amount: discount.discount_amount, reason: discount.reason } : null}
       />

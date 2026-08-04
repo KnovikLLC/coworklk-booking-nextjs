@@ -61,7 +61,7 @@ const STATUS_CLASSES: Record<string, string> = {
 const SLOT_LABELS: Record<string, string> = {
   morning: "Morning (8am-12pm)",
   afternoon: "Afternoon (12pm-4pm)",
-  evening: "Evening (4pm-8pm)",
+  evening: "Evening (5pm-9pm)",
   night: "Night (8pm-12am)",
   full_day: "Full Day (8am-5pm)",
   unlimited: "Unlimited (8am-8pm)",

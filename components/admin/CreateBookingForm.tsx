@@ -27,10 +27,19 @@ interface OrderItem {
   date: string;
   option: BookableOption;
   addons: { id: string; name: string; price: number; quantity: number }[];
+  workspaceCount: number;
   itemTotal: number;
 }
 
-export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addons: AddonDTO[] }) {
+export function CreateBookingForm({
+  spaces,
+  addons,
+  eveningFeeAmount,
+}: {
+  spaces: SpaceDTO[];
+  addons: AddonDTO[];
+  eveningFeeAmount: number;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const paramSpaceId = searchParams.get("space_id");
@@ -46,6 +55,7 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
 
   const [availability, setAvailability] = useState<AvailabilityResponse | null>(null);
   const [selectedOption, setSelectedOption] = useState<BookableOption | null>(null);
+  const [workspaceCount, setWorkspaceCount] = useState(1);
   const [addonQuantities, setAddonQuantities] = useState<Record<string, number>>({});
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
   const [name, setName] = useState("");
@@ -60,6 +70,7 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
   useEffect(() => {
     if (!spaceId || !date) return;
     setSelectedOption(null);
+    setWorkspaceCount(1);
     fetch(`/api/availability?space_id=${spaceId}&date=${date}`)
       .then((res) => res.json())
       .then(setAvailability);
@@ -70,6 +81,13 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
     [space, availability]
   );
 
+  const maxAllowed = space ? Math.min(space.total_inventory, selectedOption?.remaining ?? space.total_inventory) : 1;
+
+  function handleSelectOption(option: BookableOption) {
+    setSelectedOption(option);
+    setWorkspaceCount((prev) => Math.min(prev, Math.max(1, option.remaining)));
+  }
+
   // Addons can be scoped to one space (space_id set) or offered everywhere
   // (space_id null) — filter client-side on the already-loaded full list so
   // switching resources doesn't need a re-fetch.
@@ -78,7 +96,9 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
     .filter((a) => (addonQuantities[a.id] ?? 0) > 0)
     .map((a) => ({ ...a, quantity: addonQuantities[a.id] }));
   const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price * a.quantity, 0);
-  const lineTotal = (selectedOption?.price ?? 0) + addonsTotal;
+  const isEvening = selectedOption?.timeSlot === "evening";
+  const eveningFee = isEvening ? eveningFeeAmount : 0;
+  const lineTotal = (selectedOption?.price ?? 0) * workspaceCount + addonsTotal + eveningFee;
   const orderTotal = orderItems.reduce((sum, item) => sum + item.itemTotal, 0);
 
   function setAddonQuantity(id: string, quantity: number) {
@@ -99,10 +119,12 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
         date,
         option: selectedOption,
         addons: selectedAddons.map((a) => ({ id: a.id, name: a.name, price: a.price, quantity: a.quantity })),
+        workspaceCount,
         itemTotal: lineTotal,
       },
     ]);
     setSelectedOption(null);
+    setWorkspaceCount(1);
     setAddonQuantities({});
   }
 
@@ -131,6 +153,7 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
             date: item.date,
             slot: item.option.timeSlot,
             addons: item.addons.map((a) => ({ addon_id: a.id, quantity: a.quantity })),
+            workspace_count: item.workspaceCount,
             notes: notes || undefined,
           })),
         }),
@@ -184,14 +207,38 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
           <CardTitle className="text-base text-brand-dark">2. Select Slot</CardTitle>
         </CardHeader>
         <CardContent>
-          <SlotSelector options={options} selected={selectedOption} onSelect={setSelectedOption} />
+          <SlotSelector options={options} selected={selectedOption} onSelect={handleSelectOption} />
         </CardContent>
       </Card>
+
+      {space && space.total_inventory > 1 ? (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base text-brand-dark">3. Quantity</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-3">
+              <Input
+                type="number"
+                min={1}
+                max={maxAllowed}
+                value={workspaceCount}
+                onChange={(e) => {
+                  const val = Math.min(maxAllowed, Math.max(1, Number(e.target.value) || 1));
+                  setWorkspaceCount(val);
+                }}
+                className="w-24 text-center font-semibold"
+              />
+              <span className="text-sm text-muted-foreground">(Up to {maxAllowed} available for this slot)</span>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
 
       {availableAddons.length > 0 ? (
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base text-brand-dark">3. Add-ons (Optional)</CardTitle>
+            <CardTitle className="text-base text-brand-dark">4. Add-ons (Optional)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
@@ -212,7 +259,11 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
       ) : null}
 
       <div className="flex items-center justify-between rounded-lg border bg-white p-4">
-        <span className="text-sm text-muted-foreground">Item total: {formatLKR(lineTotal)}</span>
+        <span className="text-sm text-muted-foreground">
+          Item total: {formatLKR(lineTotal)}
+          {workspaceCount > 1 ? ` (x${workspaceCount})` : ""}
+          {isEvening && eveningFee > 0 ? ` (includes ${formatLKR(eveningFee)} Evening Convenience Fee)` : ""}
+        </span>
         <Button type="button" variant="outline" onClick={addToOrder}>
           Add to Order
         </Button>
@@ -230,6 +281,7 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
                   <TableHead>Space</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Slot</TableHead>
+                  <TableHead>Qty</TableHead>
                   <TableHead>Amount</TableHead>
                   <TableHead className="text-right"></TableHead>
                 </TableRow>
@@ -240,6 +292,7 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
                     <TableCell>{item.spaceName}</TableCell>
                     <TableCell>{item.date}</TableCell>
                     <TableCell className="capitalize">{item.option.label}</TableCell>
+                    <TableCell>{item.workspaceCount}</TableCell>
                     <TableCell>{formatLKR(item.itemTotal)}</TableCell>
                     <TableCell className="text-right">
                       <Button variant="ghost" size="sm" onClick={() => removeOrderItem(item.key)}>
@@ -256,7 +309,7 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
 
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-brand-dark">4. Customer Details</CardTitle>
+          <CardTitle className="text-base text-brand-dark">5. Customer Details</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-3">
@@ -278,7 +331,7 @@ export function CreateBookingForm({ spaces, addons }: { spaces: SpaceDTO[]; addo
 
       <Card>
         <CardHeader className="pb-3">
-          <CardTitle className="text-base text-brand-dark">5. Payment Method</CardTitle>
+          <CardTitle className="text-base text-brand-dark">6. Payment Method</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">

@@ -8,24 +8,34 @@ import {
 
 describe("slotKeysForSpaceType", () => {
   it("returns the default slot set for a normal space type", () => {
-    expect(slotKeysForSpaceType("meeting_room")).toEqual(["morning", "afternoon", "full_day", "unlimited"]);
+    expect(slotKeysForSpaceType("meeting_room")).toEqual([
+      "morning",
+      "afternoon",
+      "evening",
+      "full_day",
+      "unlimited",
+    ]);
   });
 
-  it("returns lobby's reduced 1hr/2hr slot set", () => {
-    expect(slotKeysForSpaceType("lobby")).toEqual(["1hr", "2hr"]);
+  it("returns lobby's block-rate slot set", () => {
+    expect(slotKeysForSpaceType("lobby")).toEqual(["1hr", "2hr", "4hr", "8hr", "unlimited"]);
   });
 });
 
 describe("getAvailabilityForRange", () => {
   it("builds one AvailabilityDay per date with per-slot availability from the RPC", async () => {
     const mock = createSupabaseMock();
-    // meeting_room -> 4 slot keys: morning, afternoon, full_day, unlimited
+    // meeting_room -> 5 slot keys: morning, afternoon, evening, full_day, unlimited
     mock.queueRpc("check_availability", {
       data: [{ is_available: true, booked_count: 0, total_inventory: 1, is_holiday: false }],
       error: null,
     });
     mock.queueRpc("check_availability", {
       data: [{ is_available: false, booked_count: 1, total_inventory: 1, is_holiday: false }],
+      error: null,
+    });
+    mock.queueRpc("check_availability", {
+      data: [{ is_available: true, booked_count: 0, total_inventory: 1, is_holiday: false }],
       error: null,
     });
     mock.queueRpc("check_availability", {
@@ -54,7 +64,7 @@ describe("getAvailabilityForRange", () => {
 
   it("marks the whole day as a holiday if any slot's RPC row reports is_holiday", async () => {
     const mock = createSupabaseMock();
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       mock.queueRpc("check_availability", {
         data: [{ is_available: false, booked_count: 0, total_inventory: 1, is_holiday: i === 2 }],
         error: null,
@@ -74,7 +84,7 @@ describe("getAvailabilityForRange", () => {
 
   it("never returns a negative remaining count", async () => {
     const mock = createSupabaseMock();
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       mock.queueRpc("check_availability", {
         data: [{ is_available: false, booked_count: 5, total_inventory: 1, is_holiday: false }],
         error: null,
@@ -101,13 +111,17 @@ describe("getAdminAvailabilityForDate", () => {
       error: null,
     });
 
-    // Order: rpc(morning), rpc(afternoon), rpc(full_day), rpc(unlimited), then the bookings select.
+    // Order: rpc(morning), rpc(afternoon), rpc(evening), rpc(full_day), rpc(unlimited), then the bookings select.
     mock.queueRpc("check_availability", {
       data: [{ is_available: false, booked_count: 1, total_inventory: 1, is_holiday: false }],
       error: null,
     });
     mock.queueRpc("check_availability", {
       data: [{ is_available: false, booked_count: 1, total_inventory: 1, is_holiday: false }],
+      error: null,
+    });
+    mock.queueRpc("check_availability", {
+      data: [{ is_available: true, booked_count: 0, total_inventory: 1, is_holiday: false }],
       error: null,
     });
     mock.queueRpc("check_availability", {
@@ -142,7 +156,7 @@ describe("getAdminAvailabilityForDate", () => {
       data: [{ id: "space-1", name: "Hot Desk", type: "hotdesk", total_inventory: 5 }],
       error: null,
     });
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       mock.queueRpc("check_availability", {
         data: [{ is_available: false, booked_count: 5, total_inventory: 5, is_holiday: true }],
         error: null,
