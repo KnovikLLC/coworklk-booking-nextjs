@@ -14,6 +14,7 @@ import { ConfirmBankTransferButton } from "@/components/admin/ConfirmBankTransfe
 import { StatusChangeMenu } from "@/components/admin/StatusChangeMenu";
 import { DeleteBookingButton } from "@/components/admin/DeleteBookingButton";
 import { MatchInvoiceDialog } from "@/components/admin/MatchInvoiceDialog";
+import { ApplyDiscountDialog } from "@/components/admin/ApplyDiscountDialog";
 import { CreateCombinedInvoiceDialog } from "@/components/admin/CreateCombinedInvoiceDialog";
 import { formatLKR } from "@/lib/utils";
 import { BOOKING_STATUS_VARIANT, bookingStatusLabel } from "@/lib/bookings/status";
@@ -330,6 +331,18 @@ export function BookingList() {
                           bookingNumber={b.booking_number}
                           disabled={updatingId !== null}
                           onConfirm={() => deleteBooking(b.id)}
+                        />
+                      )}
+                      {(b.status === "pending_payment" || b.status === "confirmed") && (
+                        <ApplyDiscountDialog
+                          bookingId={b.id}
+                          bookingNumber={b.booking_number}
+                          onApplied={() => setRefreshKey((k) => k + 1)}
+                          trigger={
+                            <Button size="sm" variant="outline" disabled={updatingId !== null}>
+                              Discount
+                            </Button>
+                          }
                         />
                       )}
                       {!["pending_payment", "confirmed", "checked_in", "cancelled"].includes(b.status) && (

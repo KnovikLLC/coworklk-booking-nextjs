@@ -17,6 +17,10 @@ import { buildBookableOptions, type BookableOption } from "@/lib/bookings/slot-o
 import { formatLKR } from "@/lib/utils";
 import type { AddonDTO, AvailabilityResponse, SpaceDTO } from "@/lib/types/domain";
 import { X } from "lucide-react";
+import {
+  RequestOrderDiscountDialog,
+  type VerifiedOrderDiscount,
+} from "@/components/admin/RequestOrderDiscountDialog";
 
 import { useSearchParams } from "next/navigation";
 
@@ -28,6 +32,7 @@ interface OrderItem {
   option: BookableOption;
   addons: { id: string; name: string; price: number; quantity: number }[];
   workspaceCount: number;
+  baseAmount: number;
   itemTotal: number;
 }
 
@@ -64,6 +69,7 @@ export function CreateBookingForm({
   const [paymentMethod, setPaymentMethod] = useState<"cash" | "card_terminal" | "qr_transfer">("cash");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [discount, setDiscount] = useState<VerifiedOrderDiscount | null>(null);
 
   const space = spaces.find((s) => s.id === spaceId) ?? null;
 
@@ -98,8 +104,16 @@ export function CreateBookingForm({
   const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price * a.quantity, 0);
   const isEvening = selectedOption?.timeSlot === "evening";
   const eveningFee = isEvening ? eveningFeeAmount : 0;
-  const lineTotal = (selectedOption?.price ?? 0) * workspaceCount + addonsTotal + eveningFee;
+  const lineBaseAmount = (selectedOption?.price ?? 0) * workspaceCount;
+  const lineTotal = lineBaseAmount + addonsTotal + eveningFee;
+  const orderBaseAmount = orderItems.reduce((sum, item) => sum + item.baseAmount, 0);
   const orderTotal = orderItems.reduce((sum, item) => sum + item.itemTotal, 0);
+  const discountAmount = discount
+    ? discount.type === "percent"
+      ? Math.round(orderBaseAmount * (discount.value / 100))
+      : discount.value
+    : 0;
+  const orderTotalAfterDiscount = orderTotal - discountAmount;
 
   function setAddonQuantity(id: string, quantity: number) {
     setAddonQuantities((prev) => ({ ...prev, [id]: quantity }));
@@ -120,16 +134,22 @@ export function CreateBookingForm({
         option: selectedOption,
         addons: selectedAddons.map((a) => ({ id: a.id, name: a.name, price: a.price, quantity: a.quantity })),
         workspaceCount,
+        baseAmount: lineBaseAmount,
         itemTotal: lineTotal,
       },
     ]);
     setSelectedOption(null);
     setWorkspaceCount(1);
     setAddonQuantities({});
+    // A verified discount is bound to the order's base amount at the time it
+    // was requested — changing the cart invalidates that bound-check, so the
+    // admin has to re-request a code against the new total.
+    setDiscount(null);
   }
 
   function removeOrderItem(key: string) {
     setOrderItems((prev) => prev.filter((item) => item.key !== key));
+    setDiscount(null);
   }
 
   async function handleSubmit() {
@@ -156,6 +176,7 @@ export function CreateBookingForm({
             workspace_count: item.workspaceCount,
             notes: notes || undefined,
           })),
+          discount_verification_id: discount?.verificationId,
         }),
       });
       const data = await res.json();
@@ -303,6 +324,33 @@ export function CreateBookingForm({
                 ))}
               </TableBody>
             </Table>
+
+            <div className="mt-4 flex items-center justify-between rounded-md border border-dashed p-3 text-sm">
+              {discount ? (
+                <>
+                  <span>
+                    Discount applied: {discount.type === "percent" ? `${discount.value}%` : formatLKR(discount.value)}
+                    {discount.reason ? ` — ${discount.reason}` : ""} ({formatLKR(discountAmount)} off)
+                  </span>
+                  <Button variant="ghost" size="sm" onClick={() => setDiscount(null)}>
+                    Remove
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <span className="text-muted-foreground">No discount applied to this order.</span>
+                  <RequestOrderDiscountDialog
+                    orderBaseAmount={orderBaseAmount}
+                    onVerified={setDiscount}
+                    trigger={
+                      <Button variant="outline" size="sm">
+                        Apply Discount
+                      </Button>
+                    }
+                  />
+                </>
+              )}
+            </div>
           </CardContent>
         </Card>
       ) : null}
@@ -361,7 +409,17 @@ export function CreateBookingForm({
       </Card>
 
       <div className="flex items-center justify-between rounded-lg border bg-white p-4">
-        <span className="text-lg font-semibold text-brand-dark">Order Total: {formatLKR(orderTotal)}</span>
+        <span className="text-lg font-semibold text-brand-dark">
+          {discount ? (
+            <>
+              Order Total:{" "}
+              <span className="text-muted-foreground line-through">{formatLKR(orderTotal)}</span>{" "}
+              {formatLKR(orderTotalAfterDiscount)}
+            </>
+          ) : (
+            <>Order Total: {formatLKR(orderTotal)}</>
+          )}
+        </span>
         <Button disabled={submitting || orderItems.length === 0} onClick={handleSubmit}>
           {submitting ? "Creating..." : "Create Booking"}
         </Button>

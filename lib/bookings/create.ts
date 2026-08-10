@@ -35,6 +35,10 @@ export interface CreateBookingParams {
   /** Links multiple bookings created together in one admin "order" (multi-space
    *  and/or multi-day) for grouped Zoho invoicing. NULL for every other caller. */
   bookingGroupId?: string;
+  /** Admin-approved discretionary discount (email-verified via
+   *  discount_verifications), applied instead of the automatic
+   *  corporate/loyalty discount from checkMemberDiscount. */
+  discountOverride?: { percent: number; reason: string | null };
 }
 
 export interface CreatedBooking {
@@ -141,16 +145,16 @@ export async function createBooking(
     }));
   }
 
-  // Doc §8.3: guest bookings never get a discount; checkMemberDiscount
-  // already short-circuits to ineligible when userId is null, but the
-  // pricing.price lookup only exists here, so the discount check happens
-  // here rather than being pre-computed by the caller.
-  const discount = await checkMemberDiscount(
-    supabase,
-    params.userId ?? null,
-    params.guestEmail ?? null,
-    Number(pricing.price)
-  );
+  // An admin-approved discretionary discount (email-verified) takes priority
+  // over the automatic corporate/loyalty discount, same precedence style as
+  // corporate-over-loyalty inside checkMemberDiscount itself.
+  const discount = params.discountOverride
+    ? { eligible: true, discount_percent: params.discountOverride.percent, reason: params.discountOverride.reason }
+    : // Doc §8.3: guest bookings never get a discount; checkMemberDiscount
+      // already short-circuits to ineligible when userId is null, but the
+      // pricing.price lookup only exists here, so the discount check happens
+      // here rather than being pre-computed by the caller.
+      await checkMemberDiscount(supabase, params.userId ?? null, params.guestEmail ?? null, Number(pricing.price));
 
   const totals = computeBookingTotals(
     Number(pricing.price) * workspaceCount,

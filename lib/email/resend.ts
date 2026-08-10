@@ -192,6 +192,52 @@ export async function sendPaymentRequestEmail(bookingId: string, paymentLink: st
   }
 }
 
+// Sent to the approving manager when an admin/frontdesk staffer requests a
+// discount on a booking — the discount is only written to the booking once
+// this code is confirmed back through the admin panel (valid 30 minutes).
+export async function sendDiscountApprovalCode(
+  code: string,
+  bookingNumber: string,
+  requestedByEmail: string
+): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const approverEmail = "madusanka@knovik.com";
+
+  if (!apiKey) {
+    console.warn(`[Resend] RESEND_API_KEY is not configured. Logging discount approval code instead:`);
+    console.log(`[Resend Email Mock]`);
+    console.log(`  To: ${approverEmail}`);
+    console.log(`  Subject: Discount Approval Code - Booking #${bookingNumber}`);
+    console.log(`  Requested by: ${requestedByEmail}`);
+    console.log(`  Code: ${code}`);
+    return;
+  }
+
+  const resend = new Resend(apiKey);
+  const fromEmail = process.env.EMAIL_FROM || "onboarding@resend.dev";
+
+  const { error: sendError } = await resend.emails.send({
+    from: `Cowork.lk <${fromEmail}>`,
+    to: approverEmail,
+    subject: `Discount Approval Code - Booking #${bookingNumber}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+        <h2 style="color: #F97316;">Discount Approval Code</h2>
+        <p>Hello,</p>
+        <p><strong>${requestedByEmail}</strong> requested a discount on booking <strong>#${bookingNumber}</strong>. Please share the following code with them to approve it:</p>
+        <div style="background-color: #f3f4f6; padding: 15px; text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 4px; border-radius: 6px; margin: 20px 0; color: #1e293b;">
+          ${code}
+        </div>
+        <p style="color: #64748b; font-size: 12px;">This code is valid for 30 minutes. If you did not expect this request, please ignore this email and do not share the code.</p>
+      </div>
+    `,
+  });
+
+  if (sendError) {
+    throw new Error(sendError.message);
+  }
+}
+
 export async function sendDomainVerificationEmail(email: string, code: string): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
