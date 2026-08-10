@@ -693,6 +693,45 @@ export type Database = {
         }
         Relationships: []
       }
+      discount_verifications: {
+        Row: {
+          id: string
+          booking_id: string
+          discount_type: string
+          discount_value: number
+          discount_reason: string | null
+          requested_by: string
+          code: string
+          expires_at: string
+          verified_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          booking_id: string
+          discount_type: string
+          discount_value: number
+          discount_reason?: string | null
+          requested_by: string
+          code: string
+          expires_at: string
+          verified_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          booking_id?: string
+          discount_type?: string
+          discount_value?: number
+          discount_reason?: string | null
+          requested_by?: string
+          code?: string
+          expires_at?: string
+          verified_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
