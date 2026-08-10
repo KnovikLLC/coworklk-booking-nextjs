@@ -104,5 +104,8 @@ export const adminBookingBatchCreateSchema = z.object({
   payment_method: z.enum(["cash", "card_terminal", "qr_transfer", "payhere", "stripe", "domain_verification"]),
   payment_received: z.boolean().optional(),
   items: z.array(adminBookingBatchItemSchema).min(1).max(20),
+  // Email-verified admin discretionary discount for the whole order, from
+  // POST /api/admin/discounts (verification_id) — see discount_verifications.
+  discount_verification_id: z.string().uuid().optional(),
 });
 export type AdminBookingBatchCreateInput = z.infer<typeof adminBookingBatchCreateSchema>;

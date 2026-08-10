@@ -696,7 +696,7 @@ export type Database = {
       discount_verifications: {
         Row: {
           id: string
-          booking_id: string
+          booking_id: string | null
           discount_type: string
           discount_value: number
           discount_reason: string | null
@@ -708,7 +708,7 @@ export type Database = {
         }
         Insert: {
           id?: string
-          booking_id: string
+          booking_id?: string | null
           discount_type: string
           discount_value: number
           discount_reason?: string | null
@@ -720,7 +720,7 @@ export type Database = {
         }
         Update: {
           id?: string
-          booking_id?: string
+          booking_id?: string | null
           discount_type?: string
           discount_value?: number
           discount_reason?: string | null

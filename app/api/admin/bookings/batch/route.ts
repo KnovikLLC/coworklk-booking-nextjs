@@ -28,6 +28,43 @@ export async function POST(request: NextRequest) {
     body.payment_received ?? (body.payment_method === "cash" || body.payment_method === "card_terminal");
   const bookingGroupId = crypto.randomUUID();
 
+  let discountOverride: { percent: number; reason: string | null } | undefined;
+  let discountVerificationId: string | undefined;
+
+  if (body.discount_verification_id) {
+    const { data: verification, error: verificationError } = await admin
+      .from("discount_verifications")
+      .select("id, booking_id, discount_type, discount_value, discount_reason, verified_at")
+      .eq("id", body.discount_verification_id)
+      .single();
+
+    if (verificationError || !verification || !verification.verified_at || verification.booking_id) {
+      return NextResponse.json({ error: "Discount code is not valid or has already been used" }, { status: 400 });
+    }
+
+    if (verification.discount_type === "percent") {
+      discountOverride = { percent: verification.discount_value, reason: verification.discount_reason };
+    } else {
+      const pricingIds = Array.from(new Set(body.items.map((item) => item.pricing_id)));
+      const { data: pricingRows, error: pricingError } = await admin
+        .from("pricing")
+        .select("id, price")
+        .in("id", pricingIds);
+
+      if (pricingError || !pricingRows) {
+        return NextResponse.json({ error: "Could not price the order for the discount" }, { status: 500 });
+      }
+      const priceById = new Map(pricingRows.map((p) => [p.id, Number(p.price)]));
+      const orderBaseAmount = body.items.reduce(
+        (sum, item) => sum + (priceById.get(item.pricing_id) ?? 0) * item.workspace_count,
+        0
+      );
+      const percent = orderBaseAmount > 0 ? (verification.discount_value / orderBaseAmount) * 100 : 0;
+      discountOverride = { percent, reason: verification.discount_reason };
+    }
+    discountVerificationId = verification.id;
+  }
+
   try {
     const bookings = [];
     for (const item of body.items) {
@@ -45,8 +82,16 @@ export async function POST(request: NextRequest) {
         markConfirmed,
         workspaceCount: item.workspace_count,
         bookingGroupId,
+        discountOverride,
       });
       bookings.push(booking);
+    }
+
+    if (discountVerificationId && bookings[0]) {
+      await admin
+        .from("discount_verifications")
+        .update({ booking_id: bookings[0].id })
+        .eq("id", discountVerificationId);
     }
 
     if (markConfirmed) {

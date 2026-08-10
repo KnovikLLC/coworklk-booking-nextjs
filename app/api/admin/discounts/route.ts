@@ -42,6 +42,29 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Incorrect code" }, { status: 400 });
   }
 
+  const { error: markVerifiedError } = await admin
+    .from("discount_verifications")
+    .update({ verified_at: new Date().toISOString() })
+    .eq("id", verification_id);
+
+  if (markVerifiedError) {
+    return NextResponse.json({ error: "Failed to confirm verification code" }, { status: 500 });
+  }
+
+  // Pre-creation discount (admin "New Booking" flow): no booking exists yet,
+  // so there's nothing to update — the discount gets applied when the order
+  // is submitted, via discount_verification_id on POST /api/admin/bookings/batch.
+  if (!verification.booking_id) {
+    return NextResponse.json({
+      success: true,
+      discount: {
+        type: verification.discount_type,
+        value: verification.discount_value,
+        reason: verification.discount_reason,
+      },
+    });
+  }
+
   const { data: booking, error: bookingError } = await admin
     .from("bookings")
     .select("id, base_amount, addons_amount")
@@ -60,15 +83,6 @@ export async function POST(request: NextRequest) {
       ? Math.round(baseAmount * (verification.discount_value / 100))
       : verification.discount_value;
   const totalAmount = baseAmount - discountAmount + addonsAmount;
-
-  const { error: markVerifiedError } = await admin
-    .from("discount_verifications")
-    .update({ verified_at: new Date().toISOString() })
-    .eq("id", verification_id);
-
-  if (markVerifiedError) {
-    return NextResponse.json({ error: "Failed to confirm verification code" }, { status: 500 });
-  }
 
   const { data: updatedBooking, error: updateError } = await admin
     .from("bookings")
