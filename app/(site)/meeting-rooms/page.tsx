@@ -24,7 +24,7 @@ const FAQS = [
   {
     question: "Do you have conference rooms for rent near Pannipitiya?",
     answer:
-      "Yes. Cowork.lk has private 4-seater and 5-seater meeting rooms at 349/A/3 Avissawella Road, Pannipitiya — 5 minutes from Kottawa and 10 minutes from Maharagama, bookable online with real-time availability.",
+      "Yes. Cowork.lk has private 4-seater and 5-seater meeting rooms at 349/A/3 Avissawella Road, Kottawa, Pannipitiya — 5 minutes from Kottawa town and 10 minutes from Maharagama, bookable online with real-time availability.",
   },
   {
     question: "Can I book a meeting room for half a day?",
@@ -59,8 +59,8 @@ export default async function MeetingRoomsPage() {
             Meeting Rooms &amp; Conference Rooms in Pannipitiya
           </h1>
           <p className="text-sm text-brand-dark/65 max-w-lg leading-relaxed pt-2">
-            Private, soundproofed conference rooms for interviews, client meetings, and team huddles — a
-            few minutes from Kottawa and Maharagama. Book online with real-time availability and instant
+            Private, soundproofed conference rooms for interviews, client meetings, and team huddles —
+            in Kottawa, Pannipitiya, a few minutes from Maharagama. Book online with real-time availability and instant
             confirmation, no calls needed to check a conference hall&apos;s availability.
           </p>
         </div>

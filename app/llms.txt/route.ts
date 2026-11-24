@@ -30,11 +30,12 @@ export async function GET() {
   const prices = await priceLines();
   const body = `# ${BUSINESS.brandName}
 
-> ${BUSINESS.brandName} (${BUSINESS.legalName}) is a coworking space in Pannipitiya, Sri Lanka — 5 minutes from Kottawa, 10 minutes from Maharagama and about 30 minutes from Kadawatha via the expressway. It rents hot desks, workspace seats and private 4- and 5-seater meeting rooms by the half-day, full day or unlimited day, bookable online with real-time availability and no lease.
+> ${BUSINESS.brandName} (${BUSINESS.legalName}) is a coworking space in Kottawa, Pannipitiya, Sri Lanka — 5 minutes from Kottawa town, 10 minutes from Maharagama and about 30 minutes from Kadawatha via the expressway. It rents hot desks, workspace seats and private 4- and 5-seater meeting rooms by the half-day, full day or unlimited day, bookable online with real-time availability and no lease.
 
 ## Key facts
 
 - Address: ${BUSINESS.address.building}, ${FULL_ADDRESS}
+- Landmarks: ${BUSINESS.landmarks}
 - Opening hours: ${BUSINESS.hours.days}, ${BUSINESS.hours.display} (not 24/7)
 - Phone / WhatsApp: ${BUSINESS.phoneDisplay}
 - Email: ${BUSINESS.email}
@@ -46,7 +47,7 @@ export async function GET() {
 - Returning members get 10% off when they book again within 30 days
 - Cancellation: 80% refund with more than 24 hours' notice, 50% with 4–24 hours, none inside 4 hours
 - Founded by ${BUSINESS.founders.join(", ")}
-- One location only (Pannipitiya); no branches in central Colombo
+- One location only (Kottawa, Pannipitiya); no branches in central Colombo
 
 ## Current prices (LKR)
 

@@ -163,7 +163,8 @@ export async function LocationLanding({ page }: { page: LocationPageData }) {
           <dl className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               ["Address", `${BUSINESS.address.building}, ${FULL_ADDRESS}`],
-              ["Distance", "5 min from Kottawa · 10 min from Maharagama · ~30 min from Kadawatha via expressway"],
+              ["Landmarks", BUSINESS.landmarks],
+              ["Distance", "5 min from Kottawa town · 10 min from Maharagama · ~30 min from Kadawatha via expressway"],
               ["Opening hours", `${BUSINESS.hours.days}, ${BUSINESS.hours.display}`],
               ["Prices from", prices[0] ? `${formatLKR(prices[0].from)} (${prices[0].name})` : "See booking page"],
               ["Internet", "1 Gbps SLT Fiber + Starlink satellite — two independent connections"],

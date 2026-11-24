@@ -50,8 +50,9 @@ export function Footer() {
             <h3 className="text-sm font-bold uppercase tracking-wider text-brand-dark/80">Location</h3>
             <p className="text-sm leading-relaxed text-brand-dark/70">
               <span className="text-brand font-bold mr-1.5">A</span>
-              349/A/3 Avissawella Road, Pannipitiya 10230, Western Province, Sri Lanka <br />
-              2nd Floor of Active Plus Building
+              349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, Western Province, Sri Lanka <br />
+              2nd Floor of Active Plus Building <br />
+              <span className="text-xs text-brand-dark/55">20 m from Red Bell Kottawa · 100 m from Taco Bell &amp; Lyceum School Kottawa</span>
             </p>
             <ul className="space-y-2 text-sm font-semibold text-brand-dark/70">
               <li>
@@ -61,7 +62,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/coworking-space-kottawa" className="hover:text-brand transition-colors">
-                  Coworking near Kottawa
+                  Coworking in Kottawa
                 </Link>
               </li>
               <li>

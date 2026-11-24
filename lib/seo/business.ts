@@ -16,7 +16,7 @@ export const BUSINESS = {
   whatsapp: "https://wa.me/94774884040",
   whatsappCommunity: "https://chat.whatsapp.com/FUHL35hZvOs35O4oeyexpa",
   address: {
-    street: "349/A/3 Avissawella Road",
+    street: "349/A/3 Avissawella Road, Kottawa",
     building: "2nd Floor, Active Plus Building",
     locality: "Pannipitiya",
     postalCode: "10230",
@@ -30,6 +30,8 @@ export const BUSINESS = {
   mapUrl:
     "https://www.google.com/maps?q=349%2FA%2F3+Avissawella+Road%2C+Pannipitiya+10230%2C+Sri+Lanka",
   founders: ["Charith", "Madusanka Premaratne", "Amila Gunawardhana"],
+  // Landmarks people actually navigate by (provided by the owners).
+  landmarks: "20 m from Red Bell Kottawa, and 100 m from Taco Bell and Lyceum School Kottawa",
   internet: {
     short: "1 Gbps SLT fiber + Starlink",
     long: "a 1 Gbps SLT Fiber line plus a separate Starlink satellite connection",

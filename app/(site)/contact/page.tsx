@@ -41,9 +41,14 @@ export default function ContactPage() {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 349/A/3 Avissawella Road,
                 <br />
+                Kottawa,
+                <br />
                 Pannipitiya 10230,
                 <br />
                 Sri Lanka.
+              </p>
+              <p className="mt-2 text-xs text-muted-foreground">
+                20 m from Red Bell Kottawa · 100 m from Taco Bell and Lyceum School Kottawa
               </p>
             </div>
             <div>
@@ -101,7 +106,7 @@ export default function ContactPage() {
 
         <div className="mt-4 overflow-hidden rounded-lg border">
           <iframe
-            title="Cowork Lanka location — 349/A/3 Avissawella Road, Pannipitiya"
+            title="Cowork Lanka location — 349/A/3 Avissawella Road, Kottawa, Pannipitiya"
             src="https://www.google.com/maps?q=349%2FA%2F3+Avissawella+Road%2C+Pannipitiya+10230%2C+Sri+Lanka&output=embed"
             width="100%"
             height="320"
