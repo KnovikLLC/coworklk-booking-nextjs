@@ -15,7 +15,7 @@ import type { AddonDTO, SpaceDTO } from "@/lib/types/domain";
 
 const UPDATED = "2026-11-24";
 const TITLE = `Meeting Room Rental Sri Lanka | Kottawa, from ${lkr(FROM_PRICES.meetingRoom4)} | Cowork.lk`;
-const DESCRIPTION = `Rent a private meeting or conference room in Kottawa, Sri Lanka from ${lkr(FROM_PRICES.meetingRoom4)} per half day, or the Lobby for groups of up to 10. 1 Gbps fiber + Starlink.`;
+const DESCRIPTION = `Rent a private meeting or conference room in Kottawa, Sri Lanka from ${lkr(FROM_PRICES.meetingRoom4)} per half day, or the Lobby for up to 10 people by the hour. 1 Gbps fiber + Starlink.`;
 
 export const metadata = {
   title: TITLE,
@@ -68,7 +68,7 @@ function buildFaqs(addons: AddonDTO[]) {
   return [
     {
       question: "How much does it cost to rent a meeting room in Sri Lanka?",
-      answer: `At Cowork.lk in Kottawa, a private 4-seater meeting room costs from ${lkr(FROM_PRICES.meetingRoom4)} for a half day (4 hours) and the glass-enclosed 5-seater from ${lkr(FROM_PRICES.meetingRoom5)}. Full-day, evening (5–9 PM) and unlimited-day rates are also available, and the Lobby Area for groups of up to 10 starts at ${lkr(FROM_PRICES.lobbyGroup2hr)} for 2 hours (or ${lkr(FROM_PRICES.lobbyHour)} for 1 hour for up to 3 people). Prices are in LKR and include WiFi, coffee and tea.`,
+      answer: `At Cowork.lk in Kottawa, a private 4-seater meeting room costs from ${lkr(FROM_PRICES.meetingRoom4)} for a half day (4 hours) and the glass-enclosed 5-seater from ${lkr(FROM_PRICES.meetingRoom5)}. Full-day, evening (5–9 PM) and unlimited-day rates are also available, and the Lobby Area for up to 10 people starts at ${lkr(FROM_PRICES.lobbyHour)} for an hour. Prices are in LKR and include WiFi, coffee and tea.`,
     },
     {
       question: "Do you have conference rooms for rent near Kottawa, Maharagama or Pannipitiya?",
@@ -76,7 +76,7 @@ function buildFaqs(addons: AddonDTO[]) {
     },
     {
       question: "Is there a meeting space for 6 to 10 people?",
-      answer: `The Lobby Area seats up to 10 people and can be booked for 2, 4 or 8 hours or a full day, from ${lkr(FROM_PRICES.lobbyGroup2hr)} for 2 hours. A 1-hour Lobby booking (${lkr(FROM_PRICES.lobbyHour)}) suits up to 3 people.${chair ? ` For six people, the 5-seater room can take an additional chair for ${lkr(chair)}.` : ""} For larger events, contact us and we'll help plan it.`,
+      answer: `The Lobby Area seats up to 10 people and can be booked for 1, 2, 4 or 8 hours or a full day, from ${lkr(FROM_PRICES.lobbyHour)} for an hour.${chair ? ` For six people, the 5-seater room can take an additional chair for ${lkr(chair)}.` : ""} For larger events, contact us and we'll help plan it.`,
     },
     {
       question: "Can I book a meeting room for half a day or in the evening?",
@@ -212,7 +212,7 @@ export default async function MeetingRoomsPage() {
             <p className="text-base leading-relaxed text-brand-dark/75">
               Cowork.lk rents private meeting rooms in Kottawa, Pannipitiya: two 4-seater rooms from{" "}
               {lkr(FROM_PRICES.meetingRoom4)} and a glass-enclosed 5-seater from {lkr(FROM_PRICES.meetingRoom5)} per
-              half day, plus a Lobby Area for groups of up to 10 from {lkr(FROM_PRICES.lobbyGroup2hr)} for 2 hours. Every
+              half day, plus a Lobby Area for up to 10 people from {lkr(FROM_PRICES.lobbyHour)} for an hour. Every
               booking includes 1 Gbps SLT fiber with Starlink backup, a generator, AC and free coffee, and you can book
               online with instant confirmation.
             </p>
@@ -253,7 +253,7 @@ export default async function MeetingRoomsPage() {
             {[
               { size: "1–4 people", room: "4-Seater Meeting Rooms (two rooms)", from: `From ${lkr(FROM_PRICES.meetingRoom4)} / half day` },
               { size: "5–6 people", room: "5-Seater Glass Room (extra chair available)", from: `From ${lkr(FROM_PRICES.meetingRoom5)} / half day` },
-              { size: "Up to 10 people", room: "Lobby Area, booked in hourly blocks", from: `From ${lkr(FROM_PRICES.lobbyGroup2hr)} / 2 hours` },
+              { size: "Up to 10 people", room: "Lobby Area, booked by the hour", from: `From ${lkr(FROM_PRICES.lobbyHour)} / hour` },
             ].map((item) => (
               <div key={item.size} className="rounded-2xl border border-brand-dark/5 bg-white p-6">
                 <p className="text-[10px] uppercase font-extrabold tracking-wider text-brand">{item.size}</p>
@@ -333,7 +333,7 @@ export default async function MeetingRoomsPage() {
                 </thead>
                 <tbody>
                   <tr className="border-t border-brand-dark/5">
-                    <th scope="row" className="p-4 text-left font-normal text-brand-dark/60">1 hour: up to 3 people · 2 hours+: up to 10</th>
+                    <th scope="row" className="p-4 text-left font-normal text-brand-dark/60">Up to 10 people, any block</th>
                     {LOBBY_COLUMNS.map((col) => {
                       const p = priceFor(lobby, col.duration);
                       return (

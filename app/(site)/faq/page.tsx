@@ -61,7 +61,7 @@ const FAQ_GROUPS: { heading: string; items: { question: string; answer: string }
       {
         question: "Can I book a space by the hour?",
         answer:
-          `Only the Lobby Area is bookable by the hour: a 1-hour booking for up to 3 people from ${lkr(FROM_PRICES.lobbyHour)}, or 2-hour, 4-hour, 8-hour and full-day blocks for up to 10 people from ${lkr(FROM_PRICES.lobbyGroup2hr)}. Hot desks, workspace seats, and meeting rooms are booked in half-day (4 hours), full-day (8 AM–5 PM), evening (5–9 PM), or unlimited (8 AM–8 PM) blocks rather than by the hour.`,
+          `Only the Lobby Area (up to 10 people) is bookable by the hour — 1-hour, 2-hour, 4-hour, 8-hour or full-day blocks, from ${lkr(FROM_PRICES.lobbyHour)} for an hour. Hot desks, workspace seats, and meeting rooms are booked in half-day (4 hours), full-day (8 AM–5 PM), evening (5–9 PM), or unlimited (8 AM–8 PM) blocks rather than by the hour.`,
       },
       {
         question: "Do I need to be a member to book a day pass?",

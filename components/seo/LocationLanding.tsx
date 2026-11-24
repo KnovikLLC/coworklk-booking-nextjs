@@ -34,7 +34,6 @@ async function loadPriceRows(): Promise<PriceRow[]> {
           name: s.name,
           href: `/booking/${slugify(s.name)}`,
           capacity: s.capacity,
-          capacityNote: s.type === "lobby" ? "1 hr: up to 3 people · 2 hrs+: up to 10" : undefined,
           options: durations.join(", "),
           from: sorted[0].price,
         };

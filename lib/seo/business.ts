@@ -54,10 +54,9 @@ export const FROM_PRICES = {
   workspace: 890,
   meetingRoom4: 3950,
   meetingRoom5: 4450,
-  // Lobby: the 1-hour rate is for small groups (Zoho item "Max 3 Pax");
-  // 2 hours and longer is the full-room rate for up to 10 people.
+  // Lobby seats up to 10 for every block, 1 hour included (confirmed by the
+  // owners 24 Nov 2026, despite the old Zoho item name "Max 3 Pax").
   lobbyHour: 1950,
-  lobbyGroup2hr: 5950,
   max: 16950,
   eveningFee: 500,
 } as const;
@@ -71,7 +70,7 @@ export function lkr(amount: number) {
 export const FALLBACK_FROM_PRICES = [
   { label: "Hot Desk", from: FROM_PRICES.hotDesk },
   { label: "Workspace Seat", from: FROM_PRICES.workspace },
-  { label: "Lobby Area (1 hr up to 3 people; 2 hrs+ up to 10)", from: FROM_PRICES.lobbyHour },
+  { label: "Lobby Area (up to 10 people)", from: FROM_PRICES.lobbyHour },
   { label: "4-Seater Meeting Room", from: FROM_PRICES.meetingRoom4 },
   { label: "5-Seater Meeting Room", from: FROM_PRICES.meetingRoom5 },
 ];
