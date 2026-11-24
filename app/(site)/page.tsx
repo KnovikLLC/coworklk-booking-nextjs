@@ -64,7 +64,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-6xl w-full px-4 pt-16 pb-20 relative">
         <div className="max-w-2xl space-y-6">
           <span className="text-xs uppercase font-extrabold tracking-widest text-brand-dark/40">
-            Welcome
+            Coworking Space · Pannipitiya · Kottawa · Sri Lanka
           </span>
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl leading-[1.08] text-brand-dark">
             Work Solo,
@@ -293,6 +293,21 @@ export default function HomePage() {
             Whether you need a quiet desk for a day, a dedicated seat for the week, or a meeting room
             for a client pitch, Cowork.lk in Pannipitiya is built for how coworking actually works
             today.
+          </p>
+          <p className="text-sm leading-relaxed text-brand-dark/70">
+            Coming from nearby? See our guides to{" "}
+            <Link href="/coworking-space-pannipitiya" className="text-brand font-semibold hover:underline">
+              coworking in Pannipitiya
+            </Link>
+            ,{" "}
+            <Link href="/coworking-space-kottawa" className="text-brand font-semibold hover:underline">
+              coworking near Kottawa
+            </Link>{" "}
+            and{" "}
+            <Link href="/coworking-space-sri-lanka" className="text-brand font-semibold hover:underline">
+              coworking in Sri Lanka
+            </Link>
+            .
           </p>
         </div>
       </section>

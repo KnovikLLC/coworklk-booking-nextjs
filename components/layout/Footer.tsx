@@ -53,6 +53,23 @@ export function Footer() {
               349/A/3 Avissawella Road, Pannipitiya 10230, Western Province, Sri Lanka <br />
               2nd Floor of Active Plus Building
             </p>
+            <ul className="space-y-2 text-sm font-semibold text-brand-dark/70">
+              <li>
+                <Link href="/coworking-space-pannipitiya" className="hover:text-brand transition-colors">
+                  Coworking in Pannipitiya
+                </Link>
+              </li>
+              <li>
+                <Link href="/coworking-space-kottawa" className="hover:text-brand transition-colors">
+                  Coworking near Kottawa
+                </Link>
+              </li>
+              <li>
+                <Link href="/coworking-space-sri-lanka" className="hover:text-brand transition-colors">
+                  Coworking in Sri Lanka
+                </Link>
+              </li>
+            </ul>
             {/* Map Placeholder Graphic */}
             {/* <div className="relative h-28 w-full overflow-hidden rounded-lg border border-brand-dark/10 bg-slate-100 flex flex-col items-center justify-center p-4 text-center">
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#231f20_1px,transparent_1px)] [background-size:16px_16px]" />

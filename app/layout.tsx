@@ -4,11 +4,11 @@ import { Red_Hat_Text, Red_Hat_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { BUSINESS, BUSINESS_ID, SITE_URL } from "@/lib/seo/business";
 
 const redHatText = Red_Hat_Text({ subsets: ["latin"], variable: "--font-sans" });
 const redHatDisplay = Red_Hat_Display({ subsets: ["latin"], variable: "--font-display" });
 
-const SITE_URL = process.env.NEXT_PUBLIC_URL || "https://cowork.lk";
 const SITE_NAME = "Cowork Sri Lanka";
 const DEFAULT_DESCRIPTION =
   "Book hot desks, dedicated workspaces, and meeting rooms at Cowork Lanka's coworking space in Pannipitiya, Colombo, Sri Lanka. Real-time availability, instant online booking.";
@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   keywords: [
     "coworking space Sri Lanka",
     "coworking space Pannipitiya",
+    "coworking space Kottawa",
     "hot desk Colombo",
     "meeting room rental Sri Lanka",
     "shared office space Pannipitiya",
@@ -39,9 +40,9 @@ export const metadata: Metadata = {
     title: "Cowork.lk | Coworking Space in Pannipitiya, Colombo, Sri Lanka",
     description: DEFAULT_DESCRIPTION,
   },
-  alternates: {
-    canonical: SITE_URL,
-  },
+  // No site-wide canonical: a root-level canonical is inherited by every page
+  // that doesn't set its own (terms, privacy, login...), telling Google they
+  // are duplicates of the home page. Pages set their own canonical instead.
   icons: {
     icon: "/favicon.png",
   },
@@ -49,55 +50,88 @@ export const metadata: Metadata = {
 
 // Site-wide entity signal for Google/AI answer engines: who this business is,
 // where it is, and how to reach it. Kept in the root layout so it's present
-// on every page rather than duplicated per-route.
-const localBusinessJsonLd = {
+// on every page; other pages reference it by BUSINESS_ID rather than
+// redeclaring it. All facts come from lib/seo/business.ts.
+const siteJsonLd = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: "Cowork Lanka (Pvt) Ltd",
-  alternateName: "Cowork.lk",
-  url: SITE_URL,
-  logo: `${SITE_URL}/images/logos/cowork-logo.svg`,
-  image: `${SITE_URL}/opengraph-image`,
-  telephone: "+94774884040",
-  email: "admin@cowork.lk",
-  priceRange: "LKR 490 - LKR 6750",
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "349/A/3 Avissawella Road",
-    addressLocality: "Pannipitiya",
-    postalCode: "10230",
-    addressRegion: "Western Province",
-    addressCountry: "LK",
-  },
-  // Real proximity facts already published on the About page's "Location &
-  // Facility" section (Kottawa, Maharagama, Kadawatha drive times) — not
-  // invented — surfaced here for "near me" local-intent queries.
-  areaServed: [
-    { "@type": "City", name: "Pannipitiya" },
-    { "@type": "City", name: "Kottawa" },
-    { "@type": "City", name: "Maharagama" },
-    { "@type": "City", name: "Kadawatha" },
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": BUSINESS_ID,
+      additionalType: "https://en.wikipedia.org/wiki/Coworking",
+      name: BUSINESS.brandName,
+      legalName: BUSINESS.legalName,
+      alternateName: BUSINESS.alternateNames,
+      description:
+        "Coworking space in Pannipitiya, Sri Lanka, 5 minutes from Kottawa and 10 minutes from Maharagama, offering hot desks, workspace seats and private meeting rooms bookable online by the half-day or day.",
+      slogan: "Work Solo, Collaborate Together.",
+      url: SITE_URL,
+      logo: `${SITE_URL}/images/logos/cowork-logo.svg`,
+      image: [`${SITE_URL}/opengraph-image`, `${SITE_URL}/images/spaces/co-work-area.png`],
+      telephone: BUSINESS.phone,
+      email: BUSINESS.email,
+      priceRange: "LKR 490 - LKR 6750",
+      currenciesAccepted: "LKR",
+      paymentAccepted: "Credit Card, Debit Card, Bank Transfer",
+      hasMap: BUSINESS.mapUrl,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: `${BUSINESS.address.building}, ${BUSINESS.address.street}`,
+        addressLocality: BUSINESS.address.locality,
+        postalCode: BUSINESS.address.postalCode,
+        addressRegion: BUSINESS.address.region,
+        addressCountry: BUSINESS.address.country,
+      },
+      // Real proximity facts published on the About page (Kottawa 5 min,
+      // Maharagama 10 min, Kadawatha ~30 min via expressway).
+      areaServed: [
+        { "@type": "City", name: "Pannipitiya" },
+        { "@type": "City", name: "Kottawa" },
+        { "@type": "City", name: "Maharagama" },
+        { "@type": "City", name: "Kadawatha" },
+        { "@type": "AdministrativeArea", name: "Colombo District" },
+        { "@type": "Country", name: "Sri Lanka" },
+      ],
+      knowsAbout: [
+        "Coworking",
+        "Hot desking",
+        "Shared office space",
+        "Meeting room rental",
+        "Day office rental",
+      ],
+      founder: BUSINESS.founders.map((name) => ({ "@type": "Person", name })),
+      amenityFeature: [
+        "Free Fiber WiFi",
+        "Air Conditioning",
+        "Backup Power Generator",
+        "Free Coffee & Tea",
+        "Lounge Area",
+        "On-Site Parking",
+        "Private Meeting Rooms",
+      ].map((name) => ({ "@type": "LocationFeatureSpecification", name, value: true })),
+      openingHoursSpecification: {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        opens: BUSINESS.hours.opens,
+        closes: BUSINESS.hours.closes,
+      },
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: BUSINESS.phone,
+        email: BUSINESS.email,
+        contactType: "customer service",
+        availableLanguage: ["English"],
+      },
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: BUSINESS.brandName,
+      inLanguage: "en-LK",
+      publisher: { "@id": BUSINESS_ID },
+    },
   ],
-  amenityFeature: [
-    { "@type": "LocationFeatureSpecification", name: "Free Fiber WiFi", value: true },
-    { "@type": "LocationFeatureSpecification", name: "Air Conditioning", value: true },
-    { "@type": "LocationFeatureSpecification", name: "Free Coffee & Tea", value: true },
-    { "@type": "LocationFeatureSpecification", name: "On-Site Parking", value: true },
-  ],
-  openingHoursSpecification: {
-    "@type": "OpeningHoursSpecification",
-    dayOfWeek: [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday",
-    ],
-    opens: "08:00",
-    closes: "20:00",
-  },
 };
 
 export default function RootLayout({
@@ -127,7 +161,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
         />
       </body>
     </html>
