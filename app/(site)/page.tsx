@@ -1,16 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
+import { BUSINESS, FROM_PRICES, lkr } from "@/lib/seo/business";
 
 const FAQS = [
   {
     question: "Where is Cowork.lk located?",
     answer:
-      "Cowork.lk is at 349/A/3 Avissawella Road, Pannipitiya 10230, Western Province, Sri Lanka — 5 minutes from Kottawa, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway. Open Monday to Sunday, 8:00 AM to 8:00 PM.",
+      `Cowork.lk is at 349/A/3 Avissawella Road, Pannipitiya 10230, Western Province, Sri Lanka — 5 minutes from Kottawa, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway. Open ${BUSINESS.hours.days}, ${BUSINESS.hours.display}.`,
   },
   {
     question: "What coworking spaces can I book?",
     answer:
-      "Hot desks from LKR 490, workspace seats from LKR 790, and 4- and 5-seater meeting rooms from LKR 3,450 — all bookable online with real-time availability.",
+      `Hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats from ${lkr(FROM_PRICES.workspace)}, 4- and 5-seater meeting rooms from ${lkr(FROM_PRICES.meetingRoom4)}, and the Lobby Area for groups of up to 10 from ${lkr(FROM_PRICES.lobbyHour)} for an hour — all bookable online with real-time availability.`,
   },
   {
     question: "Can I rent office space for just a day?",
@@ -119,8 +120,8 @@ export default function HomePage() {
             <div className="mx-auto h-16 w-16 rounded-full bg-brand/5 text-brand flex items-center justify-center text-2xl group-hover:scale-105 transition-transform">
               🪑
             </div>
-            <h3 className="mt-4 text-base font-bold text-brand-dark">Workspace</h3>
-            <p className="mt-1 text-xs text-brand-dark/45">Starting 699.00 LKR</p>
+            <h3 className="mt-4 text-base font-bold text-brand-dark">Hot Desk &amp; Workspace</h3>
+            <p className="mt-1 text-xs text-brand-dark/45">Starting {lkr(FROM_PRICES.hotDesk)}</p>
           </div>
 
           {/* Card 2: Meeting Room */}
@@ -132,7 +133,7 @@ export default function HomePage() {
               👥
             </div>
             <h3 className="mt-4 text-base font-bold text-brand-dark">Meeting Room</h3>
-            <p className="mt-1 text-xs text-brand-dark/45">Starting 3,450.00 LKR</p>
+            <p className="mt-1 text-xs text-brand-dark/45">Starting {lkr(FROM_PRICES.meetingRoom4)}</p>
           </Link>
 
           {/* Card 3: Creative Studio */}
@@ -141,7 +142,7 @@ export default function HomePage() {
               🎬
             </div>
             <h3 className="mt-4 text-base font-bold text-brand-dark">Creative Studio</h3>
-            <p className="mt-1 text-xs text-brand-dark/45">Starting 1,500.00 LKR</p>
+            <p className="mt-1 text-xs text-brand-dark/45">Rates on request</p>
           </div>
 
           {/* Card 4: Classroom */}
@@ -150,7 +151,7 @@ export default function HomePage() {
               🎓
             </div>
             <h3 className="mt-4 text-base font-bold text-brand-dark">Classroom</h3>
-            <p className="mt-1 text-xs text-brand-dark/45">Starting 4,990.00 LKR</p>
+            <p className="mt-1 text-xs text-brand-dark/45">Rates on request</p>
           </div>
         </div>
       </section>
@@ -286,7 +287,7 @@ export default function HomePage() {
             Coworking — sometimes written as co work or co working — means sharing a professional
             workspace with independent professionals, startups, and remote teams instead of signing
             a traditional office lease. At Cowork.lk, that means hot desks, private workspace seats,
-            and fully-equipped meeting rooms you can book by the hour or day, with real-time
+            and fully-equipped meeting rooms you can book by the half-day, day or evening, with real-time
             availability and no long-term contracts.
           </p>
           <p className="text-sm leading-relaxed text-brand-dark/70">

@@ -77,7 +77,7 @@ export default async function BookingPage() {
             <span className="text-brand">Let&apos;s Cowork!</span>
           </h1>
           <p className="text-sm text-brand-dark/65 max-w-lg leading-relaxed pt-2">
-            Explore our curated list of workspace offerings. Rent office space for a day, book a shared desk by the hour, or reserve a private meeting room for your team huddles — all with real-time availability.
+            Explore our curated list of workspace offerings. Rent office space for a day, book a shared desk for a half-day or evening, or reserve a private meeting room for your team huddles — all with real-time availability.
           </p>
         </div>
 

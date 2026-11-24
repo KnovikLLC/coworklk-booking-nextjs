@@ -1,3 +1,5 @@
+import { FROM_PRICES, lkr } from "@/lib/seo/business";
+
 // Location landing pages for local-intent queries ("coworking space Kottawa",
 // "coworking Pannipitiya", "coworking space Sri Lanka").
 //
@@ -36,13 +38,13 @@ export const LOCATION_PAGES: LocationPageData[] = [
   {
     slug: "coworking-space-kottawa",
     place: "Kottawa",
-    title: "Coworking Space Near Kottawa | Hot Desks from LKR 490 | Cowork.lk",
+    title: `Coworking Space Near Kottawa | Hot Desks from ${lkr(FROM_PRICES.hotDesk)} | Cowork.lk`,
     description:
-      "Cowork.lk is a coworking space 5 minutes from Kottawa on Avissawella Road, Pannipitiya. Hot desks from LKR 490, meeting rooms, fiber WiFi, backup power. Book online.",
+      `Cowork.lk is a coworking space 5 minutes from Kottawa on Avissawella Road, Pannipitiya. Hot desks from ${lkr(FROM_PRICES.hotDesk)}, meeting rooms, fiber WiFi, backup power. Book online.`,
     eyebrow: "Coworking near Kottawa",
     h1: "Coworking Space Near Kottawa",
     answer:
-      "Cowork.lk is a dedicated coworking space just 5 minutes' drive from Kottawa, at 349/A/3 Avissawella Road, Pannipitiya. It offers hot desks from LKR 490, workspace seats, and private 4- and 5-seater meeting rooms, with fiber WiFi, backup power, free coffee and online booking, open daily 8 AM to 8 PM.",
+      `Cowork.lk is a dedicated coworking space just 5 minutes' drive from Kottawa, at 349/A/3 Avissawella Road, Pannipitiya. It offers hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats, and private 4- and 5-seater meeting rooms, with fiber WiFi, backup power, free coffee and online booking, open daily 8 AM to 9 PM.`,
     gettingHereHeading: "Getting to Cowork.lk from Kottawa",
     gettingHere: [
       "Cowork.lk is about 5 minutes by car or tuk-tuk from Kottawa town, heading towards Maharagama along Avissawella Road (the High Level Road).",
@@ -73,12 +75,12 @@ export const LOCATION_PAGES: LocationPageData[] = [
       {
         question: "How much does a hot desk near Kottawa cost?",
         answer:
-          "A hot desk at Cowork.lk starts at LKR 490 for a half day. Full-day and unlimited-day options are also available, and WiFi, coffee and tea are included in the price.",
+          `A hot desk at Cowork.lk starts at ${lkr(FROM_PRICES.hotDesk)} for a half day. Full-day, evening (5–9 PM) and unlimited-day options are also available, and WiFi, coffee and tea are included in the price.`,
       },
       {
         question: "Can I rent a meeting room near Kottawa for a few hours?",
         answer:
-          "Yes. Cowork.lk's private 4-seater and 5-seater meeting rooms can be booked for a half day, full day or unlimited day access, starting from LKR 3,450. The Lobby Area can also be booked in short blocks for small groups.",
+          `Yes. Cowork.lk's private 4-seater and 5-seater meeting rooms can be booked for a half day, full day, evening or unlimited day access, starting from ${lkr(FROM_PRICES.meetingRoom4)}. The Lobby Area seats up to 10 people and can be booked by the hour from ${lkr(FROM_PRICES.lobbyHour)}.`,
       },
       {
         question: "Does the coworking space near Kottawa have backup power?",
@@ -93,11 +95,11 @@ export const LOCATION_PAGES: LocationPageData[] = [
     place: "Pannipitiya",
     title: "Coworking Space in Pannipitiya | Desks & Meeting Rooms | Cowork.lk",
     description:
-      "Cowork.lk is a coworking space in Pannipitiya at 349/A/3 Avissawella Road. Hot desks from LKR 490, workspace seats, private meeting rooms, fiber WiFi. Open daily 8am–8pm.",
+      `Cowork.lk is a coworking space in Pannipitiya at 349/A/3 Avissawella Road. Hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats, private meeting rooms, fiber WiFi. Open daily 8am–9pm.`,
     eyebrow: "Coworking in Pannipitiya",
     h1: "Coworking Space in Pannipitiya",
     answer:
-      "Cowork.lk is a coworking space in Pannipitiya, Sri Lanka, located on the 2nd floor of the Active Plus Building at 349/A/3 Avissawella Road. It rents hot desks from LKR 490, workspace seats and private meeting rooms by the half-day or day, with fiber WiFi, backup power and free coffee, open 8 AM to 8 PM every day.",
+      `Cowork.lk is a coworking space in Pannipitiya, Sri Lanka, located on the 2nd floor of the Active Plus Building at 349/A/3 Avissawella Road. It rents hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats and private meeting rooms by the half-day or day, with fiber WiFi, backup power and free coffee, open 8 AM to 9 PM every day.`,
     gettingHereHeading: "Where we are in Pannipitiya",
     gettingHere: [
       "Address: 2nd Floor, Active Plus Building, 349/A/3 Avissawella Road, Pannipitiya 10230, Western Province.",
@@ -128,12 +130,12 @@ export const LOCATION_PAGES: LocationPageData[] = [
       {
         question: "What are the opening hours of Cowork.lk in Pannipitiya?",
         answer:
-          "Cowork.lk is open every day, Monday to Sunday, from 8:00 AM to 8:00 PM. It is not a 24/7 space.",
+          "Cowork.lk is open every day, Monday to Sunday, from 8:00 AM to 9:00 PM, with day bookings from 8 AM and evening bookings from 5 PM to 9 PM. It is not a 24/7 space.",
       },
       {
         question: "Can I book a desk in Pannipitiya for just one day?",
         answer:
-          "Yes. Every space at Cowork.lk can be booked for a half day, full day or unlimited day access with no lease or membership contract. Guest checkout is available, so you don't need an account.",
+          "Yes. Every space at Cowork.lk can be booked for a half day, full day, evening (5–9 PM) or unlimited day access with no lease or membership contract. Guest checkout is available, so you don't need an account.",
       },
       {
         question: "What amenities does the Pannipitiya coworking space include?",
@@ -148,11 +150,11 @@ export const LOCATION_PAGES: LocationPageData[] = [
     place: "Sri Lanka",
     title: "Coworking Space in Sri Lanka (Colombo Suburbs) | Cowork.lk",
     description:
-      "Cowork.lk is a coworking space in Sri Lanka's Colombo suburbs (Pannipitiya, near Kottawa and Maharagama). Day passes from LKR 490, meeting rooms, real-time online booking.",
+      `Cowork.lk is a coworking space in Sri Lanka's Colombo suburbs (Pannipitiya, near Kottawa and Maharagama). Day passes from ${lkr(FROM_PRICES.hotDesk)}, meeting rooms, real-time online booking.`,
     eyebrow: "Coworking in Sri Lanka",
     h1: "Coworking Space in Sri Lanka's Colombo Suburbs",
     answer:
-      "Cowork.lk is a coworking space in Sri Lanka run by Cowork Lanka (Pvt) Ltd, located in Pannipitiya in the Colombo suburbs, near Kottawa and Maharagama. It offers hot desks from LKR 490, workspace seats and private meeting rooms by the half-day or day, with real-time online booking and no long-term lease.",
+      `Cowork.lk is a coworking space in Sri Lanka run by Cowork Lanka (Pvt) Ltd, located in Pannipitiya in the Colombo suburbs, near Kottawa and Maharagama. It offers hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats and private meeting rooms by the half-day or day, with real-time online booking and no long-term lease.`,
     gettingHereHeading: "Where Cowork.lk is in Sri Lanka",
     gettingHere: [
       "Cowork.lk has one location: 349/A/3 Avissawella Road, Pannipitiya 10230, in Colombo District, Western Province.",
@@ -178,7 +180,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
       {
         question: "How much does coworking cost in Sri Lanka?",
         answer:
-          "At Cowork.lk, coworking starts at LKR 490 for a half-day hot desk. Workspace seats start at LKR 790 and private meeting rooms from LKR 3,450 for a half day. WiFi, coffee and tea are included.",
+          `At Cowork.lk, coworking starts at ${lkr(FROM_PRICES.hotDesk)} for a half-day hot desk. Workspace seats start at ${lkr(FROM_PRICES.workspace)} and private meeting rooms from ${lkr(FROM_PRICES.meetingRoom4)} for a half day. WiFi, coffee and tea are included.`,
       },
       {
         question: "Is Cowork.lk in Colombo?",

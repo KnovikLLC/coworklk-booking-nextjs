@@ -72,7 +72,7 @@ export default function ContactPage() {
               <p className="text-sm text-muted-foreground">admin@cowork.lk</p>
             </div>
             <div className="rounded-lg bg-muted/40 p-4 border text-xs text-muted-foreground">
-              <strong>Operating Hours:</strong> Monday – Sunday: 8:00 AM – 8:00 PM
+              <strong>Operating Hours:</strong> Monday – Sunday: 8:00 AM – 9:00 PM (evening bookings 5–9 PM)
             </div>
           </div>
 

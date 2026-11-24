@@ -4,7 +4,7 @@ import { Red_Hat_Text, Red_Hat_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { BUSINESS, BUSINESS_ID, SITE_URL } from "@/lib/seo/business";
+import { BUSINESS, BUSINESS_ID, FROM_PRICES, SITE_URL, lkr } from "@/lib/seo/business";
 
 const redHatText = Red_Hat_Text({ subsets: ["latin"], variable: "--font-sans" });
 const redHatDisplay = Red_Hat_Display({ subsets: ["latin"], variable: "--font-display" });
@@ -70,7 +70,7 @@ const siteJsonLd = {
       image: [`${SITE_URL}/opengraph-image`, `${SITE_URL}/images/spaces/co-work-area.png`],
       telephone: BUSINESS.phone,
       email: BUSINESS.email,
-      priceRange: "LKR 490 - LKR 6750",
+      priceRange: `${lkr(FROM_PRICES.hotDesk)} - ${lkr(FROM_PRICES.max)}`,
       currenciesAccepted: "LKR",
       paymentAccepted: "Credit Card, Debit Card, Bank Transfer",
       hasMap: BUSINESS.mapUrl,
