@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getActiveSpaces } from "@/lib/data/spaces";
 import { slugify } from "@/lib/spaces";
-
-const SITE_URL = process.env.NEXT_PUBLIC_URL || "https://cowork.lk";
+import { SITE_URL } from "@/lib/seo/business";
+import { LOCATION_PAGES } from "@/lib/seo/locations";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
@@ -11,7 +11,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
     { path: "", priority: 1, changeFrequency: "weekly" },
     { path: "/booking", priority: 0.9, changeFrequency: "daily" },
+    ...LOCATION_PAGES.map((p) => ({ path: `/${p.slug}`, priority: 0.9, changeFrequency: "weekly" as const })),
     { path: "/meeting-rooms", priority: 0.8, changeFrequency: "weekly" },
+    { path: "/tour", priority: 0.6, changeFrequency: "monthly" },
     { path: "/faq", priority: 0.7, changeFrequency: "monthly" },
     { path: "/about", priority: 0.7, changeFrequency: "monthly" },
     { path: "/community", priority: 0.6, changeFrequency: "weekly" },
