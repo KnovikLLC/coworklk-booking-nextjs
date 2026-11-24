@@ -39,7 +39,8 @@ export async function GET() {
 - Phone / WhatsApp: ${BUSINESS.phoneDisplay}
 - Email: ${BUSINESS.email}
 - Map: ${BUSINESS.mapUrl}
-- Included with every booking: SLT Mobitel fiber WiFi, air conditioning, backup power generator, unlimited coffee and tea, lounge access, limited on-site parking
+- Internet: ${BUSINESS.internet.long} (two independent connections)
+- Included with every booking: WiFi, air conditioning, backup power generator, unlimited coffee and tea, lounge access, limited on-site parking
 - Payment: card online, or bank/QR transfer; guest checkout available (no account needed)
 - Evening bookings (5–9 PM) carry an LKR 500 evening convenience fee
 - Returning members get 10% off when they book again within 30 days

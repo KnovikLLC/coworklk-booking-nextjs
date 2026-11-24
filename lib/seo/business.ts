@@ -30,6 +30,10 @@ export const BUSINESS = {
   mapUrl:
     "https://www.google.com/maps?q=349%2FA%2F3+Avissawella+Road%2C+Pannipitiya+10230%2C+Sri+Lanka",
   founders: ["Charith", "Madusanka Premaratne", "Amila Gunawardhana"],
+  internet: {
+    short: "1 Gbps SLT fiber + Starlink",
+    long: "a 1 Gbps SLT Fiber line plus a separate Starlink satellite connection",
+  },
 } as const;
 
 export const FULL_ADDRESS = `${BUSINESS.address.street}, ${BUSINESS.address.locality} ${BUSINESS.address.postalCode}, ${BUSINESS.address.countryName}`;

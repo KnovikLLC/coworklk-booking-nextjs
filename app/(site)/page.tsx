@@ -21,7 +21,7 @@ const FAQS = [
   {
     question: "Is WiFi included at Cowork.lk?",
     answer:
-      "Yes. Every space includes free WiFi on SLT Mobitel Fiber, plus unlimited coffee and tea, lounge access, and a foosball table.",
+      "Yes. Every space includes free WiFi running on a 1 Gbps SLT Fiber line plus a separate Starlink satellite connection, so a single outage won't take you offline. Unlimited coffee and tea, lounge access, and a foosball table are included too.",
   },
   {
     question: "How do I pay for a booking?",
@@ -213,9 +213,9 @@ export default function HomePage() {
           <div className="rounded-2xl border border-brand-dark/5 bg-white p-6 space-y-4">
             <span className="text-2xl text-brand block">📡</span>
             <div>
-              <h3 className="font-bold text-sm text-brand-dark">Free WiFi (Fiber)</h3>
+              <h3 className="font-bold text-sm text-brand-dark">1 Gbps Fiber + Starlink WiFi</h3>
               <p className="mt-1.5 text-xs text-brand-dark/60 leading-relaxed">
-                SLT Mobitel Fiber lines will keep you connected the fastest way possible.
+                A 1 Gbps SLT Fiber line plus a separate Starlink satellite connection, so one outage won&apos;t knock you offline.
               </p>
             </div>
           </div>

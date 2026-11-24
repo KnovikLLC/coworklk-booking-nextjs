@@ -40,11 +40,11 @@ export const LOCATION_PAGES: LocationPageData[] = [
     place: "Kottawa",
     title: `Coworking Space Near Kottawa | Hot Desks from ${lkr(FROM_PRICES.hotDesk)} | Cowork.lk`,
     description:
-      `Cowork.lk is a coworking space 5 minutes from Kottawa on Avissawella Road, Pannipitiya. Hot desks from ${lkr(FROM_PRICES.hotDesk)}, meeting rooms, fiber WiFi, backup power. Book online.`,
+      `Coworking space 5 min from Kottawa on Avissawella Road, Pannipitiya. Hot desks from ${lkr(FROM_PRICES.hotDesk)}, meeting rooms, 1 Gbps fiber + Starlink, backup power.`,
     eyebrow: "Coworking near Kottawa",
     h1: "Coworking Space Near Kottawa",
     answer:
-      `Cowork.lk is a dedicated coworking space just 5 minutes' drive from Kottawa, at 349/A/3 Avissawella Road, Pannipitiya. It offers hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats, and private 4- and 5-seater meeting rooms, with fiber WiFi, backup power, free coffee and online booking, open daily 8 AM to 9 PM.`,
+      `Cowork.lk is a dedicated coworking space just 5 minutes' drive from Kottawa, at 349/A/3 Avissawella Road, Pannipitiya. It offers hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats, and private 4- and 5-seater meeting rooms, with 1 Gbps SLT fiber plus Starlink internet, backup power, free coffee and online booking, open daily 8 AM to 9 PM.`,
     gettingHereHeading: "Getting to Cowork.lk from Kottawa",
     gettingHere: [
       "Cowork.lk is about 5 minutes by car or tuk-tuk from Kottawa town, heading towards Maharagama along Avissawella Road (the High Level Road).",
@@ -59,7 +59,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
       },
       {
         heading: "Freelancers and IT professionals",
-        body: "Stable SLT Mobitel fiber WiFi and a backup generator mean client calls don't drop during power cuts.",
+        body: "A 1 Gbps SLT fiber line, a separate Starlink connection and a backup generator mean client calls don't drop when one line or the power goes out.",
       },
       {
         heading: "Small teams meeting clients",
@@ -95,11 +95,11 @@ export const LOCATION_PAGES: LocationPageData[] = [
     place: "Pannipitiya",
     title: "Coworking Space in Pannipitiya | Desks & Meeting Rooms | Cowork.lk",
     description:
-      `Cowork.lk is a coworking space in Pannipitiya at 349/A/3 Avissawella Road. Hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats, private meeting rooms, fiber WiFi. Open daily 8am–9pm.`,
+      `Cowork.lk is a coworking space in Pannipitiya at 349/A/3 Avissawella Road. Hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats, meeting rooms, 1 Gbps fiber + Starlink. Open daily 8am–9pm.`,
     eyebrow: "Coworking in Pannipitiya",
     h1: "Coworking Space in Pannipitiya",
     answer:
-      `Cowork.lk is a coworking space in Pannipitiya, Sri Lanka, located on the 2nd floor of the Active Plus Building at 349/A/3 Avissawella Road. It rents hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats and private meeting rooms by the half-day or day, with fiber WiFi, backup power and free coffee, open 8 AM to 9 PM every day.`,
+      `Cowork.lk is a coworking space in Pannipitiya, Sri Lanka, located on the 2nd floor of the Active Plus Building at 349/A/3 Avissawella Road. It rents hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats and private meeting rooms by the half-day or day, with 1 Gbps SLT fiber plus Starlink internet, backup power and free coffee, open 8 AM to 9 PM every day.`,
     gettingHereHeading: "Where we are in Pannipitiya",
     gettingHere: [
       "Address: 2nd Floor, Active Plus Building, 349/A/3 Avissawella Road, Pannipitiya 10230, Western Province.",
@@ -140,7 +140,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
       {
         question: "What amenities does the Pannipitiya coworking space include?",
         answer:
-          "Every booking includes SLT Mobitel fiber WiFi, air conditioning, unlimited Nescafé coffee and Nest tea, lounge access, backup power and a foosball table. Extras like monitors and projectors can be added at checkout.",
+          "Every booking includes WiFi on a 1 Gbps SLT fiber line with Starlink as a second connection, air conditioning, unlimited Nescafé coffee and Nest tea, lounge access, backup power and a foosball table. Extras like monitors and projectors can be added at checkout.",
       },
     ],
     updated: UPDATED,
@@ -169,7 +169,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
       },
       {
         heading: "Digital nomads and visitors",
-        body: "Book by the day with no contract, pay by card online, and get fiber WiFi and backup power for calls with overseas clients.",
+        body: "Book by the day with no contract, pay by card online, and get 1 Gbps fiber, a Starlink backup line and generator power for calls with overseas clients.",
       },
       {
         heading: "Companies needing a suburban base",
@@ -195,7 +195,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
       {
         question: "Does Cowork.lk have reliable internet and power?",
         answer:
-          "Yes. Cowork.lk uses SLT Mobitel fiber WiFi and runs a backup power generator, so work continues during power cuts.",
+          "Yes. Cowork.lk has two independent internet connections — a 1 Gbps SLT Fiber line and Starlink satellite — and a backup power generator, so work continues during line faults and power cuts.",
       },
     ],
     updated: UPDATED,

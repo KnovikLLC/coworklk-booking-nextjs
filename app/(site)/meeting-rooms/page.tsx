@@ -39,7 +39,7 @@ const FAQS = [
   {
     question: "What's included with a meeting room booking?",
     answer:
-      "Every meeting room includes fiber WiFi with a daily data package (4–15 GB depending on the room and booking length), air conditioning, and unlimited coffee and tea, with the booking confirmed instantly online. Projectors, screens and extra data can be added at checkout.",
+      "Every meeting room includes WiFi on a 1 Gbps SLT Fiber line with Starlink as a second connection, a daily data package (4–15 GB depending on the room and booking length), air conditioning, and unlimited coffee and tea, with the booking confirmed instantly online. Projectors, screens and extra data can be added at checkout.",
   },
 ];
 

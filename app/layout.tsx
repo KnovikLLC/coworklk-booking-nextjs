@@ -63,7 +63,7 @@ const siteJsonLd = {
       legalName: BUSINESS.legalName,
       alternateName: BUSINESS.alternateNames,
       description:
-        "Coworking space in Pannipitiya, Sri Lanka, 5 minutes from Kottawa and 10 minutes from Maharagama, offering hot desks, workspace seats and private meeting rooms bookable online by the half-day or day.",
+        "Coworking space in Pannipitiya, Sri Lanka, 5 minutes from Kottawa and 10 minutes from Maharagama, offering hot desks, workspace seats and private meeting rooms bookable online by the half-day or day, with 1 Gbps SLT fiber plus Starlink internet and a backup generator.",
       slogan: "Work Solo, Collaborate Together.",
       url: SITE_URL,
       logo: `${SITE_URL}/images/logos/cowork-logo.svg`,
@@ -101,7 +101,8 @@ const siteJsonLd = {
       ],
       founder: BUSINESS.founders.map((name) => ({ "@type": "Person", name })),
       amenityFeature: [
-        "Free Fiber WiFi",
+        "Free WiFi: 1 Gbps SLT Fiber",
+        "Starlink Satellite Internet (second connection)",
         "Air Conditioning",
         "Backup Power Generator",
         "Free Coffee & Tea",
