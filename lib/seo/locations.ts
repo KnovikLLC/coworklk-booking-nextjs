@@ -47,7 +47,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
       `Cowork.lk is a dedicated coworking space in Kottawa, at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230 — about 5 minutes from Kottawa town. It offers hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats, and private 4- and 5-seater meeting rooms, with 1 Gbps SLT fiber plus Starlink internet, backup power, free coffee and online booking, open daily 8 AM to 9 PM.`,
     gettingHereHeading: "Finding Cowork.lk in Kottawa",
     gettingHere: [
-      "Landmarks: we're 20 m from Red Bell Kottawa, and 100 m from Taco Bell and Lyceum School Kottawa.",
+      "Landmarks: we're opposite Anura Tyres Kottawa near Mahalwarawa Junction, 20 m from Red Bell Kottawa, and 100 m from Taco Bell and Lyceum School Kottawa.",
       "Cowork.lk is on Avissawella Road (the High Level Road) in Kottawa, Pannipitiya — about 5 minutes by car or tuk-tuk from Kottawa town, heading towards Maharagama.",
       "We're on the 2nd floor of the Active Plus Building, 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230.",
       "Safe on-premise parking is available for a limited number of vehicles.",
@@ -71,7 +71,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
       {
         question: "Is there a coworking space in Kottawa?",
         answer:
-          "Yes. Cowork.lk is a dedicated coworking space at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, about 5 minutes from Kottawa town, 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa. It offers hot desks, workspace seats and private meeting rooms, all bookable online.",
+          "Yes. Cowork.lk is a dedicated coworking space at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, about 5 minutes from Kottawa town, opposite Anura Tyres Kottawa near Mahalwarawa Junction, 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa. It offers hot desks, workspace seats and private meeting rooms, all bookable online.",
       },
       {
         question: "How much does a hot desk in Kottawa cost?",
@@ -104,7 +104,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
     gettingHereHeading: "Where we are in Pannipitiya",
     gettingHere: [
       "Address: 2nd Floor, Active Plus Building, 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, Western Province.",
-      "20 m from Red Bell Kottawa, and 100 m from Taco Bell and Lyceum School Kottawa.",
+      "Opposite Anura Tyres Kottawa, near Mahalwarawa Junction; 20 m from Red Bell Kottawa, and 100 m from Taco Bell and Lyceum School Kottawa.",
       "About 5 minutes from Kottawa town and 10 minutes from Maharagama by road.",
       "Roughly a 30-minute drive from Kadawatha via the expressway.",
       "Limited on-premise parking for members and guests.",
@@ -127,7 +127,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
       {
         question: "Where is the coworking space in Pannipitiya?",
         answer:
-          "Cowork.lk is on the 2nd floor of the Active Plus Building at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, Sri Lanka — 20 m from Red Bell Kottawa, 100 m from Taco Bell and Lyceum School Kottawa, about 5 minutes from Kottawa town and 10 minutes from Maharagama.",
+          "Cowork.lk is on the 2nd floor of the Active Plus Building at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, Sri Lanka — opposite Anura Tyres Kottawa near Mahalwarawa Junction, 20 m from Red Bell Kottawa, 100 m from Taco Bell and Lyceum School Kottawa, about 5 minutes from Kottawa town and 10 minutes from Maharagama.",
       },
       {
         question: "What are the opening hours of Cowork.lk in Pannipitiya?",

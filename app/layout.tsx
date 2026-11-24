@@ -63,7 +63,7 @@ const siteJsonLd = {
       legalName: BUSINESS.legalName,
       alternateName: BUSINESS.alternateNames,
       description:
-        "Coworking space in Kottawa, Pannipitiya, Sri Lanka, 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa, 5 minutes from Kottawa town and 10 minutes from Maharagama, offering hot desks, workspace seats and private meeting rooms bookable online by the half-day or day, with 1 Gbps SLT fiber plus Starlink internet and a backup generator.",
+        "Coworking space in Kottawa, Pannipitiya, Sri Lanka, opposite Anura Tyres Kottawa near Mahalwarawa Junction, 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa, 5 minutes from Kottawa town and 10 minutes from Maharagama, offering hot desks, workspace seats and private meeting rooms bookable online by the half-day or day, with 1 Gbps SLT fiber plus Starlink internet and a backup generator.",
       slogan: "Work Solo, Collaborate Together.",
       url: SITE_URL,
       logo: `${SITE_URL}/images/logos/cowork-logo.svg`,

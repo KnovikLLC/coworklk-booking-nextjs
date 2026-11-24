@@ -31,7 +31,7 @@ export const BUSINESS = {
     "https://www.google.com/maps?q=349%2FA%2F3+Avissawella+Road%2C+Pannipitiya+10230%2C+Sri+Lanka",
   founders: ["Charith", "Madusanka Premaratne", "Amila Gunawardhana"],
   // Landmarks people actually navigate by (provided by the owners).
-  landmarks: "20 m from Red Bell Kottawa, and 100 m from Taco Bell and Lyceum School Kottawa",
+  landmarks: "Opposite Anura Tyres Kottawa, near Mahalwarawa Junction; 20 m from Red Bell Kottawa, and 100 m from Taco Bell and Lyceum School Kottawa",
   internet: {
     short: "1 Gbps SLT fiber + Starlink",
     long: "a 1 Gbps SLT Fiber line plus a separate Starlink satellite connection",

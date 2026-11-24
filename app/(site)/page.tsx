@@ -6,7 +6,7 @@ const FAQS = [
   {
     question: "Where is Cowork.lk located?",
     answer:
-      `Cowork.lk is at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, Western Province, Sri Lanka — 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa, 5 minutes from Kottawa town, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway. Open ${BUSINESS.hours.days}, ${BUSINESS.hours.display}.`,
+      `Cowork.lk is at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, Western Province, Sri Lanka — opposite Anura Tyres Kottawa near Mahalwarawa Junction, 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa, 5 minutes from Kottawa town, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway. Open ${BUSINESS.hours.days}, ${BUSINESS.hours.display}.`,
   },
   {
     question: "What coworking spaces can I book?",

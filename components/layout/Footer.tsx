@@ -52,7 +52,7 @@ export function Footer() {
               <span className="text-brand font-bold mr-1.5">A</span>
               349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, Western Province, Sri Lanka <br />
               2nd Floor of Active Plus Building <br />
-              <span className="text-xs text-brand-dark/55">20 m from Red Bell Kottawa · 100 m from Taco Bell &amp; Lyceum School Kottawa</span>
+              <span className="text-xs text-brand-dark/55">Opposite Anura Tyres Kottawa · Near Mahalwarawa Junction · 20 m from Red Bell Kottawa · 100 m from Taco Bell &amp; Lyceum School Kottawa</span>
             </p>
             <ul className="space-y-2 text-sm font-semibold text-brand-dark/70">
               <li>

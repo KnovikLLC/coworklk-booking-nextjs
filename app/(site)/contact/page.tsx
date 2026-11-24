@@ -48,7 +48,7 @@ export default function ContactPage() {
                 Sri Lanka.
               </p>
               <p className="mt-2 text-xs text-muted-foreground">
-                20 m from Red Bell Kottawa · 100 m from Taco Bell and Lyceum School Kottawa
+                Opposite Anura Tyres Kottawa · Near Mahalwarawa Junction · 20 m from Red Bell Kottawa · 100 m from Taco Bell and Lyceum School Kottawa
               </p>
             </div>
             <div>

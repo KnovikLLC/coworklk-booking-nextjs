@@ -108,7 +108,7 @@ const FAQ_GROUPS: { heading: string; items: { question: string; answer: string }
       {
         question: "Where is Cowork.lk located, and is it easy to reach?",
         answer:
-          "Cowork.lk is at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230 — 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa, about 5 minutes from Kottawa town, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway.",
+          "Cowork.lk is at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230 — opposite Anura Tyres Kottawa near Mahalwarawa Junction, 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa, about 5 minutes from Kottawa town, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway.",
       },
     ],
   },
