@@ -11,13 +11,13 @@ const redHatDisplay = Red_Hat_Display({ subsets: ["latin"], variable: "--font-di
 
 const SITE_NAME = "Cowork Sri Lanka";
 const DEFAULT_DESCRIPTION =
-  "Book hot desks, dedicated workspaces, and meeting rooms at Cowork Lanka's coworking space in Pannipitiya, Colombo, Sri Lanka. Real-time availability, instant online booking.";
+  "Book hot desks, dedicated workspaces, and meeting rooms at Cowork Lanka's coworking space in Kottawa, Pannipitiya, Sri Lanka. Real-time availability, instant online booking.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   // Every page in this app already bakes "| Cowork.lk" into its own title
   // string, so no title.template here — it would double up the suffix.
-  title: "Cowork.lk | Coworking Space in Pannipitiya, Colombo, Sri Lanka",
+  title: "Cowork.lk | Coworking Space in Kottawa, Pannipitiya, Sri Lanka",
   description: DEFAULT_DESCRIPTION,
   keywords: [
     "coworking space Sri Lanka",
@@ -32,12 +32,12 @@ export const metadata: Metadata = {
     locale: "en_LK",
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: "Cowork.lk | Coworking Space in Pannipitiya, Colombo, Sri Lanka",
+    title: "Cowork.lk | Coworking Space in Kottawa, Pannipitiya, Sri Lanka",
     description: DEFAULT_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cowork.lk | Coworking Space in Pannipitiya, Colombo, Sri Lanka",
+    title: "Cowork.lk | Coworking Space in Kottawa, Pannipitiya, Sri Lanka",
     description: DEFAULT_DESCRIPTION,
   },
   // No site-wide canonical: a root-level canonical is inherited by every page
@@ -63,7 +63,7 @@ const siteJsonLd = {
       legalName: BUSINESS.legalName,
       alternateName: BUSINESS.alternateNames,
       description:
-        "Coworking space in Pannipitiya, Sri Lanka, 5 minutes from Kottawa and 10 minutes from Maharagama, offering hot desks, workspace seats and private meeting rooms bookable online by the half-day or day.",
+        "Coworking space in Kottawa, Pannipitiya, Sri Lanka, opposite Anura Tyres Kottawa near Mahalwarawa Junction, 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa, 5 minutes from Kottawa town and 10 minutes from Maharagama, offering hot desks, workspace seats and private meeting rooms bookable online by the half-day or day, with 1 Gbps SLT fiber plus Starlink internet and a backup generator.",
       slogan: "Work Solo, Collaborate Together.",
       url: SITE_URL,
       logo: `${SITE_URL}/images/logos/cowork-logo.svg`,
@@ -82,7 +82,7 @@ const siteJsonLd = {
         addressRegion: BUSINESS.address.region,
         addressCountry: BUSINESS.address.country,
       },
-      // Real proximity facts published on the About page (Kottawa 5 min,
+      // Real proximity facts published on the About page (Kottawa town 5 min,
       // Maharagama 10 min, Kadawatha ~30 min via expressway).
       areaServed: [
         { "@type": "City", name: "Pannipitiya" },
@@ -101,7 +101,8 @@ const siteJsonLd = {
       ],
       founder: BUSINESS.founders.map((name) => ({ "@type": "Person", name })),
       amenityFeature: [
-        "Free Fiber WiFi",
+        "Free WiFi: 1 Gbps SLT Fiber",
+        "Starlink Satellite Internet (second connection)",
         "Air Conditioning",
         "Backup Power Generator",
         "Free Coffee & Tea",

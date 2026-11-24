@@ -75,7 +75,12 @@ const FAQ_GROUPS: { heading: string; items: { question: string; answer: string }
     items: [
       {
         question: "Is WiFi included?",
-        answer: "Yes, every space includes WiFi on SLT Mobitel Fiber at no extra charge. Meeting rooms come with a daily data package (4–15 GB depending on the room and booking length), and extra data can be added at checkout.",
+        answer: "Yes, every space includes WiFi at no extra charge, running on a 1 Gbps SLT Fiber line plus a separate Starlink satellite connection. Meeting rooms come with a daily data package (4–15 GB depending on the room and booking length), and extra data can be added at checkout.",
+      },
+      {
+        question: "What happens if the internet goes down?",
+        answer:
+          "Cowork.lk has two independent internet connections — a 1 Gbps SLT Fiber line and a Starlink satellite connection — plus a backup power generator, so you can stay online for calls and deadlines even if one line or the grid goes down.",
       },
       {
         question: "Is coffee or tea provided?",
@@ -103,7 +108,7 @@ const FAQ_GROUPS: { heading: string; items: { question: string; answer: string }
       {
         question: "Where is Cowork.lk located, and is it easy to reach?",
         answer:
-          "Cowork.lk is at 349/A/3 Avissawella Road, Pannipitiya 10230 — about 5 minutes from Kottawa, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway.",
+          "Cowork.lk is at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230 — opposite Anura Tyres Kottawa near Mahalwarawa Junction, 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa, about 5 minutes from Kottawa town, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway.",
       },
     ],
   },

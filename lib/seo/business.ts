@@ -16,7 +16,7 @@ export const BUSINESS = {
   whatsapp: "https://wa.me/94774884040",
   whatsappCommunity: "https://chat.whatsapp.com/FUHL35hZvOs35O4oeyexpa",
   address: {
-    street: "349/A/3 Avissawella Road",
+    street: "349/A/3 Avissawella Road, Kottawa",
     building: "2nd Floor, Active Plus Building",
     locality: "Pannipitiya",
     postalCode: "10230",
@@ -30,6 +30,12 @@ export const BUSINESS = {
   mapUrl:
     "https://www.google.com/maps?q=349%2FA%2F3+Avissawella+Road%2C+Pannipitiya+10230%2C+Sri+Lanka",
   founders: ["Charith", "Madusanka Premaratne", "Amila Gunawardhana"],
+  // Landmarks people actually navigate by (provided by the owners).
+  landmarks: "Opposite Anura Tyres Kottawa, near Mahalwarawa Junction; 20 m from Red Bell Kottawa, and 100 m from Taco Bell and Lyceum School Kottawa",
+  internet: {
+    short: "1 Gbps SLT fiber + Starlink",
+    long: "a 1 Gbps SLT Fiber line plus a separate Starlink satellite connection",
+  },
 } as const;
 
 export const FULL_ADDRESS = `${BUSINESS.address.street}, ${BUSINESS.address.locality} ${BUSINESS.address.postalCode}, ${BUSINESS.address.countryName}`;
@@ -48,6 +54,8 @@ export const FROM_PRICES = {
   workspace: 890,
   meetingRoom4: 3950,
   meetingRoom5: 4450,
+  // Lobby seats up to 10 for every block, 1 hour included (confirmed by the
+  // owners 24 Nov 2026, despite the old Zoho item name "Max 3 Pax").
   lobbyHour: 1950,
   max: 16950,
   eveningFee: 500,

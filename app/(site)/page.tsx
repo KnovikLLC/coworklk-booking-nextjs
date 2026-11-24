@@ -6,7 +6,7 @@ const FAQS = [
   {
     question: "Where is Cowork.lk located?",
     answer:
-      `Cowork.lk is at 349/A/3 Avissawella Road, Pannipitiya 10230, Western Province, Sri Lanka — 5 minutes from Kottawa, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway. Open ${BUSINESS.hours.days}, ${BUSINESS.hours.display}.`,
+      `Cowork.lk is at 349/A/3 Avissawella Road, Kottawa, Pannipitiya 10230, Western Province, Sri Lanka — opposite Anura Tyres Kottawa near Mahalwarawa Junction, 20 m from Red Bell Kottawa and 100 m from Taco Bell and Lyceum School Kottawa, 5 minutes from Kottawa town, 10 minutes from Maharagama, and within a 30-minute drive from Kadawatha via the expressway. Open ${BUSINESS.hours.days}, ${BUSINESS.hours.display}.`,
   },
   {
     question: "What coworking spaces can I book?",
@@ -21,7 +21,7 @@ const FAQS = [
   {
     question: "Is WiFi included at Cowork.lk?",
     answer:
-      "Yes. Every space includes free WiFi on SLT Mobitel Fiber, plus unlimited coffee and tea, lounge access, and a foosball table.",
+      "Yes. Every space includes free WiFi running on a 1 Gbps SLT Fiber line plus a separate Starlink satellite connection, so a single outage won't take you offline. Unlimited coffee and tea, lounge access, and a foosball table are included too.",
   },
   {
     question: "How do I pay for a booking?",
@@ -36,15 +36,15 @@ const FAQS = [
 ];
 
 export const metadata = {
-  title: "Cowork.lk | Premium Coworking Space in Pannipitiya, Sri Lanka",
+  title: "Cowork.lk | Coworking Space in Kottawa, Pannipitiya, Sri Lanka",
   description:
-    "Discover hot desks, dedicated workspaces, and fully-equipped meeting rooms at Cowork Lanka (Pannipitiya). Book online with real-time availability.",
+    "Discover hot desks, dedicated workspaces, and fully-equipped meeting rooms at Cowork.lk in Kottawa, Pannipitiya. Book online with real-time availability.",
   alternates: { canonical: "/" },
   openGraph: {
     siteName: "Cowork.lk",
-    title: "Cowork.lk | Premium Coworking Space in Pannipitiya, Sri Lanka",
+    title: "Cowork.lk | Coworking Space in Kottawa, Pannipitiya, Sri Lanka",
     description:
-      "Discover hot desks, dedicated workspaces, and fully-equipped meeting rooms at Cowork Lanka (Pannipitiya). Book online with real-time availability.",
+      "Discover hot desks, dedicated workspaces, and fully-equipped meeting rooms at Cowork.lk in Kottawa, Pannipitiya. Book online with real-time availability.",
     url: "/",
     images: ["/opengraph-image"],
   },
@@ -65,7 +65,7 @@ export default function HomePage() {
       <section className="mx-auto max-w-6xl w-full px-4 pt-16 pb-20 relative">
         <div className="max-w-2xl space-y-6">
           <span className="text-xs uppercase font-extrabold tracking-widest text-brand-dark/40">
-            Coworking Space · Pannipitiya · Kottawa · Sri Lanka
+            Coworking Space · Kottawa · Pannipitiya · Sri Lanka
           </span>
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl leading-[1.08] text-brand-dark">
             Work Solo,
@@ -76,7 +76,7 @@ export default function HomePage() {
           </h1>
 
           <p className="text-sm sm:text-base text-brand-dark/70 max-w-xl">
-            Sri Lanka&apos;s premium cowork space in Pannipitiya — just 5 minutes from Kottawa and
+            Sri Lanka&apos;s premium cowork space in Kottawa, Pannipitiya — just 5 minutes from Kottawa town and
             10 minutes from Maharagama, with hot desks, workspace seats, and meeting rooms bookable
             online in real time.
           </p>
@@ -213,9 +213,9 @@ export default function HomePage() {
           <div className="rounded-2xl border border-brand-dark/5 bg-white p-6 space-y-4">
             <span className="text-2xl text-brand block">📡</span>
             <div>
-              <h3 className="font-bold text-sm text-brand-dark">Free WiFi (Fiber)</h3>
+              <h3 className="font-bold text-sm text-brand-dark">1 Gbps Fiber + Starlink WiFi</h3>
               <p className="mt-1.5 text-xs text-brand-dark/60 leading-relaxed">
-                SLT Mobitel Fiber lines will keep you connected the fastest way possible.
+                A 1 Gbps SLT Fiber line plus a separate Starlink satellite connection, so one outage won&apos;t knock you offline.
               </p>
             </div>
           </div>
@@ -302,7 +302,7 @@ export default function HomePage() {
             </Link>
             ,{" "}
             <Link href="/coworking-space-kottawa" className="text-brand font-semibold hover:underline">
-              coworking near Kottawa
+              coworking in Kottawa
             </Link>{" "}
             and{" "}
             <Link href="/coworking-space-sri-lanka" className="text-brand font-semibold hover:underline">

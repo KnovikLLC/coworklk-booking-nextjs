@@ -17,6 +17,7 @@ interface PriceRow {
   name: string;
   href?: string;
   capacity?: number;
+  capacityNote?: string;
   options: string;
   from: number;
 }
@@ -47,7 +48,7 @@ async function loadPriceRows(): Promise<PriceRow[]> {
 
 const COMPARISON = [
   { factor: "Upfront commitment", cowork: "None — book by the half-day or day", home: "None", lease: "Months of rent + deposit" },
-  { factor: "Internet", cowork: "SLT Mobitel fiber WiFi, included", home: "Your own connection", lease: "You set up and pay" },
+  { factor: "Internet", cowork: "1 Gbps SLT fiber + Starlink backup line, included", home: "One home connection", lease: "You set up and pay" },
   { factor: "Power cuts", cowork: "Backup generator", home: "Usually no backup", lease: "You buy a generator/UPS" },
   { factor: "Meeting space", cowork: "Private 4–5 seater rooms on demand", home: "None", lease: "Only if you rent it" },
   { factor: "Coffee, cleaning, AC", cowork: "Included", home: "Your cost", lease: "Your cost" },
@@ -163,10 +164,12 @@ export async function LocationLanding({ page }: { page: LocationPageData }) {
           <dl className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               ["Address", `${BUSINESS.address.building}, ${FULL_ADDRESS}`],
-              ["Distance", "5 min from Kottawa · 10 min from Maharagama · ~30 min from Kadawatha via expressway"],
+              ["Landmarks", BUSINESS.landmarks],
+              ["Distance", "5 min from Kottawa town · 10 min from Maharagama · ~30 min from Kadawatha via expressway"],
               ["Opening hours", `${BUSINESS.hours.days}, ${BUSINESS.hours.display}`],
               ["Prices from", prices[0] ? `${formatLKR(prices[0].from)} (${prices[0].name})` : "See booking page"],
-              ["Included", "Fiber WiFi, AC, backup power, unlimited coffee & tea, lounge, parking (limited)"],
+              ["Internet", "1 Gbps SLT Fiber + Starlink satellite — two independent connections"],
+              ["Included", "WiFi, AC, backup generator, unlimited coffee & tea, lounge, parking (limited)"],
               ["Contact", `${BUSINESS.phoneDisplay} (call or WhatsApp) · ${BUSINESS.email}`],
             ].map(([term, value]) => (
               <div key={term} className="rounded-2xl border border-brand-dark/5 bg-white p-5">
@@ -202,8 +205,10 @@ export async function LocationLanding({ page }: { page: LocationPageData }) {
                       ) : (
                         row.name
                       )}
-                      {row.capacity && row.capacity > 1 ? (
-                        <span className="block text-xs font-normal text-brand-dark/50">Up to {row.capacity} people</span>
+                      {row.capacityNote || (row.capacity && row.capacity > 1) ? (
+                        <span className="block text-xs font-normal text-brand-dark/50">
+                          {row.capacityNote ?? `Up to ${row.capacity} people`}
+                        </span>
                       ) : null}
                     </td>
                     <td className="p-4 text-brand-dark/70">{row.options}</td>
