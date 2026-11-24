@@ -81,7 +81,7 @@ export const LOCATION_PAGES: LocationPageData[] = [
       {
         question: "Can I rent a meeting room in Kottawa for a few hours?",
         answer:
-          `Yes. Cowork.lk's private 4-seater and 5-seater meeting rooms can be booked for a half day, full day, evening or unlimited day access, starting from ${lkr(FROM_PRICES.meetingRoom4)}. The Lobby Area seats up to 10 people and can be booked by the hour from ${lkr(FROM_PRICES.lobbyHour)}.`,
+          `Yes. Cowork.lk's private 4-seater and 5-seater meeting rooms can be booked for a half day, full day, evening or unlimited day access, starting from ${lkr(FROM_PRICES.meetingRoom4)}. For groups of up to 10, the Lobby Area can be booked from ${lkr(FROM_PRICES.lobbyGroup2hr)} for 2 hours.`,
       },
       {
         question: "Does the coworking space in Kottawa have backup power?",

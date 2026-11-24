@@ -11,7 +11,7 @@ const FAQS = [
   {
     question: "What coworking spaces can I book?",
     answer:
-      `Hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats from ${lkr(FROM_PRICES.workspace)}, 4- and 5-seater meeting rooms from ${lkr(FROM_PRICES.meetingRoom4)}, and the Lobby Area for groups of up to 10 from ${lkr(FROM_PRICES.lobbyHour)} for an hour — all bookable online with real-time availability.`,
+      `Hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats from ${lkr(FROM_PRICES.workspace)}, 4- and 5-seater meeting rooms from ${lkr(FROM_PRICES.meetingRoom4)}, and the Lobby Area for groups of up to 10 from ${lkr(FROM_PRICES.lobbyGroup2hr)} for 2 hours — all bookable online with real-time availability.`,
   },
   {
     question: "Can I rent office space for just a day?",

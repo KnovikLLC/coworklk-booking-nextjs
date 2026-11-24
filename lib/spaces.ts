@@ -16,6 +16,9 @@ export const DURATION_LABELS: Record<string, string> = {
   "1hr": "1 Hour",
   "2hr": "2 Hours",
   "30min": "30 Minutes",
+  "4hr": "4 Hours",
+  "8hr": "8 Hours",
+  evening: "Evening",
 };
 
 export function spaceTypeLabel(type: string) {

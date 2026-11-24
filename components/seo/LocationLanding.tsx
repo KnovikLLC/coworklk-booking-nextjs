@@ -17,6 +17,7 @@ interface PriceRow {
   name: string;
   href?: string;
   capacity?: number;
+  capacityNote?: string;
   options: string;
   from: number;
 }
@@ -33,6 +34,7 @@ async function loadPriceRows(): Promise<PriceRow[]> {
           name: s.name,
           href: `/booking/${slugify(s.name)}`,
           capacity: s.capacity,
+          capacityNote: s.type === "lobby" ? "1 hr: up to 3 people · 2 hrs+: up to 10" : undefined,
           options: durations.join(", "),
           from: sorted[0].price,
         };
@@ -204,8 +206,10 @@ export async function LocationLanding({ page }: { page: LocationPageData }) {
                       ) : (
                         row.name
                       )}
-                      {row.capacity && row.capacity > 1 ? (
-                        <span className="block text-xs font-normal text-brand-dark/50">Up to {row.capacity} people</span>
+                      {row.capacityNote || (row.capacity && row.capacity > 1) ? (
+                        <span className="block text-xs font-normal text-brand-dark/50">
+                          {row.capacityNote ?? `Up to ${row.capacity} people`}
+                        </span>
                       ) : null}
                     </td>
                     <td className="p-4 text-brand-dark/70">{row.options}</td>
