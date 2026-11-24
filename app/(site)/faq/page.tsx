@@ -1,3 +1,5 @@
+import { BUSINESS, FROM_PRICES, lkr } from "@/lib/seo/business";
+
 const TITLE = "Coworking & Office Space Rental FAQ | Cowork.lk";
 const DESCRIPTION =
   "Answers to common questions about coworking spaces and office rental at Cowork.lk, Pannipitiya — pricing, day passes, amenities, hours, cancellations, and more.";
@@ -29,7 +31,7 @@ const FAQ_GROUPS: { heading: string; items: { question: string; answer: string }
       {
         question: "How much does it cost to book a space at Cowork.lk?",
         answer:
-          "Pricing depends on the space and how long you book it: hot desks from LKR 490, workspace seats from LKR 790, and 4- and 5-seater meeting rooms from LKR 3,450, each with half-day, full-day, and unlimited-access pricing tiers.",
+          `Pricing depends on the space and how long you book it: hot desks from ${lkr(FROM_PRICES.hotDesk)}, workspace seats from ${lkr(FROM_PRICES.workspace)}, 4-seater meeting rooms from ${lkr(FROM_PRICES.meetingRoom4)} and the 5-seater from ${lkr(FROM_PRICES.meetingRoom5)}, each with half-day, full-day, evening and unlimited-access pricing tiers. Evening (5–9 PM) bookings carry an ${lkr(FROM_PRICES.eveningFee)} evening convenience fee.`,
       },
       {
         question: "What's the difference between a hot desk, a workspace seat, and a meeting room?",
@@ -44,7 +46,7 @@ const FAQ_GROUPS: { heading: string; items: { question: string; answer: string }
       {
         question: "Do I need to sign a long-term lease or contract?",
         answer:
-          "No. Every space is booked by the slot — half-day, full-day, or unlimited access for that day — with no lease, membership contract, or minimum commitment.",
+          "No. Every space is booked by the slot — half-day, full-day, evening, or unlimited access for that day — with no lease, membership contract, or minimum commitment.",
       },
     ],
   },
@@ -59,7 +61,7 @@ const FAQ_GROUPS: { heading: string; items: { question: string; answer: string }
       {
         question: "Can I book a space by the hour?",
         answer:
-          "Only the Lobby Area is bookable by the hour (1-hour or 2-hour slots). Hot desks, workspace seats, and meeting rooms are booked in half-day, full-day, or unlimited-access blocks rather than by the hour.",
+          `Only the Lobby Area (up to 10 people) is bookable by the hour — 1-hour, 2-hour, 4-hour, 8-hour or full-day blocks, from ${lkr(FROM_PRICES.lobbyHour)} for an hour. Hot desks, workspace seats, and meeting rooms are booked in half-day (4 hours), full-day (8 AM–5 PM), evening (5–9 PM), or unlimited (8 AM–8 PM) blocks rather than by the hour.`,
       },
       {
         question: "Do I need to be a member to book a day pass?",
@@ -73,7 +75,7 @@ const FAQ_GROUPS: { heading: string; items: { question: string; answer: string }
     items: [
       {
         question: "Is WiFi included?",
-        answer: "Yes, every space includes free WiFi on SLT Mobitel Fiber at no extra charge.",
+        answer: "Yes, every space includes WiFi on SLT Mobitel Fiber at no extra charge. Meeting rooms come with a daily data package (4–15 GB depending on the room and booking length), and extra data can be added at checkout.",
       },
       {
         question: "Is coffee or tea provided?",
@@ -96,7 +98,7 @@ const FAQ_GROUPS: { heading: string; items: { question: string; answer: string }
       {
         question: "What are Cowork.lk's operating hours?",
         answer:
-          "Cowork.lk is open Monday to Sunday, 8:00 AM to 8:00 PM. It is not a 24/7 space — all bookings fall within these hours.",
+          `Cowork.lk is open ${BUSINESS.hours.days}, ${BUSINESS.hours.display}. Day bookings start at 8 AM and evening bookings run 5–9 PM. It is not a 24/7 space — all bookings fall within these hours.`,
       },
       {
         question: "Where is Cowork.lk located, and is it easy to reach?",

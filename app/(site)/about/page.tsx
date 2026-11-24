@@ -37,7 +37,7 @@ const ABOUT_FAQS = [
   {
     question: "How is Cowork.lk different from renting a traditional office?",
     answer:
-      "Cowork.lk uses slot-based bookings (hourly, half-day, or full-day) instead of long-term leases, so freelancers and small teams get office infrastructure — WiFi, meeting rooms, air conditioning — without the overhead of a fixed commercial lease.",
+      "Cowork.lk uses slot-based bookings (half-day, full-day, or evening, plus hourly Lobby bookings) instead of long-term leases, so freelancers and small teams get office infrastructure — WiFi, meeting rooms, air conditioning — without the overhead of a fixed commercial lease.",
   },
 ];
 

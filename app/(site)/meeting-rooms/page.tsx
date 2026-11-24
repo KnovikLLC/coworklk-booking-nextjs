@@ -29,17 +29,17 @@ const FAQS = [
   {
     question: "Can I book a meeting room for half a day?",
     answer:
-      "Yes. Every meeting room is bookable by half-day, full-day, or unlimited day access — there are no hourly conference room slots, so pricing is fixed and predictable for the block you choose.",
+      "Yes. Every meeting room is bookable by half-day (4 hours), full-day, evening (5–9 PM), or unlimited day access — there are no hourly conference room slots, so pricing is fixed and predictable for the block you choose.",
   },
   {
     question: "Do you have conference facilities for larger groups?",
     answer:
-      "Our largest private conference room seats up to 5 people. For larger conference venues or custom setups, contact us directly and we'll help arrange a tailored solution.",
+      "Our largest private meeting room seats 5 people, and the Lobby Area can be booked by the hour for groups of up to 10. For larger events or custom setups, contact us directly and we'll help arrange a tailored solution.",
   },
   {
     question: "What's included with a meeting room booking?",
     answer:
-      "Every meeting room includes free fiber WiFi, air conditioning, and unlimited coffee and tea, with the booking confirmed instantly online.",
+      "Every meeting room includes fiber WiFi with a daily data package (4–15 GB depending on the room and booking length), air conditioning, and unlimited coffee and tea, with the booking confirmed instantly online. Projectors, screens and extra data can be added at checkout.",
   },
 ];
 

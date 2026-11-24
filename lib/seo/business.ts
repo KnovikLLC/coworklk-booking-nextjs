@@ -24,7 +24,9 @@ export const BUSINESS = {
     country: "LK",
     countryName: "Sri Lanka",
   },
-  hours: { days: "Monday to Sunday", opens: "08:00", closes: "20:00", display: "8:00 AM – 8:00 PM" },
+  // Evening bookings run 5–9 PM (lib/bookings/slot-times.ts), so the space
+  // is staffed until 9 PM even though "unlimited" day passes end at 8 PM.
+  hours: { days: "Monday to Sunday", opens: "08:00", closes: "21:00", display: "8:00 AM – 9:00 PM" },
   mapUrl:
     "https://www.google.com/maps?q=349%2FA%2F3+Avissawella+Road%2C+Pannipitiya+10230%2C+Sri+Lanka",
   founders: ["Charith", "Madusanka Premaratne", "Amila Gunawardhana"],
@@ -36,12 +38,31 @@ export const FULL_ADDRESS = `${BUSINESS.address.street}, ${BUSINESS.address.loca
 // declaring a new, disconnected business each time.
 export const BUSINESS_ID = `${SITE_URL}/#business`;
 
-// Prices already published across the site (FAQ, home page, meeting rooms).
+// "From" prices quoted in page copy (FAQ answers, intros, /llms.txt).
+// Must match the live pricing table — check https://cowork.lk/api/spaces
+// whenever rates change in Supabase/Zoho. Price tables on the location pages
+// read the live table directly; these constants are for prose and fallbacks.
+// Last checked against production: 24 Nov 2026.
+export const FROM_PRICES = {
+  hotDesk: 490,
+  workspace: 890,
+  meetingRoom4: 3950,
+  meetingRoom5: 4450,
+  lobbyHour: 1950,
+  max: 16950,
+  eveningFee: 500,
+} as const;
+
+export function lkr(amount: number) {
+  return `LKR ${amount.toLocaleString("en-US")}`;
+}
+
 // Used only when the live pricing table can't be read (e.g. a DB hiccup at
 // build time) so a page never renders an empty price table.
 export const FALLBACK_FROM_PRICES = [
-  { label: "Hot Desk", from: 490 },
-  { label: "Workspace Seat", from: 790 },
-  { label: "4-Seater Meeting Room", from: 3450 },
-  { label: "5-Seater Meeting Room", from: 3950 },
+  { label: "Hot Desk", from: FROM_PRICES.hotDesk },
+  { label: "Workspace Seat", from: FROM_PRICES.workspace },
+  { label: "Lobby Area (up to 10 people)", from: FROM_PRICES.lobbyHour },
+  { label: "4-Seater Meeting Room", from: FROM_PRICES.meetingRoom4 },
+  { label: "5-Seater Meeting Room", from: FROM_PRICES.meetingRoom5 },
 ];
